@@ -1,0 +1,335 @@
+% lab/latex/preamble-ja.tex
+% 日本語主体・欧文混在の学術論文用 共通プリアンブル（LuaLaTeX + jlreq）
+% 使い方: \input{../../lab/latex/preamble-ja}  ← 各プロジェクトの main.tex から
+
+%%% フォント %%%
+\usepackage{luatexja-fontspec}
+\usepackage{iftex}
+% 和文明朝: 原ノ味明朝（TeX Live同梱、全OS対応）
+\setmainjfont{HaranoAjiMincho}
+% 和文ゴシック: OS別にフォールバック
+%   macOS: ヒラギノ角ゴシック ProN
+%   Linux/Windows: Noto Sans CJK JP → 原ノ味ゴシック（TeX Live同梱）
+\IfFontExistsTF{Hiragino Kaku Gothic ProN}{%
+  \setsansjfont{Hiragino Kaku Gothic ProN}[
+    UprightFont = {Hiragino Kaku Gothic ProN W3},
+    BoldFont    = {Hiragino Kaku Gothic ProN W6},
+  ]%
+}{%
+  \IfFontExistsTF{Noto Sans CJK JP}{%
+    \setsansjfont{Noto Sans CJK JP}%
+  }{%
+    \setsansjfont{HaranoAjiGothic}%
+  }%
+}
+% 見出しをゴシック体にする
+\AddToHook{begindocument/before}{%
+  \ModifyHeading{chapter}{font={\sffamily\bfseries}}%
+  \ModifyHeading{section}{font={\sffamily\bfseries}}%
+  \ModifyHeading{subsection}{font={\sffamily\bfseries}}%
+}
+
+% 部の見出し: 番号と題名を別行に、行間を広げる
+\makeatletter
+\renewcommand{\part}{%
+  \clearpage
+  \thispagestyle{empty}%
+  \null\vfil
+  \secdef\@part\@spart}
+\def\@part[#1]#2{%
+  \refstepcounter{part}%
+  \addcontentsline{toc}{part}{\thepart\hspace{1em}#1}%
+  \begin{center}
+    {\huge\sffamily\bfseries 第\thepart 部}\\[1.5em]
+    {\LARGE\sffamily\bfseries #2}
+  \end{center}
+  \vfil}
+\def\@spart#1{%
+  \begin{center}
+    {\LARGE\sffamily\bfseries #1}
+  \end{center}
+  \vfil}
+\makeatother
+% 欧文: TeX Gyre Termes（Times系、TeX Live同梱）
+\setmainfont{TeX Gyre Termes}
+
+%%% 脚注番号の括弧を外す %%%
+\renewcommand{\thefootnote}{\arabic{footnote}}
+
+%%% 節見出しの番号を「第n節」にする %%%
+\renewcommand{\thesection}{第\arabic{section}節}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+
+%%% 目次の体裁 %%%
+% 部: 章と同じインデント体裁で、太字ゴシック
+\makeatletter
+\renewcommand*{\l@part}[2]{%
+  \ifnum \c@tocdepth >-2\relax
+    \addpenalty{-\@highpenalty}%
+    \addvspace{1em \@plus\p@}%
+    \@dottedtocline{-1}{0em}{5em}{\bfseries\sffamily #1}{\bfseries #2}%
+    \nobreak
+  \fi}
+\makeatother
+
+% oneside: 空白ページの挿入を防止
+\let\cleardoublepage\clearpage
+
+%%% 参考文献 %%%
+\usepackage[
+  backend=biber,
+  style=verbose-note,    % 脚注内にフル書誌→短縮形（人文系標準）
+  autocite=footnote,
+  defernumbers=true,     % 分割出力時の番号管理
+  sorting=nyt,
+  abbreviate=false,
+  language=auto,         % langid による言語別自動切替
+]{biblatex}
+
+% 参考文献一覧の見出し階層定義
+\defbibheading{subbibliography}[\bibname]{%
+  \section*{#1}}
+\defbibheading{subsubbibliography}[\bibname]{%
+  \subsection*{#1}}
+
+%%% 書誌フォーマット（修論準拠）%%%
+%
+% langid による言語別自動切替:
+%   french  → « guillemets », "dans", "et", "éd."
+%   english → "quotation marks", "in", "and", "ed."
+%   japanese → キーワードで別処理
+% .bibエントリに langid = {french/english/japanese} を指定すること。
+
+% 脚注・参考文献一覧ともに姓-名の順に統一
+\DeclareNameAlias{sortname}{family-given}
+\DeclareNameAlias{default}{family-given}
+
+% 欧語: 姓をスモールキャピタルにする
+% \ifkeyword は短縮引用で効かないため、LuaLaTeX で文字コード判定
+\directlua{
+  function is_cjk(s)
+    local first = utf8.codepoint(s, 1)
+    if first >= 0x3000 and first <= 0x9FFF then return true end
+    if first >= 0xF900 and first <= 0xFAFF then return true end
+    return false
+  end
+}
+\renewcommand*{\mkbibnamefamily}[1]{%
+  \directlua{
+    if is_cjk("\luaescapestring{#1}") then
+      tex.sprint("\luaescapestring{#1}")
+    else
+      tex.sprint("\\textsc{\luaescapestring{#1}}")
+    end
+  }%
+}
+
+% 日本語文献: 姓名スペース除去 + 句読点を日本語に
+% 日本語用の句読点設定マクロ
+\newcommand*{\setjapanesepunct}{%
+  \renewcommand*{\revsdnamepunct}{}%
+  \renewcommand*{\bibnamedelimd}{}%
+  \renewcommand*{\newunitpunct}{\addspace}%
+  \renewcommand*{\labelnamepunct}{\addspace}%
+  \renewcommand*{\subtitlepunct}{：}%
+  \renewcommand*{\bibpagespunct}{、}%
+  \renewcommand*{\multicitedelim}{、}%
+  \renewcommand*{\finentrypunct}{。}%
+  \DeclareDelimFormat{nameyeardelim}{、}%
+  \DeclareDelimFormat{nonameyeardelim}{、}%
+  \DeclareDelimFormat[bib,biblist]{multinamedelim}{・}%
+  \DeclareDelimFormat[bib,biblist]{finalnamedelim}{・}%
+  \DeclareDelimFormat{titleyeardelim}{、}%
+  \DeclareDelimFormat{publocpunct}{、}%
+  \DeclareDelimFormat{publocdelim}{、}%
+  \DeclareDelimFormat{publisherdelim}{、}%
+  \renewcommand*{\newblockpunct}{\addspace}%
+  \DeclareDelimFormat{postnotedelim}{、}%
+}
+% 欧語用の句読点設定マクロ
+\newcommand*{\setwesternpunct}{%
+  \renewcommand*{\revsdnamepunct}{\addcomma\space}%
+  \renewcommand*{\bibnamedelimd}{\addspace}%
+  \renewcommand*{\newunitpunct}{\adddot\space}%
+  \renewcommand*{\subtitlepunct}{\addcolon\space}%
+  \renewcommand*{\finentrypunct}{\adddot}%
+}
+% 日本語: 出版年の後に「年」を付ける
+\DeclareFieldFormat{datetext}{%
+  \ifkeyword{japanese}{#1年}{#1}}
+\renewbibmacro*{date}{%
+  \printtext[datetext]{\printdate}%
+}
+
+\AtEveryBibitem{\ifkeyword{japanese}{\setjapanesepunct}{\setwesternpunct}}
+\AtEveryCitekey{\ifkeyword{japanese}{\setjapanesepunct}{\setwesternpunct}}
+
+% 脚注末尾: 日本語「。」/ 欧語「.」
+\renewcommand{\bibfootnotewrapper}[1]{\bibsentence #1}
+
+% 短縮引用: 日本語では「著者、前掲書」形式にする
+\renewbibmacro*{cite:short}{%
+  \ifkeyword{japanese}%
+    {\printnames{labelname}、前掲書}%
+    {\printnames{labelname}%
+     \setunit*{\printdelim{nametitledelim}}%
+     \printtext[bibhyperref]{%
+       \printfield[citetitle]{labeltitle}}}%
+}
+
+% autocite: 末尾句点を postnote の後に出す
+\DeclareCiteCommand{\autocite}[\mkbibfootnote]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{cite}}
+  {\multicitedelim}
+  {\usebibmacro{cite:postnote}\finentrypunct}
+
+% 出版社と年の間の区切りを日本語では「、」に
+\renewbibmacro*{publisher+location+date}{%
+  \printlist{location}%
+  \iflistundef{publisher}%
+    {\setunit*{\addcomma\space}}%
+    {\setunit*{\ifkeyword{japanese}{、}{\addcomma\space}}}%
+  \printlist{publisher}%
+  \setunit*{\ifkeyword{japanese}{、}{\addcomma\space}}%
+  \usebibmacro{date}%
+  \newunit%
+}
+
+% 論文・章題の引用符
+% 日本語「」、フランス語 « »、英語 " "
+\newcommand*{\langquote}[1]{%
+  \iffieldequalstr{langid}{french}%
+    {\guillemotleft\addnbspace #1\addnbspace\guillemotright}%
+    {\mkbibquote{#1}}%
+}
+\DeclareFieldFormat[article]{title}{%
+  \ifkeyword{japanese}{「#1」}{\langquote{#1}}}
+\DeclareFieldFormat[incollection]{title}{%
+  \ifkeyword{japanese}{「#1」}{\langquote{#1}}}
+\DeclareFieldFormat[inproceedings]{title}{%
+  \ifkeyword{japanese}{「#1」}{\langquote{#1}}}
+\DeclareFieldFormat[thesis]{title}{%
+  \ifkeyword{japanese}{「#1」}{\langquote{#1}}}
+
+% 日本語の書名を『』で囲む（イタリック→ゴシック化を防止）
+\DeclareFieldFormat[book]{title}{%
+  \ifkeyword{japanese}{『#1』}{\mkbibemph{#1}}}
+\DeclareFieldFormat[book]{subtitle}{%
+  \ifkeyword{japanese}{#1}{\mkbibemph{#1}}}
+\DeclareFieldFormat[incollection]{booktitle}{%
+  \ifkeyword{japanese}{『#1』}{\mkbibemph{#1}}}
+\DeclareFieldFormat[book]{citetitle}{%
+  \ifkeyword{japanese}{『#1』}{\mkbibemph{#1}}}
+\DeclareFieldFormat[incollection]{citetitle}{%
+  \ifkeyword{japanese}{「#1」}{\langquote{#1}}}
+\DeclareFieldFormat[article]{citetitle}{%
+  \ifkeyword{japanese}{「#1」}{\langquote{#1}}}
+
+% 日本語: "In:" を抑制、欧語: 大文字 "In:" を維持
+% 日本語: 抑制、フランス語: dans、英語: in
+\renewbibmacro*{in:}{%
+  \ifkeyword{japanese}%
+    {}%
+    {\iffieldequalstr{langid}{french}%
+      {\printtext{dans\intitlepunct}}%
+      {\printtext{in\intitlepunct}}}%
+}
+
+% 日本語: 短縮引用「前掲注X」+ pages 表記
+\DefineBibliographyStrings{english}{%
+  seenote = {前掲注},
+}
+% 日本語文献の pages を日本語化
+\DeclareFieldFormat[incollection]{pages}{%
+  \ifkeyword{japanese}{#1頁}{pp.\addnbspace #1}}
+\DeclareFieldFormat[article]{pages}{%
+  \ifkeyword{japanese}{#1頁}{pp.\addnbspace #1}}
+
+% 日本語: "Edited by ..." を抑制、欧語: 名前 (eds.) 形式
+\renewbibmacro*{byeditor+others}{%
+  \ifkeyword{japanese}%
+    {}%
+    {\ifnameundef{editor}%
+      {}%
+      {\printnames[byeditor]{editor}%
+       \addspace\printeditorlabel
+       \clearname{editor}%
+       \newunit}%
+    }%
+}
+
+% 編者の括弧付き表記ヘルパー
+\newcommand*{\printeditorlabel}{%
+  \iffieldequalstr{langid}{french}%
+    {\printtext[parens]{\ifnumgreater{\value{editor}}{1}{éds\adddot}{éd\adddot}}}%
+    {\printtext[parens]{\ifnumgreater{\value{editor}}{1}{eds\adddot}{ed\adddot}}}%
+}
+
+% editor+othersstrg / editor+others: 括弧付き (eds.)/(éds.) を出力
+\renewbibmacro*{editor+othersstrg}{\printeditorlabel}
+\renewbibmacro*{editor+others}{%
+  \ifboolexpr{
+    test \ifuseeditor
+    and
+    not test {\ifnameundef{editor}}
+  }
+    {\printnames{editor}%
+     \addspace\printeditorlabel
+     \clearname{editor}}
+    {}%
+}
+
+% book型: 編者名 (éds.)/(eds.) の形式
+\renewbibmacro*{bbx:editor}{%
+  \ifnameundef{editor}{}%
+    {\printnames{editor}%
+     \usebibmacro{editor+othersstrg}%
+     \clearname{editor}%
+     \setunit{\labelnamepunct}}%
+}
+
+% フランス語文献: "and" → "et"
+\AtEveryBibitem{%
+  \iffieldequalstr{langid}{french}%
+    {\DeclareDelimFormat{finalnamedelim}{\addspace et\addspace}}%
+    {}%
+}
+\AtEveryCitekey{%
+  \iffieldequalstr{langid}{french}%
+    {\DeclareDelimFormat{finalnamedelim}{\addspace et\addspace}}%
+    {}%
+}
+
+%%% 組版 %%%
+\usepackage{setspace}
+\onehalfspacing
+\usepackage[
+  top=30mm,bottom=30mm,
+  left=30mm,right=25mm,
+]{geometry}
+
+
+%%% 引用符 %%%
+\usepackage[autostyle=true, french=guillemets, english=american]{csquotes}
+
+%%% ハイパーリンク %%%
+\usepackage[dvipsnames,svgnames,x11names]{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue!60!black,
+  bookmarksnumbered=true,
+}
+
+%%% その他 %%%
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{wrapfig}
+
+%%% 見出し %%%
+\setcounter{secnumdepth}{1}
+\setcounter{tocdepth}{2}
