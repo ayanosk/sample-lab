@@ -1,0 +1,905 @@
+/* ============================================================
+ * Marp Custom Theme: Academic (学会発表用)
+ * ============================================================
+ * Usage:  Add to marp config or frontmatter:
+ *   ---
+ *   marp: true
+ *   theme: academic
+ *   ---
+ *
+ * Installation:
+ *   marp --theme academic-theme.css slides.md
+ *   or in .vscode/settings.json:
+ *   "markdown.marp.themes": ["./academic-theme.css"]
+ * ============================================================ */
+
+/* @theme academic-sample */
+
+@import 'default';
+
+/* ── Slide size: 16:10 (1280×800) ──────────────────────────── */
+section {
+  width: 1280px;
+  height: 800px;
+}
+
+/* ── Google Fonts ───────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap');
+
+/* ── Material Symbols (Outlined) ──────────────────────────── */
+/* Usage:
+ *   <span class="icon">search</span>           — テキストと同サイズ
+ *   <span class="icon lg">school</span>        — 1.5em
+ *   <span class="icon xl">account_balance</span> — 2em
+ *   <span class="icon xxl">history_edu</span>  — 3em
+ *
+ *   色はテーマカラーを継承。変更は inline style で:
+ *   <span class="icon" style="color: var(--color-highlight);">star</span>
+ *
+ *   アイコン名の一覧: https://fonts.google.com/icons?icon.set=Material+Symbols
+ */
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0');
+
+section .icon {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 1em;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  vertical-align: -0.15em;
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+  color: var(--color-accent);
+}
+
+section .icon.lg  { font-size: 1.5em; vertical-align: -0.2em; }
+section .icon.xl  { font-size: 2em;   vertical-align: -0.25em; }
+section .icon.xxl { font-size: 3em;   vertical-align: -0.3em; }
+
+/* ── CSS Variables ──────────────────────────────────────────── */
+:root {
+  /* Color palette — 深緑×テラコッタのアカデミックトーン */
+  --color-bg:         #fafaf8;
+  --color-fg:         #2a2a28;
+  --color-accent:     #2e6b4f;       /* 深緑アクセント */
+  --color-accent-light: #e6f0eb;
+  --color-muted:      #5e6b64;
+  --color-border:     #c2cdc6;
+  --color-highlight:  #c0623a;       /* 引用・強調用テラコッタ */
+  --color-code-bg:    #f3f5f4;
+
+  /* Typography */
+  --font-sans:  'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+  --font-serif: 'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+  --font-mono:  'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
+}
+
+/* ── Base Section (each slide) ──────────────────────────────── */
+section {
+  font-family: var(--font-sans);
+  font-size: 29px;
+  color: var(--color-fg);
+  background-color: var(--color-bg);
+  padding: 24px 36px 56px 36px;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  --code-block-max-width: 88%;
+  --code-block-min-width: 22em;
+  --code-block-font-size: 1em;
+  --code-block-line-height: 1.28;
+  --code-block-margin-top: 0.55em;
+  --code-block-margin-bottom: 0.45em;
+  --code-block-padding-y: 0.8em;
+  --code-block-padding-x: 1em;
+  /* Pin content to top — override Marp default vertical centering */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* ── Headings ───────────────────────────────────────────────── */
+section h1 {
+  font-family: var(--font-sans);
+  font-size: 1.6em;
+  font-weight: 700;
+  color: var(--color-accent);
+  border-bottom: none;
+  padding-bottom: 0.25em;
+  margin-bottom: 0.6em;
+  /* グラデーションの下線 */
+  background-image: linear-gradient(to right, var(--color-accent), var(--color-accent-light));
+  background-repeat: no-repeat;
+  background-size: 100% 2.5px;
+  background-position: bottom;
+}
+
+section h2 {
+  font-family: var(--font-sans);
+  font-size: 1.6em;
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-bottom: 0.4em;
+}
+
+section h3 {
+  font-size: 1.05em;
+  font-weight: 500;
+  color: var(--color-muted);
+  margin-bottom: 0.3em;
+}
+
+/* ── Title slide ────────────────────────────────────────────── */
+section.title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: linear-gradient(135deg, #1a3d2e 0%, #3a7d5c 50%, #5a9e78 100%);
+  color: #ffffff;
+  padding: 40px 72px;
+}
+
+/* テラコッタのアクセントバー */
+section.title::before {
+  content: '';
+  display: block;
+  width: 56px;
+  height: 4px;
+  background-color: var(--color-highlight);
+  border-radius: 2px;
+  margin-bottom: 1.4em;
+}
+
+section.title h1 {
+  font-size: 2em;
+  color: #ffffff;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0.4em;
+  line-height: 1.35;
+  letter-spacing: 0.03em;
+}
+
+section.title h2 {
+  font-size: 1.05em;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.80);
+  margin-top: 0.5em;
+  letter-spacing: 0.02em;
+}
+
+/* 氏名・日付などのメタ情報を細い横線で区切る */
+section.title p {
+  font-size: 0.82em;
+  color: rgba(255, 255, 255, 0.65);
+  margin-top: 1.6em;
+  padding-top: 1em;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  width: 100%;
+}
+
+/* ── Section divider slide ──────────────────────────────────── */
+section.section-divider {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  background: linear-gradient(135deg, #1a3d2e 0%, #3a7d5c 50%, #5a9e78 100%);
+  color: #ffffff;
+  padding: 40px 56px;
+}
+
+/* テラコッタのアクセントバー */
+section.section-divider::before {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 4px;
+  background-color: var(--color-highlight);
+  border-radius: 2px;
+  margin-bottom: 1em;
+}
+
+section.section-divider h1 {
+  color: #ffffff;
+  border: none;
+  background-image: linear-gradient(to right, rgba(255,255,255,0.5), rgba(255,255,255,0.1));
+  background-repeat: no-repeat;
+  background-size: 100% 2px;
+  background-position: bottom;
+  padding-bottom: 0.3em;
+  font-size: 1.9em;
+}
+
+section.section-divider h2,
+section.section-divider p {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ── Lists ──────────────────────────────────────────────────── */
+section ul,
+section ol {
+  margin-left: 0.3em;
+  padding-left: 1.4em;
+}
+
+section li {
+  margin-bottom: 0.35em;
+}
+
+section li::marker {
+  color: var(--color-accent);
+}
+
+/* nested lists */
+section ul ul,
+section ol ol,
+section ul ol,
+section ol ul {
+  font-size: 0.92em;
+  color: var(--color-muted);
+  margin-top: 0.2em;
+}
+
+/* ── Blockquote — 史料引用向け ──────────────────────────────── */
+section blockquote {
+  border-left: 4px solid var(--color-highlight);
+  background-color: #fdf3ee;
+  padding: 0.7em 1.2em;
+  margin: 0.8em 0;
+  font-family: var(--font-serif);
+  font-size: 0.92em;
+  color: var(--color-fg);
+  line-height: 1.8;
+}
+
+section blockquote p {
+  margin: 0;
+}
+
+/* ── Tables ─────────────────────────────────────────────────── */
+section table {
+  display: table;
+  width: var(--table-width, auto);
+  min-width: 0;
+  max-width: var(--table-max-width, 100%);
+  overflow: visible;
+  table-layout: var(--table-layout, auto);
+  border-collapse: collapse;
+  font-size: var(--table-font-size, 0.86em);
+  line-height: var(--table-line-height, 1.32);
+  margin: var(--table-margin, 0.55em auto);
+}
+
+section table thead th {
+  background-color: var(--color-accent);
+  color: #ffffff;
+  font-weight: 500;
+  padding: var(--table-cell-py, 0.38em) var(--table-cell-px, 0.52em);
+  text-align: center;
+  overflow-wrap: var(--table-overflow-wrap, normal);
+  word-break: var(--table-word-break, normal);
+  hyphens: auto;
+  vertical-align: top;
+  white-space: var(--table-white-space, normal);
+}
+
+section table tbody td {
+  padding: var(--table-cell-py, 0.38em) var(--table-cell-px, 0.52em);
+  border-bottom: 1px solid var(--color-border);
+  overflow-wrap: var(--table-overflow-wrap, normal);
+  word-break: var(--table-word-break, normal);
+  hyphens: auto;
+  vertical-align: top;
+  white-space: var(--table-white-space, normal);
+}
+
+section table thead th:first-child,
+section table tbody td:first-child {
+  text-align: center;
+}
+
+section table tbody tr:nth-child(even) {
+  background-color: var(--color-accent-light);
+}
+
+/* 表用ユーティリティ
+ *   デフォルトは列幅 auto。内容に応じて各列の幅が決まる。
+ *   <!-- _class: table-relaxed -->  行間を広めに
+ *   <!-- _class: table-compact -->  行間を少し詰める
+ *   <!-- _class: table-fit -->      入りきらないときだけ文字を一段小さく
+ *   <!-- _class: table-tight -->    最終手段。文字・行間・折り返しを強めに詰める
+ */
+section.table-relaxed {
+  --table-line-height: 1.42;
+  --table-cell-py: 0.44em;
+  --table-cell-px: 0.58em;
+}
+section.table-compact {
+  --table-line-height: 1.16;
+  --table-cell-py: 0.24em;
+  --table-cell-px: 0.34em;
+}
+section.table-fit {
+  --table-font-size: 0.76em;
+}
+section.table-tight {
+  --table-font-size: 0.68em;
+  --table-line-height: 1.1;
+  --table-cell-py: 0.2em;
+  --table-cell-px: 0.28em;
+  --table-overflow-wrap: anywhere;
+  --table-word-break: break-word;
+}
+
+/* ── Images & Figures ───────────────────────────────────────── */
+section img {
+  display: block;
+  max-width: 100%;
+  max-height: 70%;
+  margin: 0.2em auto 0 auto;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+}
+
+/* Marpは ![](img) を <p><img></p> として出力する。
+   画像だけの<p>の余白を最小化する。 */
+section img {
+  margin-bottom: 0 !important;
+}
+section p {
+  margin-bottom: 0.2em;
+}
+section ul {
+  margin-top: 0.2em !important;
+}
+
+/* Full-bleed image: タイトル+図解だけのスライドで画像を最大化
+ * Usage:  <!-- _class: fig-full -->  をスライド冒頭に追加 */
+section.fig-full {
+  padding: 40px 30px 20px 30px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+section.fig-full h1,
+section.fig-full h2 {
+  margin-bottom: 0.2em !important;
+  flex-shrink: 0;
+}
+section.fig-full > p:has(> img) {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 !important;
+  overflow: hidden;
+}
+section.fig-full img {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  width: auto;
+  height: auto;
+  margin: 0 auto !important;
+  border: none !important;
+  object-fit: contain;
+}
+
+/* Figure above notes: 図を上、説明を下に置く汎用レイアウト
+ * Recommended usage (HTMLでラップして使う):
+ *   <div class="figure-layout" style="gap: 14px;">
+ *     <div class="figure-box"><img src="..." alt="" style="height: 430px;"></div>
+ *     <ul class="figure-notes"><li>...</li></ul>
+ *   </div>
+ *
+ * Note:
+ *   標準は高さ主導です。比率は画像側に従うので、通常は img の style で height だけ調整すれば十分です。
+ *   VS Code の Marp プレビューでは CSS変数より img の inline style の方が追従が安定しやすいです。
+ */
+section.figure-top {
+  --figure-height: 430px;
+  --figure-max-height: none;
+  --figure-gap: 12px;
+  --figure-notes-size: 1em;
+  --figure-justify: center;
+  --figure-offset-x: 0px;
+  --figure-offset-y: 0px;
+}
+section.figure-top > p:has(> img) {
+  display: flex;
+  justify-content: var(--figure-justify);
+  align-items: flex-start;
+  margin: 0 0 var(--figure-gap) 0 !important;
+}
+section.figure-top > p:has(> img) img {
+  width: auto;
+  max-width: 100%;
+  max-height: var(--figure-max-height);
+  height: var(--figure-height);
+  object-fit: contain;
+  transform: translate(var(--figure-offset-x), var(--figure-offset-y));
+}
+section.figure-top > ul,
+section.figure-top > ol {
+  margin-top: 0 !important;
+  font-size: var(--figure-notes-size);
+}
+
+section .figure-layout {
+  --figure-height: 430px;
+  --figure-max-height: none;
+  --figure-gap: 12px;
+  --figure-notes-size: 1em;
+  --figure-justify: center;
+  --figure-offset-x: 0px;
+  --figure-offset-y: 0px;
+  display: grid;
+  gap: var(--figure-gap);
+  align-content: start;
+  width: 100%;
+}
+section .figure-box {
+  display: flex;
+  justify-content: var(--figure-justify);
+  align-items: flex-start;
+  margin: 0;
+}
+section .figure-box img {
+  width: auto;
+  max-width: 100%;
+  max-height: var(--figure-max-height);
+  height: var(--figure-height);
+  margin: 0 !important;
+  object-fit: contain;
+  transform: translate(var(--figure-offset-x), var(--figure-offset-y));
+}
+section .figure-notes {
+  margin: 0;
+  padding-left: 1.4em;
+  font-size: var(--figure-notes-size);
+}
+section .figure-notes li:last-child {
+  margin-bottom: 0;
+}
+
+/* Image with caption: use  ![alt](url) then *caption* on next line */
+section img + em,
+section img + br + em {
+  display: block;
+  text-align: center;
+  font-size: 0.75em;
+  color: var(--color-muted);
+  margin-top: 0.2em;
+}
+
+/* ── Two-column layout ──────────────────────────────────────── */
+/* Usage: wrap content in <div class="columns"> ... </div> */
+section .columns {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+section .columns > * {
+  flex: 1;
+  min-width: 0;
+}
+
+/* columns 内では表を列幅いっぱいに使う。
+   通常スライドの「内容に応じた auto 幅」は維持しつつ、
+   2ブロック時だけレイアウト崩れを防ぐ。 */
+section .columns table {
+  width: 100%;
+  max-width: 100%;
+  margin: 0.3em 0 0.55em 0;
+}
+
+/* ── Figure grid — 史料画像の並列表示 ───────────────────────── */
+/* Usage: <div class="fig-grid"> images... </div> */
+section .fig-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 0.6em 0;
+}
+
+section .fig-grid img {
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  margin: 0;
+  width: 100%;
+  max-height: none;
+}
+
+/* ── Code blocks ────────────────────────────────────────────── */
+section code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background-color: var(--color-code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+}
+
+section pre {
+  background-color: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  min-width: min(var(--code-block-min-width), 100%);
+  max-width: min(var(--code-block-max-width), 100%);
+  margin: var(--code-block-margin-top) auto var(--code-block-margin-bottom);
+  padding: var(--code-block-padding-y) var(--code-block-padding-x);
+  font-size: var(--code-block-font-size);
+  line-height: var(--code-block-line-height);
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+section pre code {
+  background: none;
+  padding: 0;
+  font-size: 1em;
+  line-height: inherit;
+  display: block;
+}
+
+section.code-body {
+  --code-block-font-size: 1em;
+}
+
+section.code-small {
+  --code-block-font-size: 0.94em;
+}
+
+section.code-fit {
+  --code-block-min-width: 0;
+  --code-block-max-width: 96%;
+}
+
+section.code-fit pre {
+  align-self: center;
+}
+
+section.code-solo {
+  --code-block-margin-top: 0.2em;
+  --code-block-margin-bottom: 0;
+}
+
+section.code-solo h1 {
+  margin-bottom: 0.28em;
+}
+
+section.code-solo pre {
+  align-self: auto;
+}
+
+section.code-fill {
+  --code-block-max-width: 100%;
+  --code-block-min-width: 100%;
+  --code-block-font-size: 1.08em;
+  --code-block-line-height: 1.14;
+  --code-block-padding-y: 0.3em;
+  --code-block-padding-x: 0.68em;
+  --code-block-margin-top: 0.16em;
+  --code-block-margin-bottom: 0;
+}
+
+section.code-fill h1 {
+  margin-bottom: 0.28em;
+}
+
+section.code-h-compact {
+  --code-block-line-height: 1.18;
+  --code-block-padding-y: 0.42em;
+  --code-block-padding-x: 0.72em;
+}
+
+section.code-h-tight {
+  --code-block-line-height: 1.1;
+  --code-block-padding-y: 0.24em;
+  --code-block-padding-x: 0.56em;
+  --code-block-margin-top: 0.14em;
+}
+
+section.code-full {
+  --code-block-max-width: 100%;
+  --code-block-min-width: 100%;
+}
+
+section.code-wide {
+  --code-block-min-width: 72%;
+  --code-block-max-width: 96%;
+}
+
+/* ── XML/TEI syntax highlighting (oXygen風) ──────────────────── */
+section pre code .hljs-meta              { color: #7b3db4; }  /* <?xml ...?> 宣言 — 紫 */
+section pre code .hljs-tag               { color: #36a3d9; }  /* < > / 括弧 — 水色 */
+section pre code .hljs-name              { color: #1a4a99; }  /* タグ名 — 濃い青 */
+section pre code .hljs-attr              { color: #d4760a; }  /* 属性名 — オレンジ */
+section pre code .hljs-string            { color: #8b4513; }  /* 属性値 — 茶色 */
+section pre code .hljs-comment           { color: #888c96; font-style: italic; }
+
+/* ── Emphasis & Links ───────────────────────────────────────── */
+section strong {
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+section em {
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+section a {
+  color: var(--color-accent);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--color-accent);
+}
+
+/* ── Footnotes / small text ─────────────────────────────────── */
+section small {
+  font-size: 0.7em;
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
+section .footnote {
+  font-size: 0.7em;
+  color: #7a9a8a;
+  line-height: 1.5;
+  margin-top: auto;
+  margin-bottom: 0.4em;
+  text-align: right;
+}
+
+/* ── Header / Footer (via Marp directives) ──────────────────── */
+header {
+  font-size: 0.5em;
+  color: var(--color-border);
+  font-family: var(--font-sans);
+}
+
+footer {
+  font-size: 0.5em;
+  color: var(--color-border);
+  font-family: var(--font-sans);
+}
+
+/* ── Page number styling ────────────────────────────────────── */
+section::after {
+  font-size: 0.65em;
+  color: #7a9a8a;
+}
+
+/* ── Utility: highlight box ─────────────────────────────────── */
+/* 補色（グリーンの補色 = テラコッタ/サーモン系）を採用 */
+section .highlight-box {
+  background-color: #fdf0eb;
+  border: 1px solid #e0a68a;
+  padding: 0.6em 1.4em;
+  margin: 0.8em auto;
+  border-radius: 8px;
+  text-align: center;
+  width: fit-content;
+}
+
+/* ── Utility: source attribution ────────────────────────────── */
+section .source {
+  font-size: 0.65em;
+  color: var(--color-muted);
+  text-align: right;
+  margin-top: 0.5em;
+  font-style: italic;
+}
+
+/* ── Width utilities ────────────────────────────────────────── */
+/*
+ * 単体要素（表・画像）に使う幅クラス。自動的に中央揃えになる。
+ *   <table class="w-50"> … </table>
+ *   <img class="w-33" src="…">
+ *
+ * .columns の中で使うと分割比率になる:
+ *   <div class="columns">
+ *     <div class="col-1">狭い（1/3）</div>
+ *     <div class="col-2">広い（2/3）</div>
+ *   </div>
+ */
+
+/* 単体要素の幅（中央揃え） */
+section .w-25  { width: 25%;    margin-left: auto; margin-right: auto; }
+section .w-33  { width: 33.33%; margin-left: auto; margin-right: auto; }
+section .w-50  { width: 50%;    margin-left: auto; margin-right: auto; }
+section .w-66  { width: 66.67%; margin-left: auto; margin-right: auto; }
+section .w-75  { width: 75%;    margin-left: auto; margin-right: auto; }
+section .w-full { width: 100%;  margin-left: 0;    margin-right: 0;    }
+
+/* .columns 内の比率クラス（flex: N でスペースを按分） */
+section .columns > .col-1 { flex: 1; }
+section .columns > .col-2 { flex: 2; }
+section .columns > .col-3 { flex: 3; }
+
+/* ── Dense slide variants ───────────────────────────────────── */
+/*
+ * テキストが多いスライドに手動で適用する。
+ * 段階1: 行間を詰める
+ *   <!-- _class: dense -->
+ * 段階2: 行間 + 文字サイズを落とす
+ *   <!-- _class: compact -->
+ */
+
+section.dense {
+  line-height: 1.45;
+}
+
+section.compact {
+  font-size: 25px;
+  line-height: 1.35;
+}
+
+/* ── Step flow — 横並びステップ図解 ────────────────────────── */
+/* Usage:
+ *   <div class="step-flow">
+ *     <div class="step">
+ *       <p class="step-label">Step 1: ...</p>
+ *       <img src="..." />
+ *       <p class="step-caption">説明テキスト</p>
+ *     </div>
+ *     <div class="step-arrow">→</div>
+ *     <div class="step"> ... </div>
+ *   </div>
+ */
+section .step-flow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+section .step-flow .step {
+  flex: 1;
+  text-align: center;
+  min-width: 0;
+}
+
+section .step-flow .step-label {
+  font-weight: 700;
+  font-size: 0.7em;
+  margin-bottom: 6px;
+}
+
+section .step-flow .step img {
+  display: inline-block;
+  height: 280px;
+  width: auto;
+  max-width: 100%;
+  max-height: none;
+  border-radius: 8px;
+  margin: 0 auto;
+}
+
+section .step-flow .step-caption {
+  font-size: 0.6em;
+  color: #555;
+  margin-top: 6px;
+}
+
+section .step-flow .step-arrow {
+  display: flex;
+  align-items: center;
+  font-size: 1.5em;
+  color: #888;
+  padding-top: 100px;
+  flex-shrink: 0;
+}
+
+/* ── References — 参考文献リスト ─────────────────────────────── */
+/* Usage:
+ *   <!-- _class: references -->
+ * 参考文献スライド用。文字を小さくし、行間を詰め、
+ * ぶら下げインデントで2行目以降を字下げする。
+ */
+section.references p {
+  font-size: 0.72em;
+  line-height: 1.5;
+  padding-left: 1.6em;
+  text-indent: -1.6em;
+  margin: 0;
+  color: var(--color-fg);
+}
+/* 余白がある場合に均等配分されるよう、段落間を auto に */
+section.references > :not(h1):not(h2) {
+  flex: 0 0 auto;
+}
+section.references {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0.6em;
+}
+
+/* ── Icon flow — アイコン付き横並びステップ ──────────────────── */
+/* Usage:
+ *   <div class="icon-flow">
+ *     <div class="icon-flow-item">
+ *       <span class="icon xxl">search</span>
+ *       <div>調査</div>
+ *     </div>
+ *     <div class="icon-flow-arrow">→</div>
+ *     <div class="icon-flow-item">
+ *       <span class="icon xxl">edit_note</span>
+ *       <div>翻刻</div>
+ *     </div>
+ *   </div>
+ */
+section .icon-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  margin: 0.8em 0;
+}
+section .icon-flow-item {
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.85em;
+}
+section .icon-flow-item .icon {
+  display: block;
+  margin: 0 auto 0.3em;
+}
+section .icon-flow-arrow {
+  font-size: 2em;
+  color: var(--color-border);
+  flex-shrink: 0;
+}
+
+/* ── Icon cards — アイコン付きカードレイアウト ─────────────── */
+/* Usage:
+ *   <div class="icon-cards">
+ *     <div class="icon-card">
+ *       <span class="icon xxl">account_balance</span>
+ *       <div class="icon-card-title">制度分析</div>
+ *       <div class="icon-card-desc">説明テキスト</div>
+ *     </div>
+ *     ...
+ *   </div>
+ */
+section .icon-cards {
+  display: flex;
+  gap: 24px;
+  margin: 0.6em 0;
+}
+section .icon-card {
+  flex: 1;
+  background: var(--color-accent-light);
+  border-radius: 8px;
+  padding: 1em;
+  text-align: center;
+}
+section .icon-card .icon {
+  display: block;
+  margin: 0 auto 0.2em;
+}
+section .icon-card-title {
+  font-weight: 700;
+  margin-bottom: 0.2em;
+}
+section .icon-card-desc {
+  font-size: 0.75em;
+  color: var(--color-muted);
+}
+
+/* ── Print / PDF adjustments ────────────────────────────────── */
+@media print {
+  section {
+    box-shadow: none;
+  }
+}
