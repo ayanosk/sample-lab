@@ -1,0 +1,80 @@
+% publications/sample_paper/main.tex
+% LaTeX 動作確認用サンプル（LuaLaTeX + jlreq + biblatex）
+%
+% ビルド方法:
+%   cd publications/sample_paper
+%   latexmk main.tex
+%
+% VSCode の LaTeX Workshop が保存時に自動ビルドし、隣のタブに PDF が表示されます。
+%
+% PDF が生成されない場合:
+%   1. TeX Live（Mac は MacTeX）がインストールされているか → ターミナルで lualatex --version
+%   2. LaTeX Workshop 拡張がインストールされているか → VSCode 左の拡張機能パネルで確認
+%   3. .vscode/ が存在するか → セットアップ手順（README.md）で dotvscode/ からリネーム
+%   4. biber がインストールされているか → ターミナルで biber --version
+%   5. それでもダメなら → Claude Code または Codex に「main.tex をビルドして」と伝える
+
+\documentclass[a4paper,11pt,oneside]{jlreq}
+
+% 共通プリアンブルの読み込み
+\input{../../lab/latex/preamble-ja}
+
+% このサンプル用の参考文献ファイル
+\addbibresource{references.bib}
+
+% タイトル
+\title{LaTeX 動作確認サンプル}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{目的}
+
+このファイルは、LaTeX 環境が正しく動作しているかを確認するためのサンプルです。
+以下の項目が正常に表示されていれば、環境構築は成功しています。
+
+\begin{enumerate}
+  \item 日本語の表示（明朝体・ゴシック体）
+  \item 欧文の表示（Times 系セリフ体）
+  \item 参考文献の引用と一覧表示
+  \item 脚注と相互参照
+\end{enumerate}
+
+\section{日欧混在テスト}
+
+日本語と英語を混在させた文章です。
+Claude Code や Codex は AI エージェントであり、ターミナルや IDE から作業を補助できます。
+フランス語の引用も確認します：\textit{L'Académie royale des sciences} は1666年に設立されました。
+
+ゴシック体のテスト：{\sffamily この部分はゴシック体（サンセリフ）で表示されます。}
+
+\section{参考文献の引用テスト}
+
+
+日本語文献の引用テスト\autocite[10--15]{yamada2020}。
+欧文文献の引用テスト\autocite[42]{smith2019}。
+同じ文献の再引用（短縮形になるか確認）\autocite[20]{yamada2020}。
+
+\section{脚注テスト}
+
+本文中の脚注テストです\footnote{これは手動の脚注です。参考文献の自動脚注（autocite）とは別に動作します。}。
+
+\section{確認チェックリスト}
+
+ビルドが成功し PDF が表示されたら、以下を目視で確認してください。
+
+\begin{itemize}
+  \item[$\circ$] 見出し（第1節〜第5節）がゴシック体の太字で表示されている
+  \item[$\circ$] 本文が明朝体で表示されている
+  \item[$\circ$] 欧文が Times 系フォントで表示されている
+  \item[$\circ$] 脚注に参考文献が表示されている（自動脚注）
+  \item[$\circ$] 参考文献一覧が末尾に表示されている
+  \item[$\circ$] 日本語文献は「著者、前掲書」形式で短縮引用されている
+\end{itemize}
+
+\printbibliography[title={参考文献}]
+
+\end{document}

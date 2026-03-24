@@ -4,13 +4,13 @@
  * Usage:  Add to marp config or frontmatter:
  *   ---
  *   marp: true
- *   theme: academic
+ *   theme: academic-sample
  *   ---
  *
  * Installation:
- *   marp --theme academic-theme.css slides.md
+ *   marp --theme academic-sample-theme.css slides.md
  *   or in .vscode/settings.json:
- *   "markdown.marp.themes": ["./academic-theme.css"]
+ *   "markdown.marp.themes": ["./academic-sample-theme.css"]
  * ============================================================ */
 
 /* @theme academic-sample */

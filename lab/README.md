@@ -12,4 +12,4 @@
 
 - プロジェクト固有の事情は各 `project_x/` に置く
 - どのプロジェクトでも使うものだけを `lab/` に集める
-- エージェント定義は `.claude/agents/`、スキルは `.claude/skills/` に直接配置する
+- セットアップ後、エージェント定義は `.claude/agents/`、スキルは `.claude/skills/` に配置される
