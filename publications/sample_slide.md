@@ -19,7 +19,7 @@ footer: "Academic Theme サンプルスライド"
 
 # このスライドについて
 
-academic-theme.css の主要コンポーネントを**実際の見た目で確認する**ためのサンプル集です。
+`academic-sample-theme.css` の主要コンポーネントを**実際の見た目で確認する**ためのサンプル集です。
 
 <div class="icon-cards">
   <div class="icon-card">
@@ -339,10 +339,11 @@ Google Material Symbolsがテーマに組み込まれています。アイコン
 ```
 sample-lab/
 ├── CLAUDE.md / AGENTS.md      ← AIへの指示書
-├── .claude/
-│   ├── agents/                ← エージェント定義（役割別の専門家）
-│   ├── skills/                ← スキル定義（ゼミ・日次ログ等の自動化）
-│   └── settings.local.json    ← セキュリティ設定
+├── dotclaude/                 ← テンプレート配布時の設定一式
+│   ├── agents/                ← エージェント定義（セットアップ後は .claude/agents/）
+│   ├── skills/                ← スキル定義（セットアップ後は .claude/skills/）
+│   └── settings.json.example  ← セキュリティ設定の雛形
+├── dotvscode/                 ← セットアップ後は .vscode/
 ├── lab/
 │   ├── slides/                ← Marpテーマ・ビルドスクリプト
 │   └── latex/                 ← LaTeX共通プリアンブル
@@ -406,12 +407,19 @@ section { background: linear-gradient(135deg, #f8f9fb 0%, #e8f0f8 100%); }
 
 # ビルド方法
 
-`lab/slides/build_marp.sh` を使ってPDF・PPTXを生成できます。
+PDF・PPTX の生成方法は利用環境によって使い分けます。
 
 ```bash
+# Mac / Linux / Git Bash / WSL
 bash lab/slides/build_marp.sh --pdf publications/sample_slide.md
 bash lab/slides/build_marp.sh --pptx publications/sample_slide.md
+
+# 直接 Marp CLI を使う場合（PowerShell を含む）
+npx @marp-team/marp-cli --allow-local-files --pdf publications/sample_slide.md
+npx @marp-team/marp-cli --allow-local-files --pptx publications/sample_slide.md
 ```
 
-- テーマCSSは `.vscode/settings.json` に登録済み
+- Claude Code では `/build-slide publications/sample_slide.md` でもビルドできる
+- Codex では `publications/sample_slide.md を PDF と PPTX にビルドして` と指示してもよい
+- テーマCSSはセットアップ後の `.vscode/settings.json` に登録済み
 - VS Codeプレビューはリロード後に反映される

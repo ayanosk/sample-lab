@@ -24,7 +24,9 @@
 }
 % 見出しをゴシック体にする
 \AddToHook{begindocument/before}{%
-  \ModifyHeading{chapter}{font={\sffamily\bfseries}}%
+  \ifcsname chapter\endcsname
+    \ModifyHeading{chapter}{font={\sffamily\bfseries}}%
+  \fi
   \ModifyHeading{section}{font={\sffamily\bfseries}}%
   \ModifyHeading{subsection}{font={\sffamily\bfseries}}%
 }

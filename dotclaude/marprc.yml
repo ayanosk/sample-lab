@@ -1,0 +1,8 @@
+# Marp CLI 設定
+# リポジトリルートで marp を実行するとこの設定が自動で読み込まれる
+# theme: academic-sample と書くだけでカスタムテーマが適用される
+
+allowLocalFiles: true
+
+themeSet:
+  - lab/slides/academic-sample-theme.css

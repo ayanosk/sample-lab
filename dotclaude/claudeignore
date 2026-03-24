@@ -1,0 +1,44 @@
+# Secrets
+.env
+.env.*
+.envrc
+*.pem
+*.key
+*.p12
+*.pfx
+credentials/
+**/credentials/
+secrets/
+**/secrets/
+
+# PDF files
+*.pdf
+
+# Office documents
+*.docx
+*.xlsx
+*.pptx
+
+# Images and binary
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.tiff
+
+# Build and cache
+node_modules/
+dist/
+build/
+__pycache__/
+
+# Databases
+*.sqlite
+*.db
+
+# Codex 向けの共通ルールは AGENTS.md に集約
+AGENTS.md
+**/AGENTS.md
+
+# macOS
+.DS_Store

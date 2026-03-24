@@ -1,0 +1,45 @@
+# Claude Code 固有の設定（Codex には不要）
+.claude/
+CLAUDE.md
+**/CLAUDE.md
+
+# Secrets
+.env
+.env.*
+.envrc
+*.pem
+*.key
+*.p12
+*.pfx
+credentials/
+**/credentials/
+secrets/
+**/secrets/
+
+# PDF files
+*.pdf
+
+# Office documents
+*.docx
+*.xlsx
+*.pptx
+
+# Images and binary
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.tiff
+
+# Build and cache
+node_modules/
+dist/
+build/
+__pycache__/
+
+# Databases
+*.sqlite
+*.db
+
+# macOS
+.DS_Store
