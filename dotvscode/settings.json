@@ -1,7 +1,8 @@
 {
   // Marp: カスタムテーマの登録
   "markdown.marp.themes": [
-    "lab/slides/academic-sample-theme.css"
+    "lab/slides/academic-ja.css",
+    "lab/slides/academic-intl.css"
   ],
 
   // LaTeX Workshop: LuaLaTeX + latexmk

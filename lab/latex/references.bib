@@ -1,0 +1,70 @@
+% lab/latex/references.bib — リポジトリ共通の書誌データ
+%
+% Zotero の Better BibTeX プラグインから、このファイルを自動エクスポート先に
+% 指定して使う（Zotero > 右クリック > Export Library > Better BibTeX >
+% "Keep updated" にチェック）。Zotero 側で文献を足すと自動で書き換わる。
+%
+% 参照する側:
+%   - /md-to-pdf, /md-to-docx      本文の引用キーをこのファイルで解決する
+%   - lab/latex/templates/*        main.tex の \addbibresource がこのファイルを指す
+%
+% 【注意】このコメント欄にアットマーク記号を書かないこと。BibTeX は行頭以外でも
+% アットマークを見つけるとエントリの開始とみなし、「I was expecting a `{'」で
+% 止まる。引用キーの例を書きたいときは記号を省いて「citekey」とだけ書く。
+%
+% Zotero を使わず手で書く場合は、このファイルに直接追記してよい。
+% preamble-ja.tex の言語別書式は langid を、文献一覧の節分けは keywords を見る。
+%
+% ===== 日本語の著者名は姓名を区切らず1語で書く =====
+%   ○ author = {山田太郎}
+%   × author = {山田 太郎}   空白区切りは biblatex・citeproc が「名 姓」と読み、姓が「太郎」になる
+%   × author = {山田, 太郎}  カンマ区切りは学会の日本語 .bst（ipsjunsrt 等）で「太郎山田」と反転する
+% 区切らない形だけが、biblatex（LaTeX 直書き）・citeproc（/md-to-pdf）・
+% pBibTeX（学会クラス）の3系統すべてで正しく出る。
+% Zotero では姓のフィールドだけに姓名をまとめて入れると、この形で出力される。
+
+% ===== 研究文献（邦語） =====
+@book{yamada2020,
+  author    = {山田太郎},
+  title     = {サンプル書籍のタイトル},
+  subtitle  = {副題の表示確認},
+  publisher = {学術出版社},
+  location  = {東京},
+  year      = {2020},
+  langid    = {japanese},
+  keywords  = {japanese},
+}
+
+% ===== 研究文献（欧語） =====
+@article{smith2019,
+  author    = {Smith, John and Doe, Jane},
+  title     = {A Sample Article for Testing},
+  journal   = {Journal of Digital Humanities},
+  volume    = {3},
+  number    = {1},
+  pages     = {35--58},
+  year      = {2019},
+  langid    = {english},
+}
+
+% ===== 未公刊史料（thesis 雛形の文献一覧で「史料」に分類される）=====
+% 未公刊史料は author を持たないことが多い。空の author = {} は書かず、
+% フィールドごと省略する（biblatex が title を主見出しに使う）。
+@misc{archive_sample,
+  title     = {文書群の名称（例：○○家文書）},
+  note      = {所蔵機関名、請求記号},
+  year      = {1700},
+  langid    = {japanese},
+  keywords  = {source-archive, japanese},
+}
+
+% ===== 刊行史料 =====
+@book{printed_sample,
+  author    = {鈴木花子},
+  title     = {刊行史料集のタイトル},
+  publisher = {出版社},
+  location  = {東京},
+  year      = {1980},
+  langid    = {japanese},
+  keywords  = {source-printed, japanese},
+}

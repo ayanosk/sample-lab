@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1168 460" width="1168" height="460" font-family="Inter, Helvetica Neue, Arial, sans-serif">
+  <!-- Sample figure for the academic-intl theme.
+       viewBox 1168x460, smallest font-size 20.
+       Note: an XML comment may not contain two consecutive hyphens, so CSS
+       custom property names cannot be written here verbatim. -->
+
+  <rect x="0" y="0" width="1168" height="460" fill="#ffffff"/>
+
+  <!-- the one collaborative step gets a tinted band -->
+  <rect x="12" y="256" width="1144" height="62" fill="#fdf3ea"/>
+
+  <!-- column headings -->
+  <g font-size="20" font-weight="600" fill="#5a6474">
+    <text x="78" y="38">Who</text>
+    <text x="252" y="38">Step</text>
+    <text x="620" y="38">Notes</text>
+  </g>
+  <line x1="12" y1="50" x2="1156" y2="50" stroke="#c8d1dc" stroke-width="2"/>
+
+  <!-- spine -->
+  <line x1="36" y1="66" x2="36" y2="446" stroke="#c8d1dc" stroke-width="2"/>
+  <g fill="#ffffff" stroke="#1f4e79" stroke-width="2">
+    <circle cx="36" cy="90" r="15"/>
+    <circle cx="36" cy="152" r="15"/>
+    <circle cx="36" cy="214" r="15"/>
+    <circle cx="36" cy="287" r="15"/>
+    <circle cx="36" cy="360" r="15"/>
+    <circle cx="36" cy="422" r="15"/>
+  </g>
+  <g font-size="20" font-weight="700" fill="#1f4e79" text-anchor="middle">
+    <text x="36" y="97">1</text>
+    <text x="36" y="159">2</text>
+    <text x="36" y="221">3</text>
+    <text x="36" y="294">4</text>
+    <text x="36" y="367">5</text>
+    <text x="36" y="429">6</text>
+  </g>
+
+  <!-- who -->
+  <g stroke-width="1.5">
+    <rect x="70" y="75" width="150" height="30" rx="15" fill="#1f4e79" stroke="#1f4e79"/>
+    <rect x="70" y="137" width="150" height="30" rx="15" fill="#1f4e79" stroke="#1f4e79"/>
+    <rect x="70" y="199" width="150" height="30" rx="15" fill="#eef3f8" stroke="#c8d1dc"/>
+    <rect x="70" y="272" width="150" height="30" rx="15" fill="#e0a955" stroke="#c9973a"/>
+    <rect x="70" y="345" width="150" height="30" rx="15" fill="#eef3f8" stroke="#c8d1dc"/>
+    <rect x="70" y="407" width="150" height="30" rx="15" fill="#1f4e79" stroke="#1f4e79"/>
+  </g>
+  <g font-size="20" font-weight="600" text-anchor="middle">
+    <text x="145" y="97" fill="#ffffff">Researcher</text>
+    <text x="145" y="159" fill="#ffffff">Researcher</text>
+    <text x="145" y="221" fill="#1f4e79">AI</text>
+    <text x="145" y="294" fill="#1a1a2e">Both</text>
+    <text x="145" y="367" fill="#1f4e79">AI</text>
+    <text x="145" y="429" fill="#ffffff">Researcher</text>
+  </g>
+
+  <!-- step -->
+  <g font-size="21" font-weight="600" fill="#1a1a2e">
+    <text x="252" y="97">Pick the source work</text>
+    <text x="252" y="159">Pick the theme</text>
+    <text x="252" y="221">Draft the deck in Marp</text>
+    <text x="252" y="294">Revise wording and figures</text>
+    <text x="252" y="367">Export PDF and PPTX</text>
+    <text x="252" y="429">Adjust placement by hand</text>
+  </g>
+
+  <!-- notes -->
+  <g font-size="20" fill="#5a6474">
+    <text x="620" y="97">A paper or report to present from</text>
+    <text x="620" y="159">academic-intl, academic-ja, or the lecture file</text>
+    <text x="620" y="221">Get it whole first; do not polish yet</text>
+    <text x="620" y="367">Run build-slide; PPTX is images by default</text>
+    <text x="620" y="429">In PowerPoint, with the Claude add-in</text>
+  </g>
+  <text x="620" y="294" font-size="20" fill="#b5540e">If it misses, you write the text and AI redraws the SVG</text>
+  <text x="620" y="391" font-size="20" fill="#b5540e">An option exports an editable PPTX instead</text>
+</svg>

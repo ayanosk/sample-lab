@@ -6,7 +6,7 @@ Claude Code や Codex で研究室の作業を整理していくための、最�
 
 - プロジェクトごとに文脈を分ける
 - `sources/` と `outputs/` を分けて、元データを壊しにくくする
-- `lab/skills/` に再利用したい作業をまとめる
+- `.claude/skills/` に再利用したい作業をまとめる
 - `CLAUDE.md` と `AGENTS.md` で AI への指示を整理する
 
 ## ディレクトリ構成
@@ -25,7 +25,7 @@ sample-lab/
 ├── dotvscode/                    ← セットアップ時に .vscode/ にリネーム（下記参照）
 ├── lab/
 │   ├── slides/                   ← Marp テーマ・ビルドスクリプト
-│   └── latex/                    ← LaTeX 共通プリアンブル・latexmk 設定
+│   └── latex/                    ← LaTeX 共通プリアンブル・latexmk 設定・論文雛形
 ├── project_a/ / project_b/       ← 個別プロジェクト
 └── publications/                 ← 発表・配布物
 ```
@@ -62,7 +62,7 @@ Claude Code / Codex が以下を自動で行います（人間の操作が必要
 
 ### セットアップ手順（Claude Code / Codex 向け）
 
-> **Claude Code / Codex へ:** 以下の手順を順に実行してください。人間にしかできない操作（API キーの入力等）は、ユーザーに指示を出して待ってください。
+> **Claude Code / Codex へ:** 以下の手順を順に実行してください。人間にしかできない操作（API キーの入力等）は、ユーザに指示を出して待ってください。
 > Mac と Windows の両方に対応してください。
 > Windows の場合は、Claude Code は Git Bash または WSL、Codex は WSL ワークスペースを優先してください。
 > bash と PowerShell の両方の例がある場合は、現在のシェルに合う方を使ってください。
@@ -76,9 +76,9 @@ Claude Code / Codex が以下を自動で行います（人間の操作が必要
    ```
    - コマンドが見つからない、またはエラー終了したものは「未インストール」とみなしてよい
    - 不足しているツールがあれば、用途を確認した上でインストールを案内する
-   - **Node.js が未インストールの場合:** スライド作成（Marp）に必要。ユーザーにスライド作成を使うか確認し、使う場合のみインストールを案内する。https://nodejs.org/ から LTS 版をダウンロード・インストールするよう伝える。完了後 `node --version` で確認し、続けて `npm install -g @marp-team/marp-cli` を実行する。Mac で EACCES エラーが出たら `sudo npm install -g @marp-team/marp-cli` を案内する
-   - **LaTeX が未インストールの場合:** 論文執筆に必要。ユーザーに LaTeX での論文執筆を使うか確認し、使う場合のみインストールを案内する（約5GB、時間がかかるため）。Mac: https://www.tug.org/mactex/ から .pkg。Windows: https://www.tug.org/texlive/ から install-tl-windows.exe。完了後 `lualatex --version` と `biber --version` で確認する
-   - インストール不要なツールは飛ばしてよい。ユーザーが「今は使わない」と言えば次に進む
+   - **Node.js が未インストールの場合:** スライド作成（Marp）に必要。ユーザにスライド作成を使うか確認し、使う場合のみインストールを案内する。https://nodejs.org/ から LTS 版をダウンロード・インストールするよう伝える。完了後 `node --version` で確認し、続けて `npm install -g @marp-team/marp-cli` を実行する。Mac で EACCES エラーが出たら `sudo npm install -g @marp-team/marp-cli` を案内する
+   - **LaTeX が未インストールの場合:** 論文執筆に必要。ユーザに LaTeX での論文執筆を使うか確認し、使う場合のみインストールを案内する（約5GB、時間がかかるため）。Mac: https://www.tug.org/mactex/ から .pkg。Windows: https://www.tug.org/texlive/ から install-tl-windows.exe。完了後 `lualatex --version` と `biber --version` で確認する
+   - インストール不要なツールは飛ばしてよい。ユーザが「今は使わない」と言えば次に進む
 
 2. **dotclaude/ の展開**（以下のコマンドを順に実行する）
    **bash / Git Bash / WSL:**
@@ -102,7 +102,7 @@ Claude Code / Codex が以下を自動で行います（人間の操作が必要
    Move-Item dotclaude .claude
    Move-Item dotvscode .vscode
    ```
-   - 完了後、ユーザーに「VSCode の左下に推奨拡張機能の通知が出ていたらインストールしてください」と伝える
+   - 完了後、ユーザに「VSCode の左下に推奨拡張機能の通知が出ていたらインストールしてください」と伝える
 
 3. **Codex を使う場合の追加設定**（Claude Code だけ使うなら省略可）
    **bash / Git Bash / WSL:**
@@ -128,25 +128,25 @@ Claude Code / Codex が以下を自動で行います（人間の操作が必要
 
 4. **セキュリティ設定の確認**
    - `.claude/settings.local.json` に deny ルールが含まれていることを確認する（手順2で配置済み）
-   - 内容をユーザーに説明し、必要に応じて調整を提案する
+   - 内容をユーザに説明し、必要に応じて調整を提案する
    - 初回セットアップでは **確認モードのまま** 進め、危険な操作に `Always allow` を付けない
-   - `git push`、依存追加、ネットワークアクセス、作業フォルダ外の読み書き、大量削除は都度ユーザー確認を取る
+   - `git push`、依存追加、ネットワークアクセス、作業フォルダ外の読み書き、大量削除は都度ユーザ確認を取る
 
 5. **CLAUDE.md のカスタマイズ**
-   - ユーザーに研究分野・用途・並走プロジェクト数・応答言語をヒアリングする
+   - ユーザに研究分野・用途・並走プロジェクト数・応答言語をヒアリングする
    - 回答をもとに [CLAUDE.md](./CLAUDE.md) の `[角括弧]` 部分を書き換える
 
 6. **AGENTS.md のカスタマイズ**
-   - ユーザーの研究分野に合わせて [AGENTS.md](./AGENTS.md) を調整する
-   - このテンプレートは Claude Code と Codex の併用を前提にしている。CLAUDE.md は Claude Code 専用、AGENTS.md は両方が読む共通ルール。どちらか一方しか使わない場合は、不要な方の記述をユーザーに確認の上で削除する
-   - `.claude/agents/` のエージェント定義はサンプルである。ユーザーの研究分野に合わないものがあれば削除を提案する
+   - ユーザの研究分野に合わせて [AGENTS.md](./AGENTS.md) を調整する
+   - このテンプレートは Claude Code と Codex の併用を前提にしている。CLAUDE.md は Claude Code 専用、AGENTS.md は両方が読む共通ルール。どちらか一方しか使わない場合は、不要な方の記述をユーザに確認の上で削除する
+   - `.claude/agents/` のエージェント定義はサンプルである。ユーザの研究分野に合わないものがあれば削除を提案する
 
 7. **プロジェクトディレクトリのリネーム**
-   - ユーザーの研究テーマに合わせて `project_a/`, `project_b/` をリネームする
+   - ユーザの研究テーマに合わせて `project_a/`, `project_b/` をリネームする
    - 各プロジェクトの `CLAUDE.md` と `README.md` も更新する
 
 8. **初回コミット**
-   - セットアップ完了後、変更をまとめてコミットする（push はユーザーの許可を得てから）
+   - セットアップ完了後、変更をまとめてコミットする（push はユーザの許可を得てから）
 
 ## 使い方の目安
 
@@ -155,7 +155,7 @@ Claude Code / Codex が以下を自動で行います（人間の操作が必要
 - 生成結果は `project_x/outputs/`
 - メモや下書きは `project_x/docs/`
 - 発表・配布物は `publications/`
-- 横断的な設定や Skills は `lab/`
+- 横断的な設定・テーマ・雛形は `lab/`、繰り返す作業の手順は `.claude/skills/`
 
 ## セキュリティ設定
 
@@ -186,31 +186,30 @@ VSCode でこのリポジトリを開くと、いくつかの拡張機能のイ�
 
 Node.js と Marp CLI が必要です（セットアップ手順の環境チェックでインストールを案内します）。
 
-- `lab/slides/academic-sample-theme.css` がカスタムテーマとして登録済み
+**作り方の手順・コマンド・作図の基準は [publications/README.md](./publications/README.md) にまとめてあります。** ここに置くのは全体像だけです。
+
+- カスタムテーマが2つ登録済み。フロントマターの `theme:` で選ぶ
+  - `academic-ja`（`lab/slides/academic-ja.css`）— 16:10・本文29px。和文の学会発表と授業用
+  - `academic-intl`（`lab/slides/academic-intl.css`）— 16:9・本文32px・ラテン書体優先。国際学会（英語）用
+  - 判型も基準文字サイズも違うので、`theme:` だけ差し替えると全枚数がリフローする。用途に合う方で最初から書く
+- **新規作成はゼロからではなく `lab/slides/templates/` の雛形のコピーから始める**
 - Markdown のフロントマターに `marp: true` と書けばプレビューが有効になる
-- Claude Code では `/build-slide` スキルで PDF・PPTX を出力できる
-- Codex では `publications/... のスライドを PDF と PPTX にビルドして` と指示するか、`npx @marp-team/marp-cli` を直接使う
-- `lab/slides/build_marp.sh` は Mac / Linux / Git Bash / WSL 向けの補助スクリプト。Windows の PowerShell では `npx @marp-team/marp-cli` を使う
+- 図（SVG）の文字サイズは `lab/slides/check_svg_text.py` が検査する。`build_marp.sh` 経由なら自動で走る
+- Claude Code では `/build-slide <パス>` で PDF・PPTX を出力できる
 
 ### LaTeX 論文
 
 TeX Live（Mac は MacTeX）が必要です（セットアップ手順の環境チェックでインストールを案内します）。
 
-- `lab/latex/preamble-ja.tex` が日欧混在の学術論文用共通プリアンブル（LuaLaTeX + jlreq）
+**雛形の選び方・使い方・文献の書き方は [publications/README.md](./publications/README.md) にまとめてあります。**
+
+- 雛形は `lab/latex/templates/` に。`paper/`（短い論文・動作確認）、`thesis/`（学位論文。章分割・部・史料／研究文献の分離）、`resume/`（レジュメ）、`transcript/`（口頭発表原稿）
+- **LaTeX はすべて `lab/latex/` にある。**新しい学会テンプレートを足すときは、ここにフォルダを1つ置けば LaTeX 直書きでも `/md-to-pdf` でも使える（手順は `lab/latex/templates/README.md`）
+- `lab/latex/preamble-ja.tex` が日欧混在の学術論文用共通プリアンブル（LuaLaTeX + jlreq + biblatex）
 - `lab/latex/.latexmkrc` を各プロジェクトにコピーまたは参照して使う
 - LaTeX Workshop が保存時に自動ビルドし、VSCode 内で PDF プレビューできる
-
-### Zotero 文献管理（任意）
-
-[Better BibTeX for Zotero](https://retorque.re/zotero-better-bibtex/) を使うと、Zotero の文献データベースと LaTeX を自動連携できます。
-
-1. Zotero に Better BibTeX 拡張をインストール
-2. 論文と紐付けたいコレクションを右クリック → Export Collection → **Better BibLaTeX** 形式
-3. **Keep updated** にチェックし、エクスポート先をプロジェクト内の `.bib` ファイルに指定
-4. Zotero で文献を追加・編集するたびに `.bib` が自動更新される
-5. LaTeX 側は `\addbibresource{references.bib}` で読むだけ
-
-`.bib` を git 管理しておけば、Zotero がない端末でもビルドが通ります。
+- LaTeX を書かずに、ふつうの Markdown から同じ体裁の PDF・docx を作ることもできる（`/md-to-pdf`・`/md-to-docx`）
+- 書誌は `lab/latex/references.bib` の1本にまとめる。Zotero（Better BibTeX）の自動エクスポート先に指定して使う
 
 ## Codex（ChatGPT）で使う場合
 

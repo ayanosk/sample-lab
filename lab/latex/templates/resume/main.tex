@@ -1,0 +1,283 @@
+% lab/latex/templates/resume/main.tex — レジュメの雛形
+% 発表・ゼミ・授業の配布資料用（LuaLaTeX + jlreq）
+%
+% 使い方:
+%   1. このフォルダごと publications/<名前>/ にコピーする
+%   2. 書き換えるのはタイトル情報と本文だけ
+%   3. latexmk main.tex  （VSCode の LaTeX Workshop なら保存時に自動ビルド）
+%
+% 参考文献は biblatex ではなく thebibliography（手書き）を使う。
+% 数点しか挙げないレジュメでは .bib を用意するより速い。
+
+\documentclass[a4paper,11pt,article]{jlreq}
+
+% ===== フォント =====
+\usepackage{luatexja-fontspec}
+% 和文明朝: 原ノ味明朝（TeX Live 2020以降に同梱）→ Noto → IPAex明朝
+\IfFontExistsTF{HaranoAjiMincho}{%
+  \setmainjfont{HaranoAjiMincho}%
+}{%
+  \IfFontExistsTF{Noto Serif CJK JP}{\setmainjfont{Noto Serif CJK JP}}{\setmainjfont{IPAexMincho}}%
+}
+% 和文ゴシック: macOS はヒラギノ、Linux/Windows は Noto → 原ノ味 → IPAex
+\IfFontExistsTF{Hiragino Kaku Gothic ProN}{%
+  \setsansjfont{Hiragino Kaku Gothic ProN}[
+    UprightFont = {Hiragino Kaku Gothic ProN W3},
+    BoldFont    = {Hiragino Kaku Gothic ProN W6},
+  ]%
+}{%
+  \IfFontExistsTF{Noto Sans CJK JP}{%
+    \setsansjfont{Noto Sans CJK JP}%
+  }{%
+    \IfFontExistsTF{HaranoAjiGothic}{\setsansjfont{HaranoAjiGothic}}{\setsansjfont{IPAexGothic}}%
+  }%
+}
+% 欧文: TeX Gyre Termes（Times系、TeX Live同梱）
+\setmainfont{TeX Gyre Termes}
+
+%%% 古い TeX Live への保険 %%%
+% \AddToHook は LaTeX 2020-10 以降のカーネル機能。それ以前の TeX Live では
+% 未定義でビルドが止まる。見出しのゴシック化を諦めてでも通るようにしておく
+% （現行の TeX Live では下の行は何もしない）。
+\providecommand{\AddToHook}[2]{}
+
+% ===== 見出しをゴシック体に =====
+\AddToHook{begindocument/before}{%
+  \ModifyHeading{section}{font={\sffamily\bfseries\Large}}%
+  \ModifyHeading{subsection}{font={\sffamily\bfseries\large}}%
+  \ModifyHeading{subsubsection}{font={\sffamily\bfseries\normalsize}}%
+}
+% 章番号を出したくないときは secnumdepth=0
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+% ===== 紙面・行間 =====
+\usepackage[
+  top=25mm, bottom=25mm,
+  left=25mm, right=20mm,
+]{geometry}
+% 行間は jlreq デフォルトを使用（\onehalfspacing は使わない）
+% さらに詰めたい場合: \linespread{0.95}\selectfont を本文側で指定
+
+% ===== 箇条書き（多段インデント） =====
+% leftmargin の値（1.5em）を変えるとインデント幅を一括で変更できる
+% ラベルを別記号に変えたい場合: label={\textbullet} や label={\textendash} に
+\usepackage{enumitem}
+\setlist[itemize]{nosep, topsep=0.3em, partopsep=0pt}
+\setlist[itemize,1]{label={・}, leftmargin=1.5em}
+\setlist[itemize,2]{label={・}, leftmargin=1.5em}
+\setlist[itemize,3]{label={・}, leftmargin=1.5em}
+\setlist[itemize,4]{label={・}, leftmargin=1.5em}
+
+% ===== 図表 =====
+\usepackage{graphicx}
+\usepackage{wrapfig}    % 小さい図を本文に回り込ませる
+\usepackage{booktabs}
+\usepackage{caption}
+\captionsetup{font=small, labelfont=bf}
+
+% ===== 色・ハイパーリンク =====
+\usepackage[dvipsnames,svgnames,x11names]{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true, linkcolor=black, citecolor=black,
+  urlcolor=blue!60!black, bookmarksnumbered=true,
+}
+
+% ===== 出典マクロ：[著者 年] / [著者 年, pp.X-Y] / [著者 年; 著者 年] =====
+% 中身をそのまま角括弧で囲うだけのシンプル実装。
+% 例: \citep{山田 2020}
+%     \citep{鈴木 2023, pp.10--13}
+%     \citep{山田 2020; 鈴木 2023, pp.10--13}
+\newcommand{\citep}[1]{[#1]}
+
+% ===== テーゼ用囲み枠 =====
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable, skins}
+\newtcolorbox{thesis}{
+  enhanced, breakable, colback=white, colframe=black,
+  boxrule=0.8pt, arc=0pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=0.8em, after skip=0.8em,
+}
+
+% ===== 参考文献リストの余白調整 =====
+% 標準の thebibliography は右余白が広めに残るので、左右の余白を詰めて
+% 本文と同じ幅まで使うように再定義する。
+\makeatletter
+\renewenvironment{thebibliography}[1]{%
+  \section*{\refname}%
+  \@mkboth{\MakeUppercase\refname}{\MakeUppercase\refname}%
+  \list{[\@arabic\c@enumiv]}{%
+    \settowidth\labelwidth{[#1]}%
+    \leftmargin\labelwidth
+    \advance\leftmargin\labelsep
+    \setlength{\rightmargin}{0pt}%
+    \setlength{\itemsep}{0.3em}%
+    \setlength{\parsep}{0pt}%
+    \@openbib@code
+    \usecounter{enumiv}%
+    \let\p@enumiv\@empty
+    \renewcommand\theenumiv{\@arabic\c@enumiv}%
+  }%
+  \sloppy
+  \clubpenalty4000
+  \@clubpenalty\clubpenalty
+  \widowpenalty4000%
+  \sfcode`\.\@m
+}{%
+  \def\@noitemerr{\@latex@warning{Empty `thebibliography' environment}}%
+  \endlist
+}
+\makeatother
+
+% ===== ページ番号 =====
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[R]{\thepage\,/\,\pageref{LastPage}}
+
+% ===== タイトル書式（サブタイトル＋所属右寄せ対応） =====
+\makeatletter
+\newif\if@hassubtitle    \@hassubtitlefalse
+\newif\if@hasaffiliation \@hasaffiliationfalse
+\newcommand{\subtitle}[1]{\@hassubtitletrue\def\@subtitle{#1}}
+\newcommand{\affiliation}[1]{\@hasaffiliationtrue\def\@affiliation{#1}}
+
+\renewcommand{\maketitle}{%
+  \begin{center}
+    {\LARGE\sffamily\bfseries \@title}\par
+    \if@hassubtitle
+      \vspace{0.4em}{\large\sffamily \@subtitle}\par
+    \fi
+  \end{center}
+  \begin{flushright}
+    \if@hasaffiliation \@affiliation\par \fi
+    \ifx\@author\@empty\else \@author\par \fi
+    \ifx\@date\@empty\else   \@date\par   \fi
+  \end{flushright}
+  \vspace{0.5em}%
+}
+\makeatother
+
+% ===== タイトル情報 =====
+\title{レジュメのタイトル}
+\subtitle{サブタイトルをここに置く}
+\author{氏名}
+\affiliation{所属（大学・研究科名）}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+% =========================================================
+\section{はじめに}
+
+\begin{itemize}
+  \item 出典の書き方
+    \begin{itemize}
+      \item 単一文献: \citep{山田 2020}
+      \item ページ指定: \citep{鈴木 2023, pp.10--13}
+      \item 複数文献: \citep{山田 2020; 鈴木 2023, pp.10--13}
+    \end{itemize}
+  \item 多段インデント（\verb|leftmargin=1.5em| を調整してインデント幅を変更可）
+    \begin{itemize}
+      \item 第2階層
+        \begin{itemize}
+          \item 第3階層
+            \begin{itemize}
+              \item 第4階層
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+\begin{thesis}
+中心となる主張（テーゼ）はこの囲み枠で強調する。
+\end{thesis}
+
+% =========================================================
+\section{本論}
+
+\subsection{大きな図：中央寄せ}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\linewidth]{example-image-a}
+  \caption{大きい図は \texttt{figure} 環境＋\texttt{centering} で中央寄せ}
+  \label{fig:big}
+\end{figure}
+
+\begin{itemize}
+  \item 紙面幅に余裕がある図はこちらで全幅を確保して配置
+\end{itemize}
+
+\subsection{小さな図：本文の右に回り込ませる}
+
+% wrapfigure の使い方:
+%  - 第1オプション [N] は図が占有する行数を指定する（並走テキストが短くて
+%    も次ページに溢れない）。図の高さに合わせて 8〜14 程度を調整する。
+%  - 並走テキストが足りないと次ページの参考文献などに食い込むので、
+%    必ず行数指定 [N] を入れるのが安全。
+\begin{wrapfigure}[10]{r}{0.35\linewidth}
+  \centering
+  \includegraphics[width=0.95\linewidth]{example-image-b}
+  \caption{\texttt{wrapfigure} で本文右に配置}
+  \label{fig:small}
+\end{wrapfigure}
+
+\begin{itemize}
+  \item 図の幅を \verb|{r}{0.35\linewidth}| で指定（\texttt{r}=右、\texttt{l}=左）
+  \item 行数を \verb|[10]| で固定すると次ページに溢れない
+  \item 図表の脇に置きたい注釈や箇条書きに便利
+  \item 引用例: \citep{Smith 2019, pp.20--25}
+  \item さらに本文を加えて、図と本文の高さを揃える
+  \item 必要に応じてもう一段下げる
+    \begin{itemize}
+      \item サブ項目を並べる
+      \item 出典付き \citep{Doe 2021}
+    \end{itemize}
+\end{itemize}
+
+\subsection{表}
+
+\begin{table}[h]
+  \centering
+  \caption{表の例}
+  \begin{tabular}{lll}
+    \toprule
+    項目 & 前期 & 後期 \\
+    \midrule
+    件数 & 70件  & 100件 \\
+    区分数 & 6区分 & 8区分 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =========================================================
+\section{おわりに}
+
+\begin{itemize}
+  \item 要点を再掲
+  \item 残された課題 \citep{鈴木 2023, pp.30--31}
+\end{itemize}
+
+% =========================================================
+% \clearpage で wrapfigure などのフロート影響を完全に終わらせてから
+% 参考文献に入る（紙面が短い場合は \par\bigskip に置換しても可）
+\clearpage
+\renewcommand{\refname}{参考文献}
+\begin{thebibliography}{99}
+  \bibitem{yamada2020}
+    山田太郎（2020）『サンプル書籍のタイトル――副題の表示確認』学術出版社.
+  \bibitem{suzuki2023}
+    鈴木花子（2023）「論文題目」『雑誌名』第××号、pp.10--13.
+  \bibitem{smith2019}
+    Smith, John (2019) \emph{A Sample Monograph Title}, Cambridge: Cambridge University Press.
+  \bibitem{doe2021}
+    Doe, Jane (2021) ``A Sample Article Title,'' \emph{Journal of Sample Studies}, 12(3), pp.35--58.
+\end{thebibliography}
+
+\end{document}

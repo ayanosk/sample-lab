@@ -2,11 +2,28 @@
 % 日本語主体・欧文混在の学術論文用 共通プリアンブル（LuaLaTeX + jlreq）
 % 使い方: \input{../../lab/latex/preamble-ja}  ← 各プロジェクトの main.tex から
 
+%%% 古い TeX Live への保険 %%%
+% \AddToHook は LaTeX 2020-10 以降のカーネル機能。それ以前の TeX Live では
+% 未定義でビルドが止まる。見出しのゴシック化を諦めてでも通るようにしておく
+% （現行の TeX Live では下の行は何もしない）。
+\providecommand{\AddToHook}[2]{}
+
 %%% フォント %%%
 \usepackage{luatexja-fontspec}
 \usepackage{iftex}
-% 和文明朝: 原ノ味明朝（TeX Live同梱、全OS対応）
-\setmainjfont{HaranoAjiMincho}
+% 和文明朝: 原ノ味明朝（TeX Live 2020以降に同梱）→ 無ければ IPAex明朝
+%   TeX Live 2019 以前には原ノ味が入っていない。見つからない場合に
+%   フォント解決が失敗すると Missing \begin{document} まで連鎖するので、
+%   ここで必ずフォールバックさせる。
+\IfFontExistsTF{HaranoAjiMincho}{%
+  \setmainjfont{HaranoAjiMincho}%
+}{%
+  \IfFontExistsTF{Noto Serif CJK JP}{%
+    \setmainjfont{Noto Serif CJK JP}%
+  }{%
+    \setmainjfont{IPAexMincho}%
+  }%
+}
 % 和文ゴシック: OS別にフォールバック
 %   macOS: ヒラギノ角ゴシック ProN
 %   Linux/Windows: Noto Sans CJK JP → 原ノ味ゴシック（TeX Live同梱）
@@ -19,7 +36,7 @@
   \IfFontExistsTF{Noto Sans CJK JP}{%
     \setsansjfont{Noto Sans CJK JP}%
   }{%
-    \setsansjfont{HaranoAjiGothic}%
+    \IfFontExistsTF{HaranoAjiGothic}{\setsansjfont{HaranoAjiGothic}}{\setsansjfont{IPAexGothic}}%
   }%
 }
 % 見出しをゴシック体にする

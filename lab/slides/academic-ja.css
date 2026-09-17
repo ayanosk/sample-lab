@@ -1,19 +1,28 @@
 /* ============================================================
- * Marp Custom Theme: Academic (学会発表用)
+ * Marp Custom Theme: Academic JA (和文の発表・授業用)
  * ============================================================
- * Usage:  Add to marp config or frontmatter:
+ * Usage:
  *   ---
  *   marp: true
- *   theme: academic-sample
+ *   theme: academic-ja
  *   ---
  *
- * Installation:
- *   marp --theme academic-sample-theme.css slides.md
- *   or in .vscode/settings.json:
- *   "markdown.marp.themes": ["./academic-sample-theme.css"]
+ * 判型 16:10（1280×800）・本文29px。和文の学会発表と授業に使う。
+ * 国際学会（英語）は `academic-intl` を使う。判型も基準文字サイズも
+ * 違う別テーマなので、`theme:` だけ差し替えると全枚数がリフローする。
+ *
+ * .vscode/settings.json と .marprc.yml に登録済み。
+ * 実際の見た目と記法は lab/slides/templates/template_academic-ja.md で確認できる。
+ *
+ * ── 設計の根拠 ────────────────────────────────────────────
+ * 末尾のブロックのクラス（.chart-label / .dim / .dim-body / .signal /
+ * .stat / .stat-solo / .quote-parallel / .progress / .appendix）は、
+ * 発表技法の方針書に基づいて実装したもの。コメント中の「方針書
+ * スライド編」は内部文書で本テンプレートには同梱していないが、
+ * Duarte 等の出典頁を併記してあるので原典に当たれば追える。
  * ============================================================ */
 
-/* @theme academic-sample */
+/* @theme academic-ja */
 
 @import 'default';
 
@@ -63,15 +72,24 @@ section .icon.xxl { font-size: 3em;   vertical-align: -0.3em; }
 
 /* ── CSS Variables ──────────────────────────────────────────── */
 :root {
-  /* Color palette — 深緑×テラコッタのアカデミックトーン */
-  --color-bg:         #fafaf8;
-  --color-fg:         #2a2a28;
-  --color-accent:     #2e6b4f;       /* 深緑アクセント */
-  --color-accent-light: #e6f0eb;
-  --color-muted:      #5e6b64;
-  --color-border:     #c2cdc6;
-  --color-highlight:  #c0623a;       /* 引用・強調用テラコッタ */
-  --color-code-bg:    #f3f5f4;
+  /* Color palette — 落ち着いたアカデミックトーン */
+  --color-bg:         #ffffff;
+  --color-fg:         #1a1a2e;
+  --color-accent:     #2c5f8a;       /* 紺系アクセント */
+  --color-accent-light: #e8f0f8;
+  --color-muted:      #5a6474;
+  --color-border:     #c8d1dc;
+  --color-highlight:  #d4a843;       /* 引用・強調用ゴールド（地色向け。文字色には使わない） */
+  --color-code-bg:    #f5f7fa;
+
+  /* 一点強調と脱強調（2026-09-09 追加。方針書スライド編 4.1節）
+   * 構造色（--color-accent）と強調色を分けないと、全部がアクセント色に
+   * なって強調が効かなくなる。既存の --color-highlight は白地に対して
+   * 約1.9:1 しかなく、地色としてしか使えない。文字を強調するための色を
+   * 別に置く。navy × burnt orange は青と橙の対比なので主要な色覚型で
+   * 弁別でき、どちらも白地に 4.5:1 以上ある。 */
+  --color-signal:     #b5540e;       /* 強調色: 対白 4.9:1 */
+  --color-dim:        #6b747d;       /* 脱強調: 対白 4.8:1（本文として読める下限）*/
 
   /* Typography */
   --font-sans:  'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
@@ -88,8 +106,18 @@ section {
   padding: 24px 36px 56px 36px;
   line-height: 1.7;
   letter-spacing: 0.02em;
-  --code-block-max-width: 88%;
-  --code-block-min-width: 22em;
+  /* コードブロックは枠幅いっぱいに置く。Marp は pre を
+     data-auto-scaling="downscale-only" で包み、**いちばん長い行が枠に
+     収まるまで文字を自動縮小する**。枠を狭くするとその分だけ字が小さく
+     なるので、既定を 88%/22em にしていたときは 70文字の行が 29px →
+     約13px まで潰れていた（下限 17.4px を大きく割る）。
+     幅 100% なら内寸は 1148px。等幅の字送りは 0.6em なので
+       ・66文字までは縮小なし（29px のまま）
+       ・110文字までは縮小率 0.6 以上（＝17.4px 以上）を保てる
+     110文字を超える行は下限を割るので、折り返すか行を分ける。
+     2026-09-10 変更。 */
+  --code-block-max-width: 100%;
+  --code-block-min-width: 100%;
   --code-block-font-size: 1em;
   --code-block-line-height: 1.28;
   --code-block-margin-top: 0.55em;
@@ -140,12 +168,12 @@ section.title {
   justify-content: center;
   align-items: center;
   text-align: center;
-  background: linear-gradient(135deg, #1a3d2e 0%, #3a7d5c 50%, #5a9e78 100%);
+  background: linear-gradient(to top right, #1e4d7a 0%, #5ba3d4 100%);
   color: #ffffff;
   padding: 40px 72px;
 }
 
-/* テラコッタのアクセントバー */
+/* ゴールドのアクセントバー */
 section.title::before {
   content: '';
   display: block;
@@ -190,12 +218,12 @@ section.section-divider {
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  background: linear-gradient(135deg, #1a3d2e 0%, #3a7d5c 50%, #5a9e78 100%);
+  background: linear-gradient(to top right, #1e4d7a 0%, #5ba3d4 100%);
   color: #ffffff;
   padding: 40px 56px;
 }
 
-/* テラコッタのアクセントバー */
+/* ゴールドのアクセントバー */
 section.section-divider::before {
   content: '';
   display: block;
@@ -250,7 +278,7 @@ section ol ul {
 /* ── Blockquote — 史料引用向け ──────────────────────────────── */
 section blockquote {
   border-left: 4px solid var(--color-highlight);
-  background-color: #fdf3ee;
+  background-color: #fdf8ec;
   padding: 0.7em 1.2em;
   margin: 0.8em 0;
   font-family: var(--font-serif);
@@ -339,13 +367,37 @@ section.table-tight {
 }
 
 /* ── Images & Figures ───────────────────────────────────────── */
+/* 【SVG図の文字サイズ】
+ * SVG の font-size は viewBox のユーザ単位であって、スライド上の px
+ * ではない。図は下の枠（1208×560）に合わせて縮むので、実際の見え方は
+ *
+ *     実効px = 図中の font-size × min(1208/viewBox幅, 560/viewBox高)
+ *
+ * になる。**縦長の図は高さで律速される**ため、幅だけ見て「収まった」と
+ * 判断すると字が潰れる。本文29px に対して下限は 0.6倍 = 17.4px。
+ *
+ * 実用則: **viewBox を 1208×560 以内で作り、図中の最小 font-size を
+ * 18 以上にする。** こうすれば倍率が1.0前後になり、viewBox の数字が
+ * ほぼそのまま実効px になる。
+ *
+ * 検査:  python3 lab/slides/check_svg_text.py <デッキ.md>
+ * ビルド時にも自動で走る（build_marp.sh）。
+ *
+ * max-height は px で指定する（スライド高 800px の 70%）。
+   百分率にすると、親<p>は「clampされる前の画像の高さ」で確定した上で
+   画像だけが親の70%に縮むため、残り30%が<p>の中に空白として残る。
+   その空白は画像の枠線の外側に出るので、margin をいくら詰めても消えない。 */
+/* 図に枠線は付けない。地が白の図解に細い罫を回すと図の一部に見えるうえ、
+   fig-full だけ枠なし・figure-layout や fig-grid は枠あり、という不揃いが
+   生まれる。テンプレート全体で「図は枠なし」に統一する。
+   史料画像のように輪郭を示したいときだけ、その img に
+   style="border:1px solid var(--color-border)" を足す。2026-09-10 変更。 */
 section img {
   display: block;
   max-width: 100%;
-  max-height: 70%;
+  max-height: 560px;
   margin: 0.2em auto 0 auto;
-  border: 1px solid var(--color-border);
-  border-radius: 3px;
+  border: none;
 }
 
 /* Marpは ![](img) を <p><img></p> として出力する。
@@ -363,7 +415,7 @@ section ul {
 /* Full-bleed image: タイトル+図解だけのスライドで画像を最大化
  * Usage:  <!-- _class: fig-full -->  をスライド冒頭に追加 */
 section.fig-full {
-  padding: 40px 30px 20px 30px !important;
+  padding: 28px 30px 20px 30px !important;
   display: flex !important;
   flex-direction: column !important;
 }
@@ -372,12 +424,16 @@ section.fig-full h2 {
   margin-bottom: 0.2em !important;
   flex-shrink: 0;
 }
+/* 図は上寄せ。center にすると、横長の図（幅で律速される図）が余った縦の
+   空きの分だけ下がり、ラベルとのあいだに宙ぶらりんの余白ができる。
+   縦長の図は max-height:100% で高さいっぱいになるので、この指定の影響を
+   受けるのは横長の図だけ。2026-09-10 に center から変更。 */
 section.fig-full > p:has(> img) {
   flex: 1 1 0;
   min-height: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   margin: 0 !important;
   overflow: hidden;
 }
@@ -404,7 +460,6 @@ section.fig-full img {
  */
 section.figure-top {
   --figure-height: 430px;
-  --figure-max-height: none;
   --figure-gap: 12px;
   --figure-notes-size: 1em;
   --figure-justify: center;
@@ -420,8 +475,8 @@ section.figure-top > p:has(> img) {
 section.figure-top > p:has(> img) img {
   width: auto;
   max-width: 100%;
-  max-height: var(--figure-max-height);
-  height: var(--figure-height);
+  height: auto;
+  max-height: var(--figure-height);
   object-fit: contain;
   transform: translate(var(--figure-offset-x), var(--figure-offset-y));
 }
@@ -433,7 +488,6 @@ section.figure-top > ol {
 
 section .figure-layout {
   --figure-height: 430px;
-  --figure-max-height: none;
   --figure-gap: 12px;
   --figure-notes-size: 1em;
   --figure-justify: center;
@@ -450,11 +504,16 @@ section .figure-box {
   align-items: flex-start;
   margin: 0;
 }
+/* 図の大きさは「高さの上限」で与える。height を固定して max-width で幅を
+   clamp する作りだと、横長の図（幅で律速される図）は指定した高さの箱の中で
+   上下に letterbox され、枠線と図のあいだに死んだ余白が残る。height:auto に
+   すれば箱が図に密着し、余白は出ない。--figure-height は「これ以上高く
+   しない」という上限として働く。2026-09-10 変更。 */
 section .figure-box img {
   width: auto;
   max-width: 100%;
-  max-height: var(--figure-max-height);
-  height: var(--figure-height);
+  height: auto;
+  max-height: var(--figure-height);
   margin: 0 !important;
   object-fit: contain;
   transform: translate(var(--figure-offset-x), var(--figure-offset-y));
@@ -510,8 +569,7 @@ section .fig-grid {
 }
 
 section .fig-grid img {
-  border: 1px solid var(--color-border);
-  border-radius: 3px;
+  border: none;
   margin: 0;
   width: 100%;
   max-height: none;
@@ -652,7 +710,7 @@ section small {
 
 section .footnote {
   font-size: 0.7em;
-  color: #7a9a8a;
+  color: #7a8fa8;
   line-height: 1.5;
   margin-top: auto;
   margin-bottom: 0.4em;
@@ -675,14 +733,14 @@ footer {
 /* ── Page number styling ────────────────────────────────────── */
 section::after {
   font-size: 0.65em;
-  color: #7a9a8a;
+  color: #7a8fa8;
 }
 
 /* ── Utility: highlight box ─────────────────────────────────── */
-/* 補色（グリーンの補色 = テラコッタ/サーモン系）を採用 */
+/* 補色（ブルーの補色 = アンバー/ゴールド系）を採用 */
 section .highlight-box {
-  background-color: #fdf0eb;
-  border: 1px solid #e0a68a;
+  background-color: #fef4e0;
+  border: 1px solid #e8c87a;
   padding: 0.6em 1.4em;
   margin: 0.8em auto;
   border-radius: 8px;
@@ -896,6 +954,373 @@ section .icon-card-desc {
   font-size: 0.75em;
   color: var(--color-muted);
 }
+
+/* ============================================================
+ * データ・ストーリーのスライド設計（図と本文の対応づけ）
+ * ============================================================
+ * `academic-intl` 側に定義した対応表を、
+ * 日本語・16:10・本文29px の条件に移して入れたもの。
+ *
+ * 【academic-intl から変えた点】
+ * 1. 補助テキストの相対サイズを一段上げた。intl の 0.6em は本文32px
+ *    基準で 19.2px になるが、29px 基準では 17.4px にしかならない。
+ *    漢字は小さくすると画が潰れてラテン文字より早く読めなくなるので、
+ *    同じ実効pxを保つよう em を上げてある（0.6em → 0.66em など）。
+ * 2. `--measure`（1行の字数上限）を入れていない。intl はラテン文字が
+ *    1168px 幅で90字を超えるため 34em で切っているが、和文は全角なので
+ *    1208px ÷ 29px ≒ 41字にしかならず、すでに適正域に収まっている。
+ * 3. letter-spacing 0.02em と line-height 1.7 は和文向けの既存値を
+ *    そのまま使う（intl はラテン文字向けに 0 / 1.55）。
+ * 4. .quote-parallel の書体対比を「原文＝明朝／訳文＝ゴシック」に
+ *    読み替えた（intl は「原文＝セリフ／英訳＝サンセリフ」）。
+ *
+ * 【移植していないもの】
+ * 密度エスケープ（.dense / .compact）は academic に残す。方針書10.1節が
+ * 根拠を示している。2026-09-01 時点で全554枚中72回の使用があり、その
+ * すべてがハンズオン系ワークショップ資料に集中していた。これらは方針書
+ * 0.2節の分類でいう配布用 Slidedoc であって投影用ライブプレゼンではなく、
+ * 密度エスケープはそのジャンルの要請として現れている。academic は授業・
+ * ハンズオンを担うテーマなので取り上げない。
+ * ============================================================ */
+
+/* ── 中立的な図表ラベル（方針書 2.1・2.2節）────────────────────
+ * h1 に「所見」（主観的解釈の文）を置いたとき、その図が実際に何を
+ * 測ったのかという中立的事実をここに降ろす。抽象名詞を代理指標で
+ * 測っている場合は、代理指標の名前をここに明示する
+ * （「威信」ではなく「頌辞における言及回数」）。
+ *   # 地方アカデミーは1750年代に停滞した      ← h1 は所見
+ *   <p class="chart-label">年あたり新規設立数、1700〜1789年（n=34）</p>
+ *
+ * 0.66em = 19.1px。intl の 0.6em（19.2px相当）に実効サイズを合わせた。 */
+section .chart-label {
+  font-size: 0.66em;
+  font-weight: 500;
+  color: var(--color-muted);
+  letter-spacing: 0.04em;
+  margin: -0.2em 0 0.5em 0;
+}
+section.fig-full .chart-label { flex-shrink: 0; margin-bottom: 0.3em; }
+
+/* ── 脱強調（方針書 4.1節「目立たせる」122頁）──────────────────
+ * academic には強調色しかなく、**目立たせないための手段が無かった**
+ * ので、全項目が同じ濃さで並ぶことになっていた。
+ *
+ *   <li class="dim">背景として置くだけの項目</li>
+ *   <!-- _class: dim-body -->   本文全体を落として h1 だけ立てる
+ *
+ * 段階的開示にも使う（同 4.3節）。Marp にフラグメント機能は無いので、
+ * 同じスライドを複製し、複製側で .dim を外していく運用にする。 */
+section .dim,
+section .dim * {
+  color: var(--color-dim) !important;
+  font-weight: 400 !important;
+}
+section .dim strong {
+  color: var(--color-dim) !important;
+}
+section .dim img,
+section .dim svg {
+  filter: grayscale(1);
+  opacity: 0.45;
+}
+section.dim-body > ul,
+section.dim-body > ol,
+section.dim-body > p:not(.chart-label) {
+  color: var(--color-dim);
+}
+
+/* ── 一点強調（.dim と対で使う）────────────────────────────────
+ * **要素を限定している。** `section .signal` とセレクタを開くと、
+ * .signal を付けたコンテナの font-weight が子孫すべてに継承され、
+ * 強調していないはずの説明文まで太くなる。 */
+section span.signal,
+section strong.signal,
+section em.signal,
+section li.signal,
+section td.signal,
+section p.signal {
+  color: var(--color-signal) !important;
+  font-weight: 700 !important;
+}
+section img.signal,
+section svg.signal {
+  filter: none;
+  opacity: 1;
+}
+
+/* ── 統計強調スライド（方針書 5.2節、Duarte 138〜139頁）─────────
+ * 伝えたい数字だけを大きく見せる型。既存の .highlight-box は小さな
+ * 中央寄せの箱で、この用途には足りない。方針書9.5節は、図表のない
+ * 文字だけのスライドに数値が含まれるならこの型が候補になるとする。
+ *
+ *   <!-- _class: stat -->
+ *   # 会員の三分の一が地方在住だった
+ *   <div class="stat-row">
+ *     <div class="stat-item">
+ *       <div class="stat-value">3,412</div>
+ *       <div class="stat-label">調査した記載件数</div>
+ *     </div>
+ *   </div>
+ *   <p class="stat-source">HARS 1699〜1790年</p>
+ *
+ * 16:10 は intl の 16:9 より縦に80px 広いので、数値を intl より
+ * 一段大きく取れる（3.4em → 3.6em）。 */
+section.stat .stat-row {
+  display: flex;
+  gap: 64px;
+  align-items: baseline;
+  justify-content: flex-start;
+  margin: 0.6em 0 0 0;
+}
+section.stat .stat-item {
+  flex: 0 1 auto;
+}
+section.stat .stat-value {
+  font-size: 3.6em;
+  font-weight: 700;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  color: var(--color-signal);
+  /* 和文フォントは既定で数字が全角幅になることがある。桁を揃えるため
+     等幅ライニング数字を明示する。 */
+  font-variant-numeric: tabular-nums lining-nums;
+}
+section.stat .stat-label {
+  font-size: 0.76em;
+  line-height: 1.5;
+  color: var(--color-fg);
+  margin-top: 0.5em;
+  max-width: 12em;
+}
+section.stat .stat-source {
+  font-size: 0.64em;
+  color: var(--color-muted);
+  margin-top: auto;
+}
+section.stat.stat-solo .stat-value { font-size: 5.2em; }
+section.stat.stat-solo .stat-label { font-size: 0.9em; max-width: 20em; }
+
+/* ── 対訳・原文並置（方針書スコープ外の追加）───────────────────
+ * 原文と訳文を左右に並べる。intl は「非英語史料＋英訳」の並置だが、
+ * 和文発表では「漢文・古文・欧文史料＋現代語訳」に読み替える。
+ * 書体で原文と訳文を見分けられるようにするのが要点で、和文では
+ * セリフ/サンセリフではなく**明朝/ゴシック**の対比になる。
+ *
+ *   <div class="quote-parallel">
+ *     <blockquote>可被参洛之由、被仰下畢</blockquote>
+ *     <blockquote>上洛するようにと仰せ下された</blockquote>
+ *   </div>
+ *   <p class="source">『言継卿記』天文8年3月2日条</p>  */
+section .quote-parallel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin: 0.5em 0 0.3em 0;
+  align-items: start;
+}
+section .quote-parallel blockquote {
+  margin: 0;
+  border-left: 3px solid var(--color-border);
+  background: transparent;
+  padding: 0.15em 0 0.15em 0.9em;
+  font-size: 0.8em;
+  line-height: 1.65;
+}
+/* 原文（1つめ）は明朝。訳文（2つめ）はゴシックのままにする。 */
+section .quote-parallel blockquote:first-child {
+  font-family: var(--font-serif);
+  color: var(--color-fg);
+  border-left-color: var(--color-accent);
+}
+section .quote-parallel blockquote:last-child {
+  font-family: var(--font-sans);
+  color: var(--color-muted);
+}
+section .quote-parallel blockquote p { margin: 0; }
+section .quote-parallel blockquote p + p { margin-top: 0.45em; }
+
+/* ── 章区切りの進行度（方針書 9.7節）──────────────────────────
+ * 原稿の節構成とスライドの章区切りがずれると、聴衆が別の地図を持つ
+ * ことになる。進行度を書ける枠を用意しておく。方針書0.2節は目次
+ * スライドを不採用としており、地図の役割はこの章区切りが担う。
+ *   <!-- _class: section-divider -->
+ *   <p class="progress">第2部 / 全4部</p>
+ *   # 登録簿から見た実態
+ *
+ * 0.68em = 19.7px。intl の 0.62em（19.8px相当）に実効を合わせた。
+ *
+ * **色は intl と変えている。** intl の章区切りは白地なので強調色
+ * （burnt orange）が効くが、`academic` の章区切りは濃紺グラデーション地
+ * （#1e4d7a→#5ba3d4）で、その上に burnt orange を置くと沈んで読めない。
+ * **2026-09-10 に白へ変更した。** それまでゴールド（--color-highlight
+ * #d4a843）を使っていたが、地のグラデーションは `to top right` で
+ * 右上へ行くほど明るくなる（#1e4d7a→#5ba3d4）ため、ゴールドが効くのは
+ * 左下の濃い側だけだった。実測のコントラスト比は、濃い側 3.95:1 /
+ * .progress の実際の位置 2.56:1 / 明るい側 1.24:1。同じ位置で白なら
+ * 5.67:1 になる。ゴールドは ::before のアクセントバー専用に戻し、
+ * .progress は h1・h2 と同じ白で揃える。太字＋字間 0.08em があるので
+ * 見出しや副題とは書体の扱いで区別がつく。 */
+section.section-divider .progress {
+  font-size: 0.68em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  margin: 0 0 0.5em 0;
+}
+
+/* ── 付録スライド（方針書 0.2節、Duarte 143頁）─────────────────
+ * 質疑応答用の予備スライド。本編では触れない詳細データの置き場。
+ * 地色を変えるので、めくったときに本編との境が分かる。
+ *   <!-- _class: appendix --> */
+section.appendix {
+  background-color: var(--color-code-bg);
+}
+section.appendix h1 {
+  color: var(--color-muted);
+  background-image: linear-gradient(to right, var(--color-muted), var(--color-border));
+}
+section.appendix h1::before {
+  content: '付録 · ';
+  font-weight: 400;
+  color: var(--color-dim);
+}
+
+/* ── カード（方針書 §4「敵を名指しする」枚で使う）──────────────
+ * `academic-intl` から移植。3枚並べて1枚だけ .signal を付け、
+ * 「既存の説明が扱えていないもの」に視線を誘導する型。
+ * 既存の .icon-cards はアイコン主体の別部品なので併存させる。
+ *
+ * 日本語では .card-desc を intl の 0.68em から上げてある。29px 基準で
+ * 0.68em = 19.7px は漢字だと画が潰れる（intl は32px基準で21.8px）。
+ *
+ *   <div class="cards">
+ *     <div class="card"><div class="card-title">既存の説明A</div>
+ *       <div class="card-desc">それが説明できること</div></div>
+ *     <div class="card signal"> … </div>
+ *   </div>  */
+section .cards {
+  display: flex;
+  gap: 24px;
+  margin: 0.5em 0;
+  width: 100%;
+}
+section .card {
+  flex: 1;
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-accent);
+  padding: 0.7em 0.9em;
+  min-width: 0;
+}
+section .card-title {
+  font-weight: 700;
+  font-size: 0.84em;
+  margin-bottom: 0.25em;
+  color: var(--color-accent);
+}
+section .card-desc {
+  font-size: 0.74em;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+section .card.dim { border-top-color: var(--color-dim); }
+/* コンテナ版の一点強調。罫と見出しだけ色を変え、本文の太さは変えない。 */
+section .card.signal { border-top-color: var(--color-signal); }
+section .card.signal .card-title { color: var(--color-signal); }
+section .card.signal .card-desc { color: var(--color-muted); font-weight: 400; }
+
+/* ── 表の数値列（方針書スコープ外・実務上の必要）────────────────
+ * Markdown の表ではセルにクラスを付けられないので、セル内を span で包む。
+ * inline 要素のままだと text-align が効かないので block にしてある。
+ * 和文フォントは既定で数字が全角幅になることがあるため等幅ライニングを明示。
+ *     | [セル] | <span class="num">1,204</span> | */
+section table .num {
+  display: block;
+  text-align: right;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* ── 濃紺地スライドでの強調色の打ち消し ──────────────────────
+ * `section strong` は --color-accent（#2c5f8a）だが、.title と
+ * .section-divider は濃紺グラデーション地（#1e4d7a→#5ba3d4）なので、
+ * その上に置くと紺地に紺で沈んで読めない。地の文が白なので白に戻す。
+ * （タイトルスライドで発表者名を **氏名** と太字にすると発症する） */
+section.title strong,
+section.section-divider strong {
+  color: #ffffff;
+}
+
+/* 同じ理由で `section code` も壊れる。code は背景色（--color-code-bg
+   #f5f7fa）だけ指定して文字色を指定していないので、濃紺地スライドでは
+   白を継承し、淡いグレーのチップに白文字が乗る（コントラスト比 1.06:1、
+   実質不可視）。チップの地はそのままに、文字色を本文色へ戻す。
+   2026-09-10 追加。 */
+section.title code,
+section.section-divider code {
+  color: var(--color-fg);
+}
+
+/* ── アウトラインスライド（方針書スコープ外・実務上の必要）──────────
+ * 冒頭で「このデッキが何を順に扱うか」を見せる枚。素の番号付きリストだと
+ * 本文と同じ見た目になり、地図として機能しない。番号を大きく置き、項目
+ * ごとに罫線で区切ることで、一覧であることが一目で分かるようにする。
+ *
+ *   <!-- _class: outline -->
+ *   # このデッキの構成
+ *   1. 本文・リスト・引用<span class="outline-desc">見出し・強調・引用</span>
+ *   2. 図表<span class="outline-desc">表の密度・fig-full</span>
+ *
+ * <span class="outline-desc"> は任意。無くても成立する。
+ * 番号は 01 / 02 …（decimal-leading-zero）。項目は4〜6件まで。
+ * それ以上は本文が縮まないので、2枚に割るか dense を併用する。
+ * 2026-09-10 追加。 */
+section.outline ol {
+  counter-reset: outline;
+  list-style: none;
+  margin: 0.5em 0 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55em;
+}
+section.outline ol > li {
+  counter-increment: outline;
+  position: relative;
+  margin: 0;
+  padding: 0.42em 0 0.42em 108px;
+  border-top: 1px solid var(--color-border);
+  font-size: 1.05em;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--color-fg);
+}
+section.outline ol > li::before {
+  content: counter(outline, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.30em;
+  width: 88px;
+  font-size: 1.5em;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-accent);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: 0.01em;
+}
+/* 最後の項目の下にも罫線を引いて、一覧を閉じる */
+section.outline ol > li:last-child { border-bottom: 1px solid var(--color-border); }
+section.outline .outline-desc {
+  display: block;
+  margin-top: 0.15em;
+  font-size: 0.68em;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+/* 現在地を示したいときは強調色に振る: <li class="signal"> は使わず、
+   コンテナ版として .now を用意する（本文の太さを変えないため）。 */
+section.outline ol > li.now { color: var(--color-signal); }
+section.outline ol > li.now::before { color: var(--color-signal); }
+section.outline ol > li.dim::before { color: var(--color-dim); }
 
 /* ── Print / PDF adjustments ────────────────────────────────── */
 @media print {

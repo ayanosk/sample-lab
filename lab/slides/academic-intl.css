@@ -1,0 +1,1068 @@
+/* ============================================================
+ * Marp Custom Theme: Academic International (国際学会発表用)
+ * ============================================================
+ * Usage:
+ *   ---
+ *   marp: true
+ *   theme: academic-intl
+ *   ---
+ *
+ * `academic-ja` の派生ではなく別テーマ。判型・基準文字サイズ・字送りが
+ * 違うので、`academic-ja` のデッキをそのまま theme だけ差し替えると
+ * 全枚数がリフローする。国際学会用の原稿は最初からこちらで書く。
+ *
+ * 各ブロックのコメントに設計の根拠を書いてある。「方針書スライド編」は
+ * 発表技法の内部方針書（本テンプレートには同梱していない）で、
+ * Duarte 等の出典頁を併記してあるので原典に当たれば追える。
+ * ============================================================ */
+
+/* @theme academic-intl */
+
+@import 'default';
+
+/* ── 判型: 16:9 (1280×720) ──────────────────────────────────
+ * `academic` は 16:10 (1280×800)。国際学会の会場プロジェクタと
+ * オンラインの画面共有は 16:9 が標準で、16:10 を出すと上下に黒帯が
+ * 出るか会場側で拡大されて周辺が切れる。
+ * 縦が 80px 減ることは、下の「詰め込ませない」設計にも効く。 */
+section {
+  width: 1280px;
+  height: 720px;
+}
+
+/* ── Fonts ──────────────────────────────────────────────────
+ * ラテン書体を先頭に置く。`academic` は Noto Sans JP 先頭なので
+ * 英文が和文フォントのラテングリフで組まれていた。
+ * CJK は後段の Noto へフォールバックするので、原文引用に和文が
+ * 混ざっても崩れない。 */
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;600&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0');
+
+/* ── CSS Variables ──────────────────────────────────────────── */
+:root {
+  /* 色は2系統だけ。
+   * --color-accent  構造（見出し・罫線・表ヘッダ）に使う恒常的な色
+   * --color-signal  「ここを見よ」の一点強調に使う色
+   * 構造色と強調色を分けないと、全部がアクセント色になって
+   * 強調が効かなくなる（方針書スライド編 4.1節「目立たせる」122頁）。
+   * navy × burnt orange は青と橙の対比なので、主要な色覚型すべてで
+   * 弁別できる。両色とも白地に対して 4.5:1 以上ある。 */
+  --color-bg:        #ffffff;
+  --color-fg:        #16202b;
+  --color-accent:    #1f4e79;   /* 構造色: 対白 8.6:1 */
+  --color-signal:    #b5540e;   /* 強調色: 対白 4.9:1 */
+  --color-muted:     #5a6474;   /* 補助テキスト: 対白 6.4:1 */
+  --color-dim:       #6b747d;   /* 脱強調: 対白 4.8:1（本文として読める下限）*/
+  --color-rule:      #d5dae0;   /* 細い罫線 */
+  --color-wash:      #f2f5f8;   /* ごく薄い地色（表の縞・コード地）*/
+  --color-accent-light: #e6edf5;  /* アクセントの淡色（アイコンカードの地）*/
+  --color-quote-bg:  #f7f9fb;
+
+  --font-sans:  'Source Sans 3', 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+  --font-serif: 'Source Serif 4', 'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+  --font-mono:  'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
+
+  /* 1行あたりの文字数の上限。ラテン文字で約68字。
+   * 指定しないと 1168px 幅いっぱいに流れて 90字を超え、
+   * 行を追う目の戻りが大きくなる。 */
+  --measure: 34em;
+}
+
+/* ── Base ───────────────────────────────────────────────────
+ * 基準 32px / 行間 1.55。`academic` は 29px / 1.7（1280×800）だった。
+ * 画面高に対する比は 3.6% から 4.4% に上がる。
+ *
+ * **`.dense` `.compact` に相当する密度エスケープは定義しない。**
+ * `academic` では 554枚中 72枚（13.0%）でそれらが発動していたが、
+ * **72回すべてがハンズオン系ワークショップ資料**（＝聴衆が手元で追う
+ * 配布資料）に集中しており、授業スライドでの使用はゼロだった。
+ * 口頭発表は配布資料ではないので、この道具は持ち込まない。
+ * 単一チャネル原理（Duarte 133頁）に照らせば、入りきらないスライドの
+ * 正しい処置は縮めることではなく、削るか2枚に割ることである。
+ * 縮める手段がなければ、入りきらないスライドは見切れて作者に見える。 */
+section {
+  font-family: var(--font-sans);
+  font-size: 32px;
+  color: var(--color-fg);
+  background-color: var(--color-bg);
+  padding: 32px 56px 56px 56px;
+  line-height: 1.55;
+  letter-spacing: 0;   /* `academic` の 0.02em は和文向け。ラテン文字では緩く見える */
+  font-feature-settings: 'kern' 1, 'liga' 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: hidden;
+  /* コードブロックの調整幅。academic-ja と同じ変数名・同じクラス名で効く。
+     既定値は従来の直書きの値そのままなので、見た目は変わらない。
+     幅の既定が 100% なのは、Marp が pre を
+     data-auto-scaling="downscale-only" で包み、いちばん長い行が枠に
+     収まるまで文字を自動縮小するため。枠を狭めた分だけ字が小さくなる。
+     2026-09-10 追加。 */
+  --code-block-max-width: 100%;
+  --code-block-min-width: 100%;
+  --code-block-font-size: 0.72em;
+  --code-block-line-height: 1.4;
+  --code-block-margin-top: 0.4em;
+  --code-block-margin-bottom: 0.4em;
+  --code-block-padding-y: 0.7em;
+  --code-block-padding-x: 0.9em;
+}
+
+/* 本文直下のブロックにだけ measure を効かせる。
+   .columns や表の中では列幅が優先されるべきなので適用しない。 */
+section > p,
+section > ul,
+section > ol {
+  max-width: var(--measure);
+}
+
+/* ── Headings ───────────────────────────────────────────────
+ * h1 は「所見（主張）」を置く場所。本書108頁は、グラフのタイトルを
+ * 中立的事実に保ち、そこから読み取った所見をスライドタイトルへ
+ * 上げることを推奨する。所見は体言止めではなく文になるので、
+ * 英語では 2行に折れることを前提にする（行間を詰め、字を落とす）。 */
+section h1 {
+  font-family: var(--font-sans);
+  font-size: 1.32em;
+  font-weight: 600;
+  line-height: 1.22;
+  color: var(--color-accent);
+  letter-spacing: -0.005em;
+  margin: 0 0 0.5em 0;
+  padding-bottom: 0.32em;
+  border-bottom: 2px solid var(--color-accent);
+  max-width: 100%;
+}
+
+section h2 {
+  font-size: 1.05em;
+  font-weight: 600;
+  color: var(--color-fg);
+  margin: 0.2em 0 0.35em 0;
+}
+
+section h3 {
+  font-size: 0.86em;
+  font-weight: 600;
+  color: var(--color-muted);
+  margin: 0.2em 0 0.25em 0;
+}
+
+/* 中立的な図表ラベル。h1 に所見を置いたとき、その図が実際に
+ * 何を測ったのかをここに書く。抽象名詞を代理指標で測っている場合
+ * （本書106頁）は、代理指標の名前をここに明示する。
+ *   <p class="chart-label">Mentions per volume, 1699–1790 (n = 3,412)</p> */
+section .chart-label {
+  font-size: 0.6em;
+  font-weight: 600;
+  color: var(--color-muted);
+  letter-spacing: 0.04em;
+  margin: -0.2em 0 0.5em 0;
+  max-width: none;
+}
+
+/* ── Title slide ────────────────────────────────────────────
+ * グラデーションを使わない。白地・細い罫線・左揃え。 */
+section.title {
+  justify-content: center;
+  padding: 56px 80px;
+}
+section.title::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: var(--color-accent);
+  margin-bottom: 1.1em;
+}
+section.title h1 {
+  font-size: 1.85em;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-fg);
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0.35em;
+}
+section.title h2 {
+  font-size: 1.02em;
+  font-weight: 400;
+  color: var(--color-muted);
+  margin: 0 0 1.4em 0;
+}
+/* 氏名・所属・学会名・日付 */
+section.title p {
+  font-size: 0.72em;
+  line-height: 1.6;
+  color: var(--color-fg);
+  margin: 0;
+  max-width: none;
+}
+section.title p + p {
+  color: var(--color-muted);
+  margin-top: 0.5em;
+  padding-top: 0.7em;
+  border-top: 1px solid var(--color-rule);
+}
+
+/* ── Section divider ────────────────────────────────────────
+ * 「いま発表のどこにいるか」を示す地図。方針書スライド編 9.7節は、
+ * 原稿の節構成とスライドの章区切りがずれると、聴衆が別の地図を
+ * 持つことになると指摘する。進行度を書ける枠を用意しておく。
+ *   <!-- _class: section-divider -->
+ *   <p class="progress">Part 2 of 4</p>
+ *   # Evidence from the registers  */
+section.section-divider {
+  justify-content: center;
+  padding: 56px 80px;
+}
+section.section-divider .progress {
+  font-size: 0.62em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--color-signal);
+  margin: 0 0 0.5em 0;
+  max-width: none;
+}
+section.section-divider h1 {
+  font-size: 1.7em;
+  font-weight: 700;
+  color: var(--color-fg);
+  border-bottom: none;
+  padding-bottom: 0.4em;
+  margin-bottom: 0;
+  max-width: 22em;
+}
+section.section-divider h1::after {
+  content: '';
+  display: block;
+  width: 72px;
+  height: 3px;
+  background-color: var(--color-accent);
+  margin-top: 0.5em;
+}
+section.section-divider h2,
+section.section-divider p:not(.progress) {
+  font-size: 0.8em;
+  color: var(--color-muted);
+  margin-top: 0.8em;
+}
+
+/* ── 脱強調ユーティリティ ───────────────────────────────────
+ * 本書122頁の強調技法は「注目させたくない要素を無彩色にし、重要な
+ * 部分にだけ色を使う」。`academic` には強調色はあったが**脱強調の
+ * 手段がなかった**ので、全項目が同じ濃さで並ぶことになっていた。
+ *
+ * Usage:
+ *   <li class="dim">背景として置くだけの項目</li>
+ *   <tr class="dim">…</tr>
+ *   <span class="dim">…</span>
+ *   <!-- _class: dim-body -->   本文全体を落として h1 だけ立てる
+ *
+ * 段階的開示にも使う（方針書スライド編 4.3節）。Marp にフラグメント
+ * 機能はないので、同じスライドを複製し、複製側で .dim を外して
+ * いく運用にする。テーマ側はこのクラスを提供するだけでよい。 */
+section .dim,
+section .dim * {
+  color: var(--color-dim) !important;
+  font-weight: 400 !important;
+}
+section .dim strong {
+  color: var(--color-dim) !important;
+}
+section .dim img,
+section .dim svg {
+  filter: grayscale(1);
+  opacity: 0.45;
+}
+section.dim-body > ul,
+section.dim-body > ol,
+section.dim-body > p:not(.chart-label) {
+  color: var(--color-dim);
+}
+
+/* 一点強調。dim と対で使う。
+ * **要素を限定している。** `section .signal` のようにセレクタを開くと、
+ * .signal を付けたコンテナの font-weight が子孫すべてに継承され、
+ * 強調していないはずの説明文まで太くなる。コンテナに付ける場合は
+ * 下の .card.signal / .stat-item.signal のように個別に定義する。 */
+section span.signal,
+section strong.signal,
+section em.signal,
+section li.signal,
+section td.signal,
+section p.signal {
+  color: var(--color-signal) !important;
+  font-weight: 700 !important;
+}
+section img.signal,
+section svg.signal {
+  filter: none;
+  opacity: 1;
+}
+
+/* ── 統計強調スライド ───────────────────────────────────────
+ * 本書138〜139頁のパネル強調（伝えたい数字だけを大きく見せる）。
+ * `academic` の .highlight-box は小さな中央寄せの箱で、この用途には
+ * 足りなかった。方針書スライド編 9.5節は、図表のない文字だけの
+ * スライドに数値が含まれるならこの型が候補になるとしている。
+ *
+ * Usage:
+ *   <!-- _class: stat -->
+ *   # Assertion sentence goes here
+ *   <div class="stat-row">
+ *     <div class="stat-item">
+ *       <div class="stat-value">3,412</div>
+ *       <div class="stat-label">entries surveyed</div>
+ *     </div>
+ *     <div class="stat-item dim"> … </div>
+ *   </div>
+ *   <p class="stat-source">HARS, 1699–1790</p>  */
+section.stat .stat-row {
+  display: flex;
+  gap: 64px;
+  align-items: baseline;
+  justify-content: flex-start;
+  margin: 0.6em 0 0 0;
+}
+section.stat .stat-item {
+  flex: 0 1 auto;
+}
+section.stat .stat-value {
+  font-size: 3.4em;
+  font-weight: 700;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  color: var(--color-signal);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+section.stat .stat-label {
+  font-size: 0.72em;
+  line-height: 1.35;
+  color: var(--color-fg);
+  margin-top: 0.5em;
+  max-width: 12em;
+}
+section.stat .stat-source {
+  font-size: 0.64em;
+  color: var(--color-muted);
+  margin-top: auto;
+  max-width: none;
+}
+/* 単独の巨大数値（1つだけ見せる場合） */
+section.stat.stat-solo .stat-value { font-size: 5em; }
+section.stat.stat-solo .stat-label { font-size: 0.86em; max-width: 20em; }
+
+/* ── 対訳引用 ───────────────────────────────────────────────
+ * 英語圏の聴衆に非英語の一次史料を見せるための並置。左に原文
+ * （セリフ体）、右に英訳、下に出典を1行。
+ *
+ * Usage:
+ *   <div class="quote-parallel">
+ *     <blockquote lang="fr">Le Roy, voulant que les Arts…</blockquote>
+ *     <blockquote lang="en">The King, wishing that the Arts…</blockquote>
+ *   </div>
+ *   <p class="source">HARS 1699, p. 17. Translation mine.</p>  */
+section .quote-parallel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin: 0.5em 0 0.3em 0;
+  align-items: start;
+}
+section .quote-parallel blockquote {
+  margin: 0;
+  border-left: 3px solid var(--color-rule);
+  background: transparent;
+  padding: 0.15em 0 0.15em 0.9em;
+  font-size: 0.78em;
+  line-height: 1.6;
+}
+/* 原文（1つめ）はセリフ体。訳文（2つめ）はサンセリフのままにして、
+   どちらが原文かを書体で見分けられるようにする。 */
+section .quote-parallel blockquote:first-child {
+  font-family: var(--font-serif);
+  color: var(--color-fg);
+  border-left-color: var(--color-accent);
+}
+section .quote-parallel blockquote:last-child {
+  font-family: var(--font-sans);
+  color: var(--color-muted);
+}
+section .quote-parallel blockquote p { margin: 0; }
+section .quote-parallel blockquote p + p { margin-top: 0.45em; }
+
+/* 単独引用（訳文だけ見せる場合、あるいは英語史料） */
+section > blockquote {
+  border-left: 3px solid var(--color-accent);
+  background-color: var(--color-quote-bg);
+  padding: 0.6em 1em;
+  margin: 0.6em 0;
+  font-family: var(--font-serif);
+  font-size: 0.82em;
+  line-height: 1.65;
+  color: var(--color-fg);
+  max-width: var(--measure);
+}
+section > blockquote p { margin: 0; }
+
+/* ── Lists ──────────────────────────────────────────────────── */
+section ul,
+section ol {
+  margin: 0.25em 0 0.3em 0;
+  padding-left: 1.25em;
+}
+section li {
+  margin-bottom: 0.42em;
+}
+section li::marker {
+  color: var(--color-accent);
+}
+section ul ul,
+section ol ol,
+section ul ol,
+section ol ul {
+  font-size: 0.9em;
+  color: var(--color-muted);
+  margin-top: 0.25em;
+}
+
+/* ── Tables ─────────────────────────────────────────────────
+ * `academic` の .table-tight（0.68em ＝ 実寸20px）は移植しない。
+ * 会場後方から読めない大きさに落とすくらいなら、行を削るか
+ * 付録スライドへ回す（本書143頁）。 */
+section table {
+  display: table;
+  width: var(--table-width, auto);
+  max-width: 100%;
+  border-collapse: collapse;
+  font-size: var(--table-font-size, 0.76em);
+  line-height: var(--table-line-height, 1.4);
+  margin: 0.5em 0;
+}
+/* `@import 'default'` が縦罫・外枠・縞地を付けるので、明示的に打ち消して
+   横罫だけにする。打ち消さないと無装飾の意図と合わない。 */
+section table,
+section table thead,
+section table tbody,
+section table tr {
+  border: none;
+}
+section table thead th {
+  background: transparent;
+  color: var(--color-accent);
+  font-weight: 600;
+  text-align: left;
+  padding: var(--table-cell-py, 0.4em) var(--table-cell-px, 0.7em);
+  border: none;
+  border-bottom: 2px solid var(--color-accent);
+  vertical-align: bottom;
+}
+section table tbody td {
+  padding: var(--table-cell-py, 0.4em) var(--table-cell-px, 0.7em);
+  border: none;
+  border-bottom: 1px solid var(--color-rule);
+  vertical-align: top;
+}
+section table tbody tr:nth-child(even),
+section table tbody tr:nth-child(odd) {
+  background-color: transparent;
+}
+/* 数値列は右揃え・等幅数字にする。
+   Markdown の表ではセルにクラスを付けられないので、セル内を span で包む。
+   inline 要素のままだと text-align が効かないので block にしてある。
+     | [cell] | <span class="num">1,204</span> | */
+section table .num {
+  display: block;
+  text-align: right;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+section.table-relaxed { --table-line-height: 1.55; --table-cell-py: 0.5em; }
+section.table-compact { --table-line-height: 1.28; --table-cell-py: 0.3em; }
+
+/* ── Images & Figures ───────────────────────────────────────── */
+/* 【SVG図の文字サイズ】
+ * SVG の font-size は viewBox のユーザ単位であって、スライド上の px
+ * ではない。図は下の枠（1168×460、fig-full は約1200×580）に合わせて縮む
+ * ので、実際の見え方は
+ *
+ *     実効px = 図中の font-size × min(1168/viewBox幅, 460/viewBox高)
+ *
+ * になる。**縦長の図は高さで律速される**ため、幅だけ見て「収まった」と
+ * 判断すると字が潰れる。本文32px に対して下限は 0.6倍 = 19.2px。
+ *
+ * 実用則: **viewBox を 1168×460 以内で作り、図中の最小 font-size を
+ * 20 以上にする。** こうすれば倍率が1.0前後になり、viewBox の数字が
+ * ほぼそのまま実効px になる。図が入りきらないなら viewBox を広げるのでは
+ * なく図を分割する。広げれば必ず字が小さくなる。
+ *
+ * 検査:  python3 lab/slides/check_svg_text.py <デッキ.md>
+ * ビルド時にも自動で走る（build_marp.sh）。
+ */
+/* 図に枠線は付けない（academic-ja と同じ扱い）。史料画像のように輪郭を
+   示したいときだけ、その img に style="border:1px solid var(--color-rule)"
+   を足す。 */
+section img {
+  display: block;
+  max-width: 100%;
+  max-height: 460px;
+  margin: 0.15em auto 0 auto;
+  border: none;
+}
+section img { margin-bottom: 0 !important; }
+section p { margin-bottom: 0.25em; }
+
+/* 図だけを最大化する。タイトル＋図のスライド用。 */
+section.fig-full {
+  padding: 22px 40px 44px 40px !important;
+}
+section.fig-full h1 { margin-bottom: 0.3em !important; flex-shrink: 0; }
+section.fig-full .chart-label { flex-shrink: 0; margin-bottom: 0.3em; }
+/* 図は上寄せ。center にすると横長の図が余った縦の空きの分だけ下がり、
+   ラベルとのあいだに宙ぶらりんの余白ができる。縦長の図は max-height:100%
+   で高さいっぱいになるのでこの指定の影響を受けない。2026-09-10 変更。 */
+section.fig-full > p:has(> img) {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 0 !important;
+  max-width: none;
+}
+section.fig-full img {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* 図を上、注記を下に置く。 */
+section .figure-layout {
+  --figure-height: 380px;
+  --figure-gap: 12px;
+  --figure-notes-size: 0.82em;
+  --figure-justify: center;
+  --figure-offset-x: 0px;
+  --figure-offset-y: 0px;
+  display: grid;
+  gap: var(--figure-gap);
+  align-content: start;
+  width: 100%;
+}
+section .figure-box {
+  display: flex;
+  justify-content: var(--figure-justify);
+  align-items: flex-start;
+  margin: 0;
+}
+/* 図の大きさは「高さの上限」で与える。height を固定して max-width で幅を
+   clamp する作りだと、横長の図（幅で律速される図）は指定した高さの箱の中で
+   上下に letterbox され、図の前後に死んだ余白が残る。height:auto にすれば
+   箱が図に密着する。--figure-height は「これ以上高くしない」上限として働く。
+   academic-ja と同じ扱い。2026-09-10 変更。 */
+section .figure-box img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: var(--figure-height);
+  margin: 0 !important;
+  object-fit: contain;
+  transform: translate(var(--figure-offset-x), var(--figure-offset-y));
+}
+section .figure-notes {
+  margin: 0;
+  padding-left: 1.25em;
+  font-size: var(--figure-notes-size);
+}
+section .figure-notes li:last-child { margin-bottom: 0; }
+
+section img + em,
+section img + br + em {
+  display: block;
+  text-align: center;
+  font-size: 0.6em;
+  color: var(--color-muted);
+  margin-top: 0.25em;
+}
+
+/* ── Columns ────────────────────────────────────────────────── */
+section .columns {
+  display: flex;
+  gap: 44px;
+  align-items: flex-start;
+  width: 100%;
+}
+section .columns > * { flex: 1; min-width: 0; }
+section .columns > .col-1 { flex: 1; }
+section .columns > .col-2 { flex: 2; }
+section .columns > .col-3 { flex: 3; }
+section .columns table { width: 100%; margin: 0.2em 0 0.4em 0; }
+section .columns ul, section .columns ol { max-width: none; }
+
+/* ── Cards（丸角・塗りをやめ、細い罫線に）────────────────── */
+section .cards {
+  display: flex;
+  gap: 24px;
+  margin: 0.5em 0;
+  width: 100%;
+}
+section .card {
+  flex: 1;
+  border: 1px solid var(--color-rule);
+  border-top: 3px solid var(--color-accent);
+  padding: 0.7em 0.9em;
+  min-width: 0;
+}
+section .card-title {
+  font-weight: 600;
+  font-size: 0.82em;
+  margin-bottom: 0.25em;
+  color: var(--color-accent);
+}
+section .card-desc {
+  font-size: 0.68em;
+  line-height: 1.45;
+  color: var(--color-muted);
+}
+section .card.dim { border-top-color: var(--color-dim); }
+/* コンテナ版の一点強調。罫と見出しだけ色を変え、本文の太さは変えない。 */
+section .card.signal { border-top-color: var(--color-signal); }
+section .card.signal .card-title { color: var(--color-signal); }
+section .card.signal .card-desc { color: var(--color-muted); font-weight: 400; }
+
+/* ── Icons（Material Symbols）───────────────────────────────── */
+section .icon {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 1em;
+  line-height: 1;
+  display: inline-block;
+  white-space: nowrap;
+  vertical-align: -0.15em;
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+  color: var(--color-accent);
+}
+section .icon.lg  { font-size: 1.5em; vertical-align: -0.2em; }
+section .icon.xl  { font-size: 2em;   vertical-align: -0.25em; }
+section .icon.xxl { font-size: 2.6em; vertical-align: -0.3em; }
+
+section .icon-flow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 28px;
+  margin: 0.7em 0;
+  width: 100%;
+}
+section .icon-flow-item {
+  text-align: center;
+  font-size: 0.76em;
+  font-weight: 600;
+  flex: 1;
+  min-width: 0;
+}
+section .icon-flow-item .icon { display: block; margin: 0 auto 0.25em; }
+section .icon-flow-item .sub {
+  display: block;
+  font-weight: 400;
+  font-size: 0.85em;
+  color: var(--color-muted);
+  margin-top: 0.15em;
+}
+section .icon-flow-arrow {
+  font-size: 1.5em;
+  color: var(--color-rule);
+  flex-shrink: 0;
+  padding-top: 0.6em;
+}
+
+/* ── Code ───────────────────────────────────────────────────── */
+section code {
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  background-color: var(--color-wash);
+  padding: 0.1em 0.35em;
+}
+section pre {
+  background-color: var(--color-wash);
+  border: 1px solid var(--color-rule);
+  box-sizing: border-box;
+  flex-shrink: 0;
+  min-width: min(var(--code-block-min-width), 100%);
+  max-width: min(var(--code-block-max-width), 100%);
+  margin: var(--code-block-margin-top) auto var(--code-block-margin-bottom);
+  padding: var(--code-block-padding-y) var(--code-block-padding-x);
+  font-size: var(--code-block-font-size);
+  line-height: var(--code-block-line-height);
+  overflow: hidden;
+}
+
+/* 調整クラス。academic-ja と同名・同義。数値だけ本文32px 基準に読み替えて
+   ある（補助テキストの下限 19.2px を割らないこと）。
+     code-body / code-small        文字サイズ（既定 / 一段小さく）
+     code-solo                     コード1つだけのスライド。上下の余白を詰める
+     code-fill                     全幅・文字大きめ・行間狭め
+     code-full / code-wide / code-fit  幅の指定
+     code-h-compact / code-h-tight     行間と内側余白 */
+section.code-body  { --code-block-font-size: 0.72em; }   /* 23.0px */
+section.code-small { --code-block-font-size: 0.66em; }   /* 21.1px */
+section.code-fill {
+  --code-block-max-width: 100%;
+  --code-block-min-width: 100%;
+  --code-block-font-size: 0.80em;                        /* 25.6px */
+  --code-block-line-height: 1.2;
+  --code-block-padding-y: 0.4em;
+  --code-block-padding-x: 0.7em;
+  --code-block-margin-top: 0.2em;
+  --code-block-margin-bottom: 0;
+}
+section.code-fill h1 { margin-bottom: 0.28em; }
+section.code-full { --code-block-max-width: 100%; --code-block-min-width: 100%; }
+section.code-wide { --code-block-min-width: 72%;  --code-block-max-width: 96%; }
+section.code-fit  { --code-block-min-width: 0;    --code-block-max-width: 96%; }
+section.code-fit pre { align-self: center; }
+section.code-solo {
+  --code-block-margin-top: 0.2em;
+  --code-block-margin-bottom: 0;
+}
+section.code-solo h1 { margin-bottom: 0.28em; }
+section.code-h-compact {
+  --code-block-line-height: 1.25;
+  --code-block-padding-y: 0.5em;
+  --code-block-padding-x: 0.8em;
+}
+section.code-h-tight {
+  --code-block-line-height: 1.15;
+  --code-block-padding-y: 0.35em;
+  --code-block-padding-x: 0.65em;
+  --code-block-margin-top: 0.15em;
+}
+section pre code {
+  background: none;
+  padding: 0;
+  font-size: 1em;
+  line-height: inherit;
+  display: block;
+}
+
+/* XML/TEI（oXygen風） */
+section pre code .hljs-meta    { color: #7b3db4; }
+section pre code .hljs-tag     { color: #36a3d9; }
+section pre code .hljs-name    { color: #1a4a99; }
+section pre code .hljs-attr    { color: #d4760a; }
+section pre code .hljs-string  { color: #8b4513; }
+section pre code .hljs-comment { color: #888c96; font-style: italic; }
+
+/* ── Emphasis & links ───────────────────────────────────────── */
+section strong { font-weight: 700; color: var(--color-accent); }
+section em     { font-family: var(--font-serif); font-style: italic; }
+section a {
+  color: var(--color-accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-rule);
+}
+
+/* ── Notes, sources, footnotes ──────────────────────────────
+ * 補助テキストの下限は本文32px の 0.6倍 = 19.2px（Images & Figures 節の
+ * 基準と同じ）。.source / .footnote / .references p / .stat-source は
+ * 0.58em ＝ 18.6px でこれを割っていたので、2026-09-10 に 0.64em ＝ 20.5px
+ * へ揃えた。`academic-ja` の対応値（18.9〜20.9px）と同水準になる。 */
+section small { font-size: 0.62em; color: var(--color-muted); line-height: 1.45; }
+section .source {
+  font-size: 0.64em;
+  color: var(--color-muted);
+  margin-top: 0.4em;
+  max-width: none;
+}
+section .footnote {
+  font-size: 0.64em;
+  color: var(--color-muted);
+  line-height: 1.45;
+  margin-top: auto;
+  margin-bottom: 0.2em;
+  max-width: none;
+}
+
+/* ── References ─────────────────────────────────────────────── */
+section.references {
+  gap: 0.45em;
+}
+section.references p {
+  font-size: 0.64em;
+  line-height: 1.45;
+  padding-left: 1.6em;
+  text-indent: -1.6em;
+  margin: 0;
+  max-width: none;
+  color: var(--color-fg);
+}
+section.references > :not(h1):not(h2) { flex: 0 0 auto; }
+
+/* ── Appendix（質疑応答用の予備スライド）─────────────────────
+ * 本書143頁。本編で触れない詳細データの避難場所。
+ * 本編と地色で区別し、めくったときに「ここからは予備」と分かるようにする。 */
+section.appendix {
+  background-color: var(--color-wash);
+}
+section.appendix h1 {
+  color: var(--color-muted);
+  border-bottom-color: var(--color-rule);
+}
+section.appendix h1::before {
+  content: 'Appendix · ';
+  font-weight: 400;
+  color: var(--color-dim);
+}
+
+/* ── Header / footer / page number ──────────────────────────
+ * `academic` の footer は --color-border（#c8d1dc）で白地にほぼ
+ * 見えなかった。国際学会では所属・学会名・日付をフッタに置くのが
+ * 通例なので、読める濃度にする。 */
+header {
+  font-size: 0.46em;
+  color: var(--color-muted);
+  font-family: var(--font-sans);
+}
+footer {
+  font-size: 0.46em;
+  color: var(--color-muted);
+  font-family: var(--font-sans);
+  letter-spacing: 0.01em;
+}
+/* ページ番号。基準 32px に対して 0.5em = 16px は、`academic`（基準 30px ×
+   0.65em ≒ 19.5px）より小さく、Marpit 既定（66%）も下回っていた。
+   会場後方から番号を読み上げて質問される場面があるので、絶対値で
+   `academic` と揃う 0.62em ≒ 20px にする。 */
+section::after {
+  font-size: 0.62em;
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums;
+}
+/* タイトルスライドのページ番号を消す。Marpit のページ番号CSSはテーマの
+   あとに注入されるので content:'' では勝てない。display:none で消す。
+   フッタは原稿側の `<!-- _footer: "" -->` で消す。 */
+section.title::after { display: none; }
+
+/* ── Utility: highlight box ──────────────────────────────────
+ * 一文だけを地の文から持ち上げる箱。`academic` の実装を移植したが、
+ * 地色のアンバー (#fef4e0) は navy × burnt orange のパレットから浮くので、
+ * 強調色 --color-signal (#b5540e) の淡いティントに置き換えた。
+ * 段落マージンは打ち消す（section p は margin-bottom しか指定していない）。*/
+section .highlight-box {
+  background-color: #fdf3ea;
+  border: 1px solid #e3b98f;
+  border-radius: 6px;
+  padding: 0.55em 1.3em;
+  margin: 0.8em auto;
+  width: fit-content;
+  max-width: 100%;
+  text-align: center;
+}
+section .highlight-box p {
+  margin: 0;
+  max-width: none;
+}
+
+/* ── アウトラインスライド（a practical addition）──────────
+ * 冒頭で「このデッキが何を順に扱うか」を見せる枚。素の番号付きリストだと
+ * 本文と同じ見た目になり、地図として機能しない。番号を大きく置き、項目
+ * ごとに罫線で区切ることで、一覧であることが一目で分かるようにする。
+ *
+ *   <!-- _class: outline -->
+ *   # このデッキの構成
+ *   1. 本文・リスト・引用<span class="outline-desc">見出し・強調・引用</span>
+ *   2. 図表<span class="outline-desc">表の密度・fig-full</span>
+ *
+ * <span class="outline-desc"> は任意。無くても成立する。
+ * 番号は 01 / 02 …（decimal-leading-zero）。項目は4〜6件まで。
+ * それ以上は本文が縮まないので、2枚に割るか dense を併用する。
+ * 2026-09-10 追加。academic-ja と同じ記法。 */
+section.outline ol {
+  counter-reset: outline;
+  list-style: none;
+  margin: 0.5em 0 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55em;
+}
+section.outline ol > li {
+  counter-increment: outline;
+  position: relative;
+  margin: 0;
+  padding: 0.42em 0 0.42em 108px;
+  border-top: 1px solid var(--color-rule);
+  font-size: 1.05em;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--color-fg);
+}
+section.outline ol > li::before {
+  content: counter(outline, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.30em;
+  width: 88px;
+  font-size: 1.5em;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-accent);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: 0.01em;
+}
+/* 最後の項目の下にも罫線を引いて、一覧を閉じる */
+section.outline ol > li:last-child { border-bottom: 1px solid var(--color-rule); }
+section.outline .outline-desc {
+  display: block;
+  margin-top: 0.15em;
+  font-size: 0.62em;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+/* 現在地を示したいときは強調色に振る: <li class="signal"> は使わず、
+   コンテナ版として .now を用意する（本文の太さを変えないため）。 */
+section.outline ol > li.now { color: var(--color-signal); }
+section.outline ol > li.now::before { color: var(--color-signal); }
+section.outline ol > li.dim::before { color: var(--color-dim); }
+
+/* ── academic-ja から移植した部品（2026-09-10）──────────────────
+ * いずれも「この判型では成り立たない」という理由が無かったもの。
+ * 移植しなかったのは密度エスケープ（dense / compact）とコード用クラス
+ * （code-*）だけで、それぞれ本ファイル冒頭と Code 節に理由がある。
+ * 補助テキストの em は本文32px 基準に読み替えてある（下限 19.2px）。
+ * ============================================================ */
+
+/* 図を上・箇条書きを下に置く _class 版。figure-layout と同じ変数で効く。 */
+section.figure-top {
+  --figure-height: 380px;
+  --figure-gap: 12px;
+  --figure-notes-size: 0.82em;
+  --figure-justify: center;
+  --figure-offset-x: 0px;
+  --figure-offset-y: 0px;
+}
+section.figure-top > p:has(> img) {
+  display: flex;
+  justify-content: var(--figure-justify);
+  align-items: flex-start;
+  margin: 0 0 var(--figure-gap) 0 !important;
+}
+section.figure-top > p:has(> img) img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: var(--figure-height);
+  object-fit: contain;
+  transform: translate(var(--figure-offset-x), var(--figure-offset-y));
+}
+section.figure-top > ul,
+section.figure-top > ol {
+  margin-top: 0 !important;
+  font-size: var(--figure-notes-size);
+}
+
+/* 史料画像などを格子状に並べる。<div class="fig-grid"> 画像… </div> */
+section .fig-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 0.6em 0;
+}
+section .fig-grid img {
+  border: none;
+  margin: 0;
+  width: 100%;
+  max-height: none;
+}
+
+/* 単体要素（表・画像）の幅。自動的に中央揃えになる。
+   .columns の中では col-1 / col-2 / col-3 を使う。 */
+section .w-25  { width: 25%;    margin-left: auto; margin-right: auto; }
+section .w-33  { width: 33.33%; margin-left: auto; margin-right: auto; }
+section .w-50  { width: 50%;    margin-left: auto; margin-right: auto; }
+section .w-66  { width: 66.67%; margin-left: auto; margin-right: auto; }
+section .w-75  { width: 75%;    margin-left: auto; margin-right: auto; }
+section .w-full { width: 100%;  margin-left: 0;    margin-right: 0;    }
+
+/* 画像つきの横並びステップ。
+   <div class="step-flow">
+     <div class="step"><p class="step-label">Step 1</p><img …>
+       <p class="step-caption">…</p></div>
+     <div class="step-arrow">→</div>
+     …
+   </div> */
+section .step-flow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+section .step-flow .step { flex: 1; text-align: center; min-width: 0; }
+section .step-flow .step-label {
+  font-weight: 600;
+  font-size: 0.68em;
+  margin-bottom: 6px;
+  color: var(--color-accent);
+}
+section .step-flow .step img {
+  display: inline-block;
+  height: 240px;
+  width: auto;
+  max-width: 100%;
+  max-height: none;
+  margin: 0 auto;
+}
+section .step-flow .step-caption {
+  font-size: 0.62em;
+  color: var(--color-muted);
+  margin-top: 6px;
+}
+section .step-flow .step-arrow {
+  display: flex;
+  align-items: center;
+  font-size: 1.5em;
+  color: var(--color-rule);
+  flex-shrink: 0;
+  padding-top: 90px;
+}
+
+/* アイコン付きカード。academic-ja と同じ「淡い塗り＋角丸」。
+   罫線系の .card とは別部品として併存させる（.card は一点強調のために
+   上罫の色を変える型、.icon-card はアイコン主体の紹介の型）。 */
+section .icon-cards {
+  display: flex;
+  gap: 24px;
+  margin: 0.6em 0;
+  width: 100%;
+}
+section .icon-card {
+  flex: 1;
+  min-width: 0;
+  background: var(--color-accent-light);
+  border-radius: 8px;
+  padding: 1em;
+  text-align: center;
+}
+section .icon-card .icon { display: block; margin: 0 auto 0.2em; }
+section .icon-card-title {
+  font-weight: 700;
+  margin-bottom: 0.2em;
+}
+section .icon-card-desc {
+  font-size: 0.68em;
+  line-height: 1.45;
+  color: var(--color-muted);
+}
+
+/* ── Print / PDF ────────────────────────────────────────────── */
+@media print {
+  section { box-shadow: none; }
+}

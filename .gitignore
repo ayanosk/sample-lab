@@ -1,0 +1,48 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+.env.*
+.envrc
+*.pem
+*.key
+*.p12
+*.pfx
+credentials/
+secrets/
+
+# macOS
+.DS_Store
+
+# Microsoft Office 一時ロックファイル
+~$*
+
+# Claude のローカル設定
+.claude/settings.local.json
+
+# よくある生成物
+*.log
+*.sqlite
+*.db
+
+# 各プロジェクトの生成結果
+project_a/outputs/*
+!project_a/outputs/.gitkeep
+project_b/outputs/*
+!project_b/outputs/.gitkeep
+
+# 発表資料の書き出し
+publications/*.pdf
+publications/*.pptx
+
+# LaTeX 生成物
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.run.xml
+*.synctex.gz
+*.toc

@@ -1,0 +1,120 @@
+% ---- /md-to-pdf 共通プリアンブル（LuaLaTeX 用・全レイアウトに埋め込まれる）----
+% pandoc は数式に amsmath の環境（aligned 等）を、チェックボックスに
+% amssymb の \square を使う。原稿に数式が出た時点で落ちるので必ず読む。
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{fvextra}
+% pandocの表出力（longtable）対応。calcは列幅計算の \real を供給する
+\usepackage{longtable,booktabs,array}
+\usepackage{calc}
+\usepackage{newunicodechar}
+%% 和文フォントに無い記号を、同義の和文記号へ寄せる
+\newunicodechar{⚪}{○}
+\newunicodechar{⚫}{●}
+\usepackage[hidelinks]{hyperref}
+% jlreqでは \@currentcounter が none のことがあり、hyperref+longtableが
+% \refstepcounter{none} を呼んで「No counter 'none' defined」で落ちる。回避用に定義。
+\makeatletter
+\@ifundefined{c@none}{\newcounter{none}}{}
+\makeatother
+% 行末・行長調整で和欧混在時の改行位置と均等割りを改善
+\usepackage{luatexja-adjust}
+\ltjsetparameter{xkanjiskip={0.25\zw plus 0.15\zw minus 0.08\zw},
+                 kanjiskip={0\zw plus 0.08\zw minus 0.08\zw}}
+
+% 画像の相対パス（img/... 等）を入力mdのフォルダ基準で解決する
+% （Obsidian vaultでは img/ がvaultルートにあることが多いため、親ディレクトリも探索する）
+\graphicspath{__GRAPHICSPATH__}
+
+% pandoc は \includegraphics に alt= キーを付けるので graphicx に無視させる
+\makeatletter
+\define@key{Gin}{alt}[]{}
+\makeatother
+
+% citeproc 引用マクロ（pandoc 3.x の \citeproc 形式に対応）
+% \NewDocumentCommand はLaTeX 2020-10-01以降のカーネル機能。
+% TeX Live 2019以前では未定義なので xparse を読み込んで補う。
+\makeatletter
+\@ifundefined{NewDocumentCommand}{\usepackage{xparse}}{}
+\makeatother
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % 引用の行分割を許可し、\cite の括弧を抑止（citeproc書式に委ねる）
+ \let\@cite@ofmt\@firstofone
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+% citeproc の参考文献リスト（CSLReferences）用の定義（pandoc common.latex より）
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
+  \ifodd #1
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
+  \fi
+  % 項目間は詰める（CSLの entry-spacing #2 は採用しない）
+  \setlength{\itemsep}{0.2\baselineskip}}}
+ {\end{list}}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+%%% 学会クラス固有マクロのフォールバック %%%
+% 投稿規定に沿って書いた原稿（\ecaption や \figref を含む）を、学会クラス以外の
+% レイアウトでも下見できるようにする。学会クラス側で定義済みなら \providecommand は
+% 何もしないので、ipsj などの本番ビルドには影響しない。
+\providecommand{\ecaption}[1]{}          % 図表の英文見出しは落とす（和文見出しのみ残る）
+\providecommand{\CaptionType}[1]{}
+\providecommand{\figref}[1]{図~\ref{#1}}
+\providecommand{\tabref}[1]{表~\ref{#1}}
+\providecommand{\urlj}[1]{\texttt{#1}}
+\providecommand{\refdatej}[1]{（参照 #1）}
+\providecommand{\profile}[3]{\par\noindent\textbf{#2}\quad #3\par\smallskip}
+\makeatletter
+\@ifundefined{acknowledgment}{%
+  \newenvironment{acknowledgment}{\par\medskip\noindent\textbf{謝辞}\par\nobreak}{\par\medskip}}{}
+\@ifundefined{biography}{%
+  \newenvironment{biography}{\par\medskip\noindent\textbf{著者紹介}\par\nobreak\small}{\par}}{}
+\makeatother
+
+% pandoc ヘルパ
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\newcommand{\pandocbounded}[1]{\begin{center}%
+  \adjustbox{max width=0.66\linewidth,max totalheight=0.5\textheight}{#1}\end{center}}
+
+% ==ハイライト== → 折り返し可能な色付き太字（Obsidianの蛍光ペン相当）
+\newcommand{\hl}[1]{\textbf{\textcolor[HTML]{B00000}{#1}}}
+
+% Obsidianの箇条書きは6段以上ネストしうるので上限を拡張しつつ詰める
+\setlistdepth{9}
+\renewlist{itemize}{itemize}{9}
+\renewlist{enumerate}{enumerate}{9}
+\setlist{leftmargin=1.15em,itemsep=1pt,parsep=0pt,topsep=2pt,partopsep=0pt}
+\setlist[itemize]{label=\textbullet}
+\setlist[itemize,2]{label=\normalfont\bfseries--}
+\setlist[itemize,3]{label=\textopenbullet}
+\setlist[itemize,4]{label=\textperiodcentered}
+\setlist[itemize,5]{label=\textasteriskcentered}
+\setlist[itemize,6]{label=\textperiodcentered}
+\setlist[itemize,7]{label=\textperiodcentered}
+\setlist[itemize,8]{label=\textperiodcentered}
+\setlist[itemize,9]{label=\textperiodcentered}
+
+% コードブロック（XML等）：小フォントでトークン境界折り返し（語中で切らない）
+\RecustomVerbatimEnvironment{verbatim}{Verbatim}%
+  {fontsize=\scriptsize,breaklines=true,breakanywhere=false,breakautoindent=true,%
+   breaksymbolleft=\raisebox{0.2ex}{\scriptsize\color{gray!70}$\hookrightarrow$},%
+   breaksymbolindentleft=0.6em,xleftmargin=1.2em,xrightmargin=0.5em,%
+   frame=leftline,framerule=0.4pt,rulecolor=\color{gray!50}}

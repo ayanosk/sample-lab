@@ -1,0 +1,86 @@
+% lab/latex/templates/thesis/main.tex — 学位論文の雛形
+% LuaLaTeX + jlreq(book) + biblatex/biber
+%
+% 使い方:
+%   1. このフォルダごと publications/<論文名>/ にコピーする
+%   2. latexmk main.tex  （VSCode の LaTeX Workshop なら保存時に自動ビルド）
+%   パスの書き換えは不要。ただし雛形の置き場所のままではビルドできない。
+%
+% 章は chapters/ に1ファイルずつ置き、ここから \input で読み込む。
+% 1ファイルが長くなりすぎないので、章単位で AI に渡しやすい。
+
+\documentclass[a4paper,12pt,oneside,openany,book]{jlreq}
+
+% 共通プリアンブルと共通の書誌データ（パスの書き換えは不要）
+\input{../../lab/latex/preamble-ja}
+\addbibresource{../../lab/latex/references.bib}
+
+\title{博士論文のタイトル\\
+  {\large サブタイトルをここに置く}}
+\author{氏名}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+% ===== 前付（目次など。ページ番号はローマ数字） =====
+\frontmatter
+\tableofcontents
+
+% ===== 本文 =====
+\mainmatter
+\input{chapters/1_introduction}
+
+% 部（\part）で章をまとめる場合。使わないなら \part の行を消すだけでよい。
+\part{第1部の題名}
+\input{chapters/2_chapter}
+
+\part{第2部の題名}
+\input{chapters/3_chapter}
+
+% 結論を部に属させない場合は、目次上でも前の部から視覚的に切り離す
+\addtocontents{toc}{\protect\addvspace{1.5em}}
+\input{chapters/4_conclusion}
+
+% ===== 後付（参考文献一覧） =====
+\backmatter
+
+% \clearpage を無効化して、分割した文献リストを続けて組む
+\begingroup
+\let\clearpage\relax
+
+\chapter*{参考文献一覧}
+\addcontentsline{toc}{chapter}{参考文献一覧}
+
+% 文献の分類は .bib の keywords フィールドで行う。
+% 例: keywords = {source-archive} と書いた項目だけが下の「未公刊史料」に出る。
+% 分類が不要なら、この節をまるごと消して
+%   \printbibliography[title={参考文献}]
+% の1行に置き換えればよい。
+
+\section*{I\quad 史料}
+
+\subsection*{1.\quad 未公刊史料}
+\printbibliography[heading=subsubbibliography, keyword=source-archive, title={}]
+
+\subsection*{2.\quad 刊行史料}
+\printbibliography[heading=subsubbibliography, keyword=source-printed, title={}]
+
+\section*{II\quad 研究文献}
+
+% notkeyword で「史料に分類されなかったもの」を拾う。
+% 史料のキーワードを増やしたら、ここにも notkeyword を足すこと。
+\subsection*{1.\quad 欧語文献}
+\printbibliography[heading=subsubbibliography,
+  notkeyword=source-archive, notkeyword=source-printed, notkeyword=japanese,
+  title={}]
+
+\subsection*{2.\quad 邦語文献}
+\printbibliography[heading=subsubbibliography,
+  notkeyword=source-archive, notkeyword=source-printed, keyword=japanese,
+  title={}]
+
+\endgroup
+
+\end{document}

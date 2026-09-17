@@ -1,0 +1,26 @@
+% ---- transcript: 口頭発表原稿（A4・12pt・36字×22行のゆったり行送り）----
+% 読み上げ用: 大きめの文字・広い行間・段落間の空きで、発表中に目で追いやすくする
+%
+%%! fontsize     = 12pt
+%%! classopts    = a4paper,fontsize=__FONTSIZE__,line_length=36zw,number_of_lines=22
+%%! titleblock   = center-meta
+%%! bibliography = suppress
+%%! toplevel     = default
+
+\documentclass[__CLASSOPTS__]{jlreq}
+__COMMON__
+
+% 段落間を空けて「読みの単位」を見やすくする（字下げは維持）
+\setlength{\parskip}{0.5\baselineskip}
+
+% ページ番号を大きめに（めくり位置の確認用）
+\makeatletter
+\def\@evenfoot{\hfil\large\thepage\hfil}
+\def\@oddfoot{\hfil\large\thepage\hfil}
+\makeatother
+
+\begin{document}
+__TITLEBLOCK__
+__BODY__
+
+\end{document}

@@ -1,0 +1,24 @@
+% ---- thesis: 学位論文体裁（A4・10.5pt・40字×30行・book クラス）----
+% md の見出し1（# / \chapter{}）が「第n章」になる。章単位の原稿を
+% 学位論文の体裁で確認するためのレイアウト。
+%
+% 部（\part）や、史料と研究文献に分けた文献一覧が要る完成稿は、
+% md からではなく同じフォルダの main.tex（LaTeX 雛形）で組む。
+%
+%%! fontsize     = 10.5pt
+%%! classopts    = a4paper,fontsize=__FONTSIZE__,line_length=40zw,number_of_lines=30,book,oneside,openany
+%%! titleblock   = title-only
+%%! bibliography = list
+%%! toplevel     = chapter
+
+\documentclass[__CLASSOPTS__]{jlreq}
+__COMMON__
+
+% 本文主体。リストは標準的な空きに戻す
+\setlist{leftmargin=2em,itemsep=2pt,parsep=0pt,topsep=4pt,partopsep=0pt}
+
+\begin{document}
+__TITLEBLOCK__
+__BODY__
+
+\end{document}

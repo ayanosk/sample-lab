@@ -1,0 +1,20 @@
+% ---- paper: 論文体裁（A4・10.5pt・40字×30行・jlreq標準組）----
+% 余白は jlreq が line_length / number_of_lines から自動算出する（geometry は使わない）
+%
+%%! fontsize     = 10.5pt
+%%! classopts    = a4paper,fontsize=__FONTSIZE__,line_length=40zw,number_of_lines=30
+%%! titleblock   = title-only
+%%! bibliography = list
+%%! toplevel     = default
+
+\documentclass[__CLASSOPTS__]{jlreq}
+__COMMON__
+
+% 論文では箇条書きよりも本文が主体。リストは標準的な空きに戻す
+\setlist{leftmargin=2em,itemsep=2pt,parsep=0pt,topsep=4pt,partopsep=0pt}
+
+\begin{document}
+__TITLEBLOCK__
+__BODY__
+
+\end{document}

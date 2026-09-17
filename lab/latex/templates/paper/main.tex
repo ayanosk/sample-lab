@@ -1,9 +1,10 @@
-% publications/sample_paper/main.tex
+% lab/latex/templates/paper/main.tex — 論文の最小構成の雛形
 % LaTeX 動作確認用サンプル（LuaLaTeX + jlreq + biblatex）
 %
 % ビルド方法:
-%   cd publications/sample_paper
-%   latexmk main.tex
+%   1. このフォルダごと publications/<名前>/ にコピーする
+%   2. cd publications/<名前> して latexmk main.tex
+%   （雛形の置き場所のままでは相対パスが合わないのでビルドできない）
 %
 % VSCode の LaTeX Workshop が保存時に自動ビルドし、隣のタブに PDF が表示されます。
 %
@@ -16,11 +17,10 @@
 
 \documentclass[a4paper,11pt,oneside]{jlreq}
 
-% 共通プリアンブルの読み込み
+% 共通プリアンブルと共通の書誌データ。
+% パスは publications/<名前>/ に置かれている前提。書き換えは不要。
 \input{../../lab/latex/preamble-ja}
-
-% このサンプル用の参考文献ファイル
-\addbibresource{references.bib}
+\addbibresource{../../lab/latex/references.bib}
 
 % タイトル
 \title{LaTeX 動作確認サンプル}

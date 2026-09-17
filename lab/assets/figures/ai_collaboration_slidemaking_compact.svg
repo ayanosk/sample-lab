@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 170" width="1200" height="170" font-family="Noto Sans JP, Hiragino Kaku Gothic ProN, sans-serif">
+  <!-- ai_collaboration_slidemaking.svg の短縮版。
+       figure-layout の figure-height を 170px にした枠に合わせ、横帯だけを残したもの。
+       viewBox 1200×170・最小 font-size 18
+       注意: XMLコメントの中にハイフン2つは書けない。CSS変数名をそのまま
+       書くとSVG全体が不正になり、画像が読み込まれなくなる。 -->
+
+  <rect x="0" y="0" width="1200" height="170" fill="#ffffff"/>
+
+  <!-- ── 段階名 ─────────────────────────────────────────────── -->
+  <g font-size="20" font-weight="700" fill="#1a1a2e" text-anchor="middle">
+    <text x="100" y="46">成果物を選ぶ</text>
+    <text x="300" y="46">テーマを選ぶ</text>
+    <text x="500" y="46">叩き台を出す</text>
+    <text x="700" y="46">文言と図を直す</text>
+    <text x="900" y="46">PDF・PPTXを出力</text>
+    <text x="1100" y="46">配置を微調整</text>
+  </g>
+
+  <!-- ── 担い手の帯（紺=研究者 / 淡紺=AI / ゴールド=両者）───── -->
+  <g stroke-width="1.5">
+    <rect x="6"    y="62" width="188" height="52" rx="4" fill="#2c5f8a" stroke="#2c5f8a"/>
+    <rect x="206"  y="62" width="188" height="52" rx="4" fill="#2c5f8a" stroke="#2c5f8a"/>
+    <rect x="406"  y="62" width="188" height="52" rx="4" fill="#e8f0f8" stroke="#c8d1dc"/>
+    <rect x="606"  y="62" width="188" height="52" rx="4" fill="#d4a843" stroke="#c9973a"/>
+    <rect x="806"  y="62" width="188" height="52" rx="4" fill="#e8f0f8" stroke="#c8d1dc"/>
+    <rect x="1006" y="62" width="188" height="52" rx="4" fill="#2c5f8a" stroke="#2c5f8a"/>
+  </g>
+
+  <!-- 段階番号 -->
+  <g font-size="20" font-weight="700" text-anchor="middle">
+    <text x="100"  y="96" fill="#ffffff">1</text>
+    <text x="300"  y="96" fill="#ffffff">2</text>
+    <text x="500"  y="96" fill="#2c5f8a">3</text>
+    <text x="700"  y="96" fill="#1a1a2e">4</text>
+    <text x="900"  y="96" fill="#2c5f8a">5</text>
+    <text x="1100" y="96" fill="#ffffff">6</text>
+  </g>
+
+  <!-- 帯のあいだの送り -->
+  <g fill="#c8d1dc">
+    <path d="M 196 82 L 204 88 L 196 94 z"/>
+    <path d="M 396 82 L 404 88 L 396 94 z"/>
+    <path d="M 596 82 L 604 88 L 596 94 z"/>
+    <path d="M 796 82 L 804 88 L 796 94 z"/>
+    <path d="M 996 82 L 1004 88 L 996 94 z"/>
+  </g>
+
+  <!-- ── 担い手 ─────────────────────────────────────────────── -->
+  <g font-size="18" font-weight="700" text-anchor="middle">
+    <text x="100"  y="142" fill="#2c5f8a">研究者</text>
+    <text x="300"  y="142" fill="#2c5f8a">研究者</text>
+    <text x="500"  y="142" fill="#5a6474">AI</text>
+    <text x="700"  y="142" fill="#b5540e">研究者＋AI</text>
+    <text x="900"  y="142" fill="#5a6474">AI</text>
+    <text x="1100" y="142" fill="#2c5f8a">研究者</text>
+  </g>
+</svg>
