@@ -25,15 +25,23 @@ secrets/
 *.sqlite
 *.db
 
-# 各プロジェクトの生成結果
-project_a/outputs/*
-!project_a/outputs/.gitkeep
-project_b/outputs/*
-!project_b/outputs/.gitkeep
+# 各 work の生成結果
+work/*/outputs/*
+!work/*/outputs/.gitkeep
 
-# 発表資料の書き出し
-publications/*.pdf
-publications/*.pptx
+# 独立Gitリポジトリの置き場。外側Gitでは追跡しない。
+# ここを追跡すると入れ子リポジトリが gitlink として登録され、中身も履歴も壊れる
+repos/*
+!repos/.gitkeep
+!repos/README.md
+
+# 完成版の書き出し。サイズが大きいので履歴には入れない
+publications/**/*.pdf
+publications/**/*.pptx
+publications/**/*.docx
+
+# 完成版の置き場に .tex は要らない（原稿は work/publications/ 側にある）
+publications/**/*.tex
 
 # LaTeX 生成物
 *.aux

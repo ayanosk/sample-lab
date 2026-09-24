@@ -1,0 +1,20 @@
+# project_b
+
+もう一つの作業単位のサンプルです。執筆や授業準備のような作業を想定しています。
+**名前は自分の用途に合わせて変えてください**（`teaching/`、`review/` など）。
+
+## フォルダの役割
+
+- `sources/` : 配布資料、元原稿、参照ファイル
+- `scripts/` : 整形や集計の補助コード
+- `outputs/` : 書き出し結果や中間成果
+- `docs/` : 構成案、打ち合わせメモ、TODO
+
+## 原稿を書くとき
+
+学会発表や論文の**原稿は [work/publications/](../publications/) に置きます。**
+ビルドすると、完成版の PDF・PPTX だけが [publications/](../../publications/) に集まります。
+
+## このフォルダだけのルールが要るとき
+
+`work/project_b/AGENTS.md` を作り、**親の [AGENTS.md](../../AGENTS.md) と違う点だけ**を書きます。
