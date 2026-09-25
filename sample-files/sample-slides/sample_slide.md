@@ -43,7 +43,7 @@ lang: ja
 
 # 本文の編集方法
 
-`sample-lab/lab/slides/templates`内のmdファイルには、基本的な記法のサンプルが並んでいます。それらを参考にしつつ、このスライドを自由に編集してみましょう。
+`sample-lab/.claude/skills/build-slide/assets/templates`内のmdファイルには、基本的な記法のサンプルが並んでいます。それらを参考にしつつ、このスライドを自由に編集してみましょう。
 
 テーマは **「AIによって自らの研究環境はいかに変わりうるか」** とします。
 
@@ -62,7 +62,7 @@ lang: ja
 
 # 図表の記法
 
-`sample-lab/lab/slides/templates`内のmdファイルには、基本的な記法のサンプルが並んでいます。それらを使って、図とテキストからなるスライドを作成して下さい。
+`sample-lab/.claude/skills/build-slide/assets/templates`内のmdファイルには、基本的な記法のサンプルが並んでいます。それらを使って、図とテキストからなるスライドを作成して下さい。
 
 オリジナルの画像を作成し、挿入することも歓迎します。
 

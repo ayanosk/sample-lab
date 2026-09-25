@@ -22,8 +22,8 @@ tools: Read, Glob, Grep, Write
 
 | 用途 | 雛形 |
 |---|---|
-| 和文の発表・授業 | `lab/slides/templates/template_academic-ja.md` |
-| 国際学会（英語） | `lab/slides/templates/template_academic-intl.md` |
+| 和文の発表・授業 | `.claude/skills/build-slide/assets/templates/template_academic-ja.md` |
+| 国際学会（英語） | `.claude/skills/build-slide/assets/templates/template_academic-intl.md` |
 
 雛形は**テーマのレイアウトと記法のサンプル集**である。1枚が1クラスに対応し、
 そのスライドの本文に記法の説明が書いてある。要らない枚を削り、残した枚の
@@ -76,7 +76,7 @@ tools: Read, Glob, Grep, Write
 ### 書いたら必ず検査する
 
 ```bash
-python3 lab/slides/check_svg_text.py <図.svg または デッキ.md>
+python3 .claude/skills/build-slide/scripts/check_svg_text.py <図.svg または デッキ.md>
 ```
 
 下限割れがあれば、必要な font-size を数値で教えてくれる。

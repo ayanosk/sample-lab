@@ -13,7 +13,7 @@ lang: ja
   使い方
     1. コピーして原稿を置くディレクトリへ（例: publications/<event>/）
     2. 要らないスライドを消し、[  ] を置換する
-    3. 図を入れたら  python3 lab/slides/check_svg_text.py <このファイル>
+    3. 図を入れたら  python3 .claude/skills/build-slide/scripts/check_svg_text.py <このファイル>
     4. /build-slide <パス>  で PDF・PPTX を出力
 
   手順と作図の基準の正本: publications/README.md の「スライド」節

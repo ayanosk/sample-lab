@@ -37,7 +37,16 @@ case "$format" in
 esac
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-repo_root="$(cd "${script_dir}/../.." && pwd)"
+
+# リポジトリルート（AGENTS.md のあるフォルダ）を上へ辿って探す。
+# 「../..」のように階層数を決め打ちすると、スキルを置き直したときに壊れる。
+repo_root="$script_dir"
+while [[ "$repo_root" != "/" && ! -e "$repo_root/AGENTS.md" ]]; do
+  repo_root="$(dirname "$repo_root")"
+done
+if [[ "$repo_root" == "/" ]]; then
+  repo_root="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || pwd)"
+fi
 
 # --- 入力パスの解決は cd する前に行う ---
 # Marp の themeSet（.marprc.yml）はリポジトリルート基準なので、後で cd "$repo_root" する。
@@ -120,7 +129,7 @@ if [[ -z "${MARP_SKIP_SVG_CHECK:-}" && -f "${script_dir}/check_svg_text.py" ]] \
   if ! python3 "${script_dir}/check_svg_text.py" --quiet "$target_file" >&2; then
     cat >&2 <<'SVGWARN'
 [WARN] 図の中の文字が小さすぎます。上の指示どおり font-size を上げてください。
-       一括で直す: python3 lab/slides/check_svg_text.py --fix <このmd>
+       一括で直す: python3 .claude/skills/build-slide/scripts/check_svg_text.py --fix <このmd>
        （拡大後は枠からのはみ出しを目視で確認すること）
        この検査を飛ばす: MARP_SKIP_SVG_CHECK=1
 SVGWARN
@@ -179,6 +188,17 @@ fi
 case "$format" in
   --pdf)  out_file="${target_file%.md}.pdf" ;;
   --pptx) out_file="${target_file%.md}.pptx" ;;
+esac
+
+# 完成版の収集先。原稿が work/publications/<名前>/ の下にあるなら、
+# 同じ名前の publications/<名前>/ へ完成版だけをコピーする。
+# 手でコピーすると忘れるので、ビルドの一部として行う。
+src_dir="$(cd "$(dirname "$target_file")" && pwd)"
+collect_dir=""
+case "$src_dir/" in
+  "${repo_root}/work/publications/"*)
+    collect_dir="${repo_root}/publications/${src_dir#"${repo_root}/work/publications/"}"
+    ;;
 esac
 
 # --- marp 実行体の解決 ---
@@ -246,7 +266,7 @@ if ! resolve_marp_launcher; then
 marp コマンドが見つかりません。
 - インストール: npm i -g @marp-team/marp-cli
 - すでに入っている場合は MARP_BIN に実行体のパスを指定してください。
-    例: MARP_BIN=/path/to/marp lab/slides/build_marp.sh --pdf slide.md
+    例: MARP_BIN=/path/to/marp .claude/skills/build-slide/scripts/build_marp.sh --pdf slide.md
 - Node.js（npm / npx）自体が入っていない可能性もあります。
 EOF
   exit 1
@@ -273,4 +293,13 @@ Marpのビルドに失敗しました。
 - MARP_BROWSER_PATH でブラウザを明示指定することもできます。
 EOF
   exit 1
+fi
+
+echo "OK: $out_file"
+
+# 完成版を publications/<名前>/ へ集める
+if [[ -n "$collect_dir" ]]; then
+  mkdir -p "$collect_dir"
+  cp "$out_file" "$collect_dir/"
+  echo "収集: ${collect_dir}/$(basename "$out_file")"
 fi

@@ -1,6 +1,6 @@
 ---
 name: md-to-docx
-description: Markdownを、コメント・変更履歴を付けてもらうためのdocxに変換する。Wordネイティブ脚注・明朝本文・ゴシック見出し・A4。本文の[@key]はlab/latex/references.bibで脚注書誌に展開する。
+description: Markdownを、コメント・変更履歴を付けてもらうためのdocxに変換する。Wordネイティブ脚注・明朝本文・ゴシック見出し・A4。本文の[@key]はbibliography/references.bibで脚注書誌に展開する。
 argument-hint: "<mdファイルパス> [タイトル] [--outdir DIR] [--number-sections]"
 ---
 
@@ -27,7 +27,7 @@ bash .claude/skills/md-to-docx/md2docx.sh <入力mdパス> ["タイトル"]
 
 - **前処理**（md-to-pdf と同一）: `\chapter{X}` → 見出し1、`\section{X}` → 見出し2、`<sup>N</sup><span class="footnote">…</span>` → pandoc脚注
 - **脚注**: Wordネイティブの脚注（ページ下部・自動採番）として出力
-- **書誌**: `[@key]` は `lab/latex/references.bib` + Chicago note CSL で脚注書誌に展開
+- **書誌**: `[@key]` は `bibliography/references.bib` + Chicago note CSL で脚注書誌に展開
 - **体裁**: 同梱 `reference.docx` を適用。本文 Times New Roman + ＭＳ 明朝 12pt（行間1.5）、見出し Arial + ＭＳ ゴシック（黒）、A4縦・余白30mm
 - **出力先**: 入力mdと同じフォルダ（`--outdir` で変更可）
 - **表示**: 生成後にWordで自動オープン（`--no-open` で抑止）
@@ -52,8 +52,8 @@ python3 .claude/skills/md-to-docx/make_reference.py
 ## 使用例
 
 ```
-/md-to-docx project_a/docs/draft_ch3.md
-/md-to-docx publications/20260911_seminar/resume.md "ゼミレジュメ" --number-sections
+/md-to-docx work/project_a/docs/draft_ch3.md
+/md-to-docx work/publications/20260911_seminar/resume.md "ゼミレジュメ" --number-sections
 ```
 
 ## 関連スキル

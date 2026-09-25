@@ -15,11 +15,17 @@ set -euo pipefail
 
 PANDOC="$(command -v pandoc || true)"
 SKILL_DIR="$(cd "$(dirname "$0")" && pwd)"
-ROOT="$(git -C "$SKILL_DIR" rev-parse --show-toplevel 2>/dev/null || pwd)"
+# リポジトリルート（AGENTS.md のあるフォルダ）を上へ辿って探す。
+# git 管理外に展開された場合でも動くよう、git には頼りきらない。
+ROOT="$SKILL_DIR"
+while [[ "$ROOT" != "/" && ! -e "$ROOT/AGENTS.md" ]]; do
+  ROOT="$(dirname "$ROOT")"
+done
+[[ "$ROOT" == "/" ]] && ROOT="$(git -C "$SKILL_DIR" rev-parse --show-toplevel 2>/dev/null || pwd)"
 REF="${SKILL_DIR}/reference.docx"
 # 書誌は Zotero（Better BibTeX）の自動エクスポート先をリポジトリで1本に固定する
-BIB="${ROOT}/lab/latex/references.bib"
-CSL="${ROOT}/lab/latex/chicago-note-bibliography.csl"
+BIB="${ROOT}/bibliography/references.bib"
+CSL="${ROOT}/bibliography/chicago-note-bibliography.csl"
 OUTDIR=""
 
 # ---- 引数処理 ----

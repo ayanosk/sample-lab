@@ -12,7 +12,7 @@
  * 違う別テーマなので、`theme:` だけ差し替えると全枚数がリフローする。
  *
  * .vscode/settings.json と .marprc.yml に登録済み。
- * 実際の見た目と記法は lab/slides/templates/template_academic-ja.md で確認できる。
+ * 実際の見た目と記法は .claude/skills/build-slide/assets/templates/template_academic-ja.md で確認できる。
  *
  * ── 設計の根拠 ────────────────────────────────────────────
  * 末尾のブロックのクラス（.chart-label / .dim / .dim-body / .signal /
@@ -380,7 +380,7 @@ section.table-tight {
  * 18 以上にする。** こうすれば倍率が1.0前後になり、viewBox の数字が
  * ほぼそのまま実効px になる。
  *
- * 検査:  python3 lab/slides/check_svg_text.py <デッキ.md>
+ * 検査:  python3 .claude/skills/build-slide/scripts/check_svg_text.py <デッキ.md>
  * ビルド時にも自動で走る（build_marp.sh）。
  *
  * max-height は px で指定する（スライド高 800px の 70%）。

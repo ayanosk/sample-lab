@@ -1,12 +1,18 @@
 ---
 name: build-slide
-description: MarpスライドMDからPDFとPPTXを生成する。原稿・出力とも publications/<イベント>/ に置く。
+description: MarpスライドMDからPDFとPPTXを生成する。原稿は work/publications/<イベント>/、完成版は publications/<イベント>/ に出す。
 argument-hint: "<スライドmdのパス> [--pdf-only|--pptx-only]"
 ---
 
 # スライドビルド
 
 **引数:** $ARGUMENTS
+
+> **このスキルの `assets/` はエディタからも参照されている。**
+> `assets/academic-ja.css` と `assets/academic-intl.css` は、`.marprc.yml` の `themeSet` と
+> `.vscode/settings.json` の `markdown.marp.themes` が名指ししている。
+> このスキルを削除・改名・移動すると、**Marp for VS Code のプレビューがエラーも出さずに崩れる。**
+> 動かすときは、その2ファイルのパスも一緒に直すこと。
 
 ## 手順
 
@@ -15,8 +21,9 @@ argument-hint: "<スライドmdのパス> [--pdf-only|--pptx-only]"
 引数からファイルパスとフラグを読み取る。
 
 - `--pdf-only` / `--pptx-only` フラグを確認
-- 原稿mdは `publications/<イベント名>/` に置くのが基本。PDF・PPTX は同じディレクトリに出る
-- 新規作成なら `lab/slides/templates/template_academic-ja.md`（和文）または
+- **原稿mdは `work/publications/<イベント名>/` に置く。** 中間ファイルもそこに残る
+- **完成版の PDF・PPTX は `publications/<イベント名>/` に出す**（手順3で自動的にコピーされる）
+- 新規作成なら `.claude/skills/build-slide/assets/templates/template_academic-ja.md`（和文）または
   `template_academic-intl.md`（英語）をコピーして始める
 - 手順とテーマ・作図の基準の正本は `publications/README.md` の「スライド」節
 
@@ -36,22 +43,22 @@ argument-hint: "<スライドmdのパス> [--pdf-only|--pptx-only]"
 
 **PDF（`--pptx-only` でない場合）:**
 ```bash
-lab/slides/build_marp.sh --pdf [パス] 2>&1
+.claude/skills/build-slide/scripts/build_marp.sh --pdf [パス] 2>&1
 ```
 
 **PPTX（`--pdf-only` でない場合）:**
 ```bash
-lab/slides/build_marp.sh --pptx [パス] 2>&1
+.claude/skills/build-slide/scripts/build_marp.sh --pptx [パス] 2>&1
 ```
 
 ビルド前に `check_svg_text.py` が自動で走り、図中の文字が小さすぎる場合に警告する
 （ビルドは止めない）。**警告が出たらユーザに報告し、黙って通さないこと。**
-一括修正は `python3 lab/slides/check_svg_text.py --fix [パス]`。font-size を一律拡大する
+一括修正は `python3 .claude/skills/build-slide/scripts/check_svg_text.py --fix [パス]`。font-size を一律拡大する
 だけで図形は動かさないため、適用後は必ず出力PDFを目視確認する。
 
 **Windows の PowerShell など `build_marp.sh` が使えない環境:**
 ```bash
-python3 lab/slides/check_svg_text.py [パス]   # 検査は手動で
+python3 .claude/skills/build-slide/scripts/check_svg_text.py [パス]   # 検査は手動で
 npx @marp-team/marp-cli --allow-local-files --pdf [パス]
 npx @marp-team/marp-cli --allow-local-files --pptx [パス]
 ```

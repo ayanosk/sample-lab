@@ -1,8 +1,8 @@
 ---
 title: 情報処理学会論文誌ジャーナル論文の準備方法\\（ipsj.cls version 2.01）
 title_en: How to Prepare Your Paper for IPSJ Journal \\ (ipsj.cls version 2.01)
-template: ipsj   # /md-to-pdf が読むレイアウト名（lab/latex/templates/ のフォルダ名）
-bib: lab/latex/templates/ipsj/jsample.bib
+template: ipsj   # /md-to-pdf が読むレイアウト名（.claude/skills/md-to-pdf/assets/templates/ のフォルダ名）
+bib: .claude/skills/md-to-pdf/assets/templates/ipsj/jsample.bib
 author:
   - 情報 太郎
   - 処理 花子

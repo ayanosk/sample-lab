@@ -3,9 +3,9 @@
 # jlreq + LuaLaTeX。正規化 → 前処理 → pandoc → テンプレート結合 → lualatex。
 #
 # レイアウトは frontmatter の `pdf:` キーまたは --layout で指定する。
-# 使えるレイアウトは lab/latex/templates/<名前>/layout.tex を走査して決まるので、
+# 使えるレイアウトは .claude/skills/md-to-pdf/assets/templates/<名前>/layout.tex を走査して決まるので、
 # 追加するときはそのフォルダを1つ置くだけでよい（layout.tex 先頭の %%! 行が既定値）。
-# LaTeX はすべて lab/latex/ にある。このスクリプトはテンプレートを持たない。
+# LaTeX はすべてこのスキルの assets/ にある。このスクリプトはテンプレートを持たない。
 #
 # Usage:
 #   bash md2pdf.sh <md_path> [title] [options]
@@ -13,7 +13,7 @@
 #   --layout NAME       レイアウト名（frontmatter `pdf:` より優先）
 #   --author "氏名"     タイトル部に作成者を表示（既定: 空）
 #   --date "YYYY-MM-DD" タイトル部に日付を表示（YYYY年M月D日 へ自動整形。既定: 空）
-#   --outdir DIR        出力先（既定: publications/。原稿が publications/ 下なら原稿の隣）
+#   --outdir DIR        出力先（既定: 原稿の隣。work/publications/ 下なら完成版を publications/ へ収集）
 #   --fontsize 9pt      本文サイズ（既定: レイアウトごとの宣言値）
 #   --margin 15mm       余白（geometry を使うレイアウトのみ有効）
 #   --twocolumn         本文2段組
@@ -23,14 +23,20 @@
 set -euo pipefail
 
 SKILL_DIR="$(cd "$(dirname "$0")" && pwd)"
-ROOT="$(git -C "$SKILL_DIR" rev-parse --show-toplevel 2>/dev/null || pwd)"
+# リポジトリルート（AGENTS.md のあるフォルダ）を上へ辿って探す。
+# git 管理外に展開された場合でも動くよう、git には頼りきらない。
+ROOT="$SKILL_DIR"
+while [[ "$ROOT" != "/" && ! -e "$ROOT/AGENTS.md" ]]; do
+  ROOT="$(dirname "$ROOT")"
+done
+[[ "$ROOT" == "/" ]] && ROOT="$(git -C "$SKILL_DIR" rev-parse --show-toplevel 2>/dev/null || pwd)"
 PANDOC="$(command -v pandoc || true)"
 LATEXMK="$(command -v latexmk || true)"
 # 書誌は Zotero（Better BibTeX）の自動エクスポート先をリポジトリで1本に固定する
-BIB="${ROOT}/lab/latex/references.bib"
-CSL="${ROOT}/lab/latex/chicago-note-bibliography.csl"
-TPL_DIR="${ROOT}/lab/latex/templates"
-COMMON="${ROOT}/lab/latex/md-common.tex"
+BIB="${ROOT}/bibliography/references.bib"
+CSL="${ROOT}/bibliography/chicago-note-bibliography.csl"
+TPL_DIR="${SKILL_DIR}/assets/templates"
+COMMON="${SKILL_DIR}/assets/md-common.tex"
 
 # --- 引数解析 ---
 OPEN=true; TWOCOL=""; FONTSIZE=""; MARGIN="top=15mm,bottom=15mm,hmargin=20mm"
@@ -116,13 +122,13 @@ TOPLEVEL="$(tpl_directive toplevel)";     TOPLEVEL="${TOPLEVEL:-default}"
 ENGINE="$(tpl_directive engine)";         ENGINE="${ENGINE:-lualatex}"
 CITEMODE="$(tpl_directive citations)";    CITEMODE="${CITEMODE:-citeproc}"
 COMMON_NAME="$(tpl_directive common)";    COMMON_NAME="${COMMON_NAME:-md-common.tex}"
-# common はレイアウト自身のフォルダ → lab/latex/ の順に探す（none で読み込まない）
+# common はレイアウト自身のフォルダ → assets/ の順に探す（none で読み込まない）
 if [[ "$COMMON_NAME" == "none" ]]; then
   COMMON=""
 elif [[ -f "${TPL_DIR}/${LAYOUT}/${COMMON_NAME}" ]]; then
   COMMON="${TPL_DIR}/${LAYOUT}/${COMMON_NAME}"
 else
-  COMMON="${ROOT}/lab/latex/${COMMON_NAME}"
+  COMMON="${SKILL_DIR}/assets/${COMMON_NAME}"
 fi
 [[ -n "$CLASSOPTS" ]] || { echo "ERROR: $TEMPLATE に '%%! classopts = ...' の宣言がありません。" >&2; exit 1; }
 [[ -z "$COMMON" || -f "$COMMON" ]] || { echo "ERROR: 共通プリアンブルがありません: $COMMON" >&2; exit 1; }
@@ -134,17 +140,23 @@ case "$ENGINE" in lualatex|platex) ;; *)
 
 SRC_DIR="$(cd "$(dirname "$MD_FILE")" && pwd)"
 BASE="$(basename "${MD_FILE%.md}")"
-# 出力先の既定。成果物は publications/ に集めるが、原稿がすでに publications/ の
-# 下にあるならその隣に出す（原稿と成果物を同じフォルダで扱う運用のため）。
+# 出力先の既定は「原稿の隣」。中間ファイル（.tex や正規化済み .md）もここに出るので、
+# 制作中のものが完成版の置き場に混ざらない。
 if [[ -z "$OUTDIR" ]]; then
-  if [[ "$SRC_DIR" == "${ROOT}/publications"* ]]; then
-    OUTDIR="$SRC_DIR"
-  else
-    OUTDIR="${ROOT}/publications"
-  fi
+  OUTDIR="$SRC_DIR"
 fi
 [[ "$OUTDIR" != /* ]] && OUTDIR="${ROOT}/${OUTDIR}"
 mkdir -p "$OUTDIR"
+
+# 完成版の収集先。原稿が work/publications/<名前>/ の下にあるなら、
+# 同じ名前の publications/<名前>/ へ PDF だけをコピーする（中間ファイルは移さない）。
+# 手でコピーすると忘れるので、ビルドの一部として行う。
+COLLECT_DIR=""
+case "$SRC_DIR/" in
+  "${ROOT}/work/publications/"*)
+    COLLECT_DIR="${ROOT}/publications/${SRC_DIR#"${ROOT}/work/publications/"}"
+    ;;
+esac
 
 # --- タイトル: 引数 → frontmatter title: → \chapter{} → 最初の # 見出し → ファイル名 ---
 TITLE="$TITLE_ARG"
@@ -433,7 +445,7 @@ PY
 # レイアウトのフォルダに置かれたクラスファイル（学会指定の .cls/.sty/.bst）を探せるようにする
 export TEXINPUTS="${TPL_DIR}/${LAYOUT}:${TEXINPUTS:-}"
 export BSTINPUTS="${TPL_DIR}/${LAYOUT}:${BSTINPUTS:-}"
-export BIBINPUTS="${ROOT}/lab/latex:${TPL_DIR}/${LAYOUT}:${BIBINPUTS:-}"
+export BIBINPUTS="${ROOT}/bibliography:${SKILL_DIR}/assets:${TPL_DIR}/${LAYOUT}:${BIBINPUTS:-}"
 if [[ "$ENGINE" == "platex" ]]; then
   # 日本語の .bst（ipsjunsrt 等）は is.kanji.str$ を使うため、素の bibtex では
   # 「unknown function」で落ちる。日本語版の pbibtex を明示する。
@@ -462,4 +474,12 @@ if command -v pdfinfo >/dev/null 2>&1; then
 fi
 [[ -n "$MISSING_BIB" ]] && echo "WARN: [@key] 引用がありますが書誌が見つかりません: $MISSING_BIB" >&2
 echo "OK: $PDF (${PAGES:-?}ページ)  layout=$LAYOUT  engine=$ENGINE  tex=$TEX"
+
+# 完成版を publications/<名前>/ へ集める（原稿が work/publications/ 配下のときだけ）
+if [[ -n "$COLLECT_DIR" ]]; then
+  mkdir -p "$COLLECT_DIR"
+  cp "$PDF" "$COLLECT_DIR/"
+  echo "収集: ${COLLECT_DIR}/${BASE}.pdf"
+fi
+
 [[ "$OPEN" == true ]] && open "$PDF" 2>/dev/null || true

@@ -1,4 +1,4 @@
-# lab/latex/templates
+# templates（.claude/skills/md-to-pdf/assets/templates）
 
 論文・レジュメの雛形です。**新しい学会テンプレートを足すときは、ここにフォルダを1つ作るだけ**で済みます。他のファイルを書き換える必要はありません。
 
@@ -10,6 +10,7 @@
 | `thesis/` | 学位論文。章を `chapters/` に分割、部と史料／研究文献に分けた文献一覧つき |
 | `resume/` | ゼミ・会議の配布レジュメ |
 | `transcript/` | 口頭発表の読み上げ原稿（Markdown からの変換専用） |
+| `ipsj/` | 情報処理学会論文誌。学会配布の `.cls` `.bst` 同梱。pLaTeX で組む |
 
 ## 1つのフォルダに入る2種類のファイル
 
@@ -17,14 +18,14 @@
 
 | ファイル | いつ使われるか |
 |---|---|
-| `main.tex` ＋ `.latexmkrc`（＋ `chapters/`） | **LaTeX で書くとき。** フォルダごと `publications/<名前>/` にコピーして、`main.tex` を直接編集する |
+| `main.tex` ＋ `.latexmkrc`（＋ `chapters/`） | **LaTeX で書くとき。** フォルダごと `work/publications/<名前>/` にコピーして、`main.tex` を直接編集する |
 | `layout.tex` | **Markdown で書くとき。** `/md-to-pdf <パス> --layout <フォルダ名>` が本文を流し込む型枠。コピーしない |
 
 どちらか一方だけでも構いません。`transcript/` は `layout.tex` だけを持ちます（読み上げ原稿を LaTeX で直接書くことはまずないため）。
 
 ## 新しいテンプレートの足し方
 
-`jsai/`（人工知能学会）を例にすると、`lab/latex/templates/jsai/` を作り、必要な方を置きます。
+`jsai/`（人工知能学会）を例にすると、`.claude/skills/md-to-pdf/assets/templates/jsai/` を作り、必要な方を置きます。
 
 **Markdown から出したい場合** — `jsai/layout.tex` を作ります。既存の `paper/layout.tex` をコピーして直すのが早いです。
 
@@ -45,11 +46,11 @@ __BODY__
 \end{document}
 ```
 
-`__COMMON__` `__TITLEBLOCK__` `__BODY__` は変換時に差し替わる目印です。消さないでください。`__COMMON__` には `lab/latex/md-common.tex` が入ります。
+`__COMMON__` `__TITLEBLOCK__` `__BODY__` は変換時に差し替わる目印です。消さないでください。`__COMMON__` には `assets/md-common.tex` が入ります。
 
 置いた時点で `/md-to-pdf 原稿.md --layout jsai` が使えます。`/md-to-pdf` に一覧を教える設定はありません（このフォルダを毎回見に行きます）。
 
-**LaTeX で直接書きたい場合** — `jsai/main.tex` と `jsai/.latexmkrc` を置きます。`paper/` をコピーして中身を差し替えるのが早いです。パスは `publications/<名前>/` にコピーされた状態（`../../lab/latex/...`）で書いてください。
+**LaTeX で直接書きたい場合** — `jsai/main.tex` と `jsai/.latexmkrc` を置きます。`paper/` をコピーして中身を差し替えるのが早いです。パスは書かないでください（`\input{preamble-ja}` のように名前だけ）。`.latexmkrc` がリポジトリルートを探して検索パスを通します。
 
 **学会指定のクラスファイル**（`ipsj.cls` など）がある場合は、`.cls` `.sty` `.bst` をまとめて同じフォルダに置きます。`/md-to-pdf` はビルド時にこのフォルダを `TEXINPUTS` / `BSTINPUTS` に加えるので、コピーや登録は不要です。
 
@@ -71,6 +72,6 @@ __BODY__
 
 ## 注意
 
-- 雛形は**その場ではビルドできません**。相対パスが `publications/<名前>/` に置かれた前提のためです。まずコピーしてください
-- 書誌は `lab/latex/references.bib` の1本を共有します。雛形ごとに `.bib` は持ちません
+- 雛形は**その場でビルドしないでください**。このスキルの中に出力が散らかります。まず `work/publications/<名前>/` へコピーしてください（コピー先の深さは問いません）
+- 書誌は `bibliography/references.bib` の1本を共有します。雛形ごとに `.bib` は持ちません
 - 学会の制約が体裁以外（提出物の構成、`.bbl` の同梱など）にも及ぶ場合は、テンプレートに加えて `build-<学会名>` のスキルを作ることを検討してください

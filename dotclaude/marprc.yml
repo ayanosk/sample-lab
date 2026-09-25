@@ -5,5 +5,5 @@
 allowLocalFiles: true
 
 themeSet:
-  - lab/slides/academic-ja.css
-  - lab/slides/academic-intl.css
+  - .claude/skills/build-slide/assets/academic-ja.css
+  - .claude/skills/build-slide/assets/academic-intl.css

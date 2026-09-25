@@ -12,7 +12,7 @@ footer: "[Author] · [Affiliation] · [Conference], [Year]"
   使い方
     1. コピーして原稿を置くディレクトリへ
     2. 要らないスライドを消し、[  ] を置換する
-    3. 図を入れたら  python3 lab/slides/check_svg_text.py <このファイル>
+    3. 図を入れたら  python3 .claude/skills/build-slide/scripts/check_svg_text.py <このファイル>
     4. /build-slide <パス>  で PDF・PPTX を出力
 
   手順と作図の基準の正本: publications/README.md の「スライド」節
@@ -395,4 +395,4 @@ Everything else in `academic-ja` is available here under the same markup. These 
 | `dense` / `compact` | A talk is projected, not handed out. Shrinking body text to fit is the wrong repair | Cut content, or split the slide in two |
 | `table-fit` / `table-tight` | Both drop below what the back row can read | `table-compact`, then cut rows or move the table to an appendix |
 
-<p class="footnote">Build with /build-slide, or bash lab/slides/build_marp.sh --pdf &lt;file&gt;</p>
+<p class="footnote">Build with /build-slide, or bash .claude/skills/build-slide/scripts/build_marp.sh --pdf &lt;file&gt;</p>

@@ -498,7 +498,7 @@ section.table-compact { --table-line-height: 1.28; --table-cell-py: 0.3em; }
  * ほぼそのまま実効px になる。図が入りきらないなら viewBox を広げるのでは
  * なく図を分割する。広げれば必ず字が小さくなる。
  *
- * 検査:  python3 lab/slides/check_svg_text.py <デッキ.md>
+ * 検査:  python3 .claude/skills/build-slide/scripts/check_svg_text.py <デッキ.md>
  * ビルド時にも自動で走る（build_marp.sh）。
  */
 /* 図に枠線は付けない（academic-ja と同じ扱い）。史料画像のように輪郭を

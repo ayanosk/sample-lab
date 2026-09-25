@@ -21,9 +21,9 @@ SVGの `font-size` は viewBox のユーザ単位であって、スライド上�
 
 ## 使い方
 
-    python3 lab/slides/check_svg_text.py FIG.svg [...]        # SVGを直接
-    python3 lab/slides/check_svg_text.py deck.md              # デッキが参照する図を全部
-    python3 lab/slides/check_svg_text.py figures/            # ディレクトリ内を全部
+    python3 .claude/skills/build-slide/scripts/check_svg_text.py FIG.svg [...]        # SVGを直接
+    python3 .claude/skills/build-slide/scripts/check_svg_text.py deck.md              # デッキが参照する図を全部
+    python3 .claude/skills/build-slide/scripts/check_svg_text.py figures/            # ディレクトリ内を全部
 
     --theme academic-ja|academic-intl 枠の大きさと本文サイズ（.md指定時は自動判定）
     --full                           fig-full スライド前提で判定（.md指定時は自動判定）

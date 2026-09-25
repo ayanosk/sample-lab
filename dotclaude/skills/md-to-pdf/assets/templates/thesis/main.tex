@@ -1,19 +1,19 @@
-% lab/latex/templates/thesis/main.tex — 学位論文の雛形
+% .claude/skills/md-to-pdf/assets/templates/thesis/main.tex — 学位論文の雛形
 % LuaLaTeX + jlreq(book) + biblatex/biber
 %
 % 使い方:
-%   1. このフォルダごと publications/<論文名>/ にコピーする
+%   1. このフォルダごと work/publications/<論文名>/ にコピーする
 %   2. latexmk main.tex  （VSCode の LaTeX Workshop なら保存時に自動ビルド）
-%   パスの書き換えは不要。ただし雛形の置き場所のままではビルドできない。
+%   パスの書き換えは不要。ただし雛形の置き場所のままビルドすると、スキルの中に出力が散らかる。
 %
 % 章は chapters/ に1ファイルずつ置き、ここから \input で読み込む。
 % 1ファイルが長くなりすぎないので、章単位で AI に渡しやすい。
 
 \documentclass[a4paper,12pt,oneside,openany,book]{jlreq}
 
-% 共通プリアンブルと共通の書誌データ（パスの書き換えは不要）
-\input{../../lab/latex/preamble-ja}
-\addbibresource{../../lab/latex/references.bib}
+% 共通プリアンブルと共通の書誌データ。パスは書かない（.latexmkrc が解決する）
+\input{preamble-ja}
+\addbibresource{references.bib}
 
 \title{博士論文のタイトル\\
   {\large サブタイトルをここに置く}}

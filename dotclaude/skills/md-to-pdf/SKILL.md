@@ -1,6 +1,6 @@
 ---
 name: md-to-pdf
-description: MarkdownをA4のPDFに変換する。レイアウトはfrontmatterの`template:`キー（旧`pdf:`も可）か--layoutで指定：resume=配布レジュメ/paper=論文体裁/thesis=学位論文体裁(章立て)/transcript=口頭発表原稿/ipsj=情報処理学会論文誌。テンプレートは lab/latex/templates/ にあり、フォルダを足すだけでレイアウトが増える。
+description: MarkdownをA4のPDFに変換する。レイアウトはfrontmatterの`template:`キー（旧`pdf:`も可）か--layoutで指定：resume=配布レジュメ/paper=論文体裁/thesis=学位論文体裁(章立て)/transcript=口頭発表原稿/ipsj=情報処理学会論文誌。テンプレートは .claude/skills/md-to-pdf/assets/templates/ にあり、フォルダを足すだけでレイアウトが増える。
 argument-hint: "<mdファイルパス> [タイトル] [--layout resume|paper|thesis|transcript|ipsj] [--author 氏名] [--date YYYY-MM-DD]"
 ---
 
@@ -28,7 +28,7 @@ template: transcript
 ```
 
 **部（`\part`）や、史料と研究文献に分けた文献一覧が要る完成稿は、md ではなく
-`lab/latex/templates/thesis/main.tex` の LaTeX 雛形で組む。**
+`.claude/skills/md-to-pdf/assets/templates/thesis/main.tex` の LaTeX 雛形で組む。**
 
 ## 手順
 
@@ -39,7 +39,7 @@ bash .claude/skills/md-to-pdf/md2pdf.sh <入力mdパス> ["タイトル"] [optio
 主なオプション:
 - `--layout NAME`：レイアウトの明示指定
 - `--author "氏名"` / `--date "2026-09-11"`：作成者・日付（`YYYY-MM-DD` は `YYYY年M月D日` へ自動整形。**`paper` と `thesis` は作成者を表示しない**＝原稿確認用）
-- `--outdir DIR`：出力先。**既定は `publications/`**（原稿がすでに `publications/` の下にあれば原稿の隣）
+- `--outdir DIR`：出力先。**既定は原稿の隣**。原稿が `work/publications/<名前>/` の下にあれば、完成版が `publications/<名前>/` にも自動で集まる
 - `--fontsize 8pt` / `--margin 15mm` / `--twocolumn`：体裁の微調整
 - `--no-secnum`：見出しに番号を振らない。原稿に「1. はじめに」と番号を書いてある場合、自動採番と二重になるので使う
 - `--keep-h1`：冒頭の `# 見出し` を本文に残す（既定はタイトルブロックと重複するため除去）
@@ -49,20 +49,20 @@ bash .claude/skills/md-to-pdf/md2pdf.sh <入力mdパス> ["タイトル"] [optio
 1. **正規化**（`normalize.py`）：見出し直前の空行補完・リスト内コードフェンスの列0出し。本文の文言は変更しない
 2. **前処理**：`\chapter{}`→`#`、`\section{}`→`##`、脚注span→pandoc脚注、callout マーカー除去、wikilink を表示テキストに
 3. **pandoc**：本文をLaTeXフラグメント化。`[@key]` があれば citeproc + Chicago note で脚注書誌に展開
-4. **テンプレート結合**：`lab/latex/templates/<レイアウト>/layout.tex` + `lab/latex/md-common.tex` を単一の `.tex` に
+4. **テンプレート結合**：`.claude/skills/md-to-pdf/assets/templates/<レイアウト>/layout.tex` + `.claude/skills/md-to-pdf/assets/md-common.tex` を単一の `.tex` に
 5. **LuaLaTeXコンパイル**：`latexmk -lualatex`。補助ファイルは自動で掃除
 
 ## 出力
-- `<outdir>/<basename>.pdf` … 生成PDF（既定の出力先は `publications/`）（ページ数とレイアウトを報告）
+- `<outdir>/<basename>.pdf` … 生成PDF（既定は原稿の隣。ページ数とレイアウトを報告）。`work/publications/` 配下なら `publications/` への収集も報告する
 - `<outdir>/<basename>.tex` … 単一ソース（`latexmk -lualatex` で再コンパイル可・手直し可）
 
 ## レイアウトを増やす
 
-**このスキルは LaTeX を一切持たない。**テンプレートは `lab/latex/templates/<名前>/layout.tex`
+**このスキルは LaTeX を一切持たない。**テンプレートは `.claude/skills/md-to-pdf/assets/templates/<名前>/layout.tex`
 にあり、スクリプトは実行のたびにこのフォルダを走査してレイアウト名を認識する。
 足すときはフォルダを1つ作るだけでよい（引数解析にも SKILL.md にも手を入れない）。
 `layout.tex` 先頭の `%%!` 行がそのレイアウトの既定値になる。手順は
-`lab/latex/templates/README.md`。
+`.claude/skills/md-to-pdf/assets/templates/README.md`。
 
 ```tex
 %%! fontsize     = 10pt
@@ -85,12 +85,12 @@ common と citations を宣言し、`.cls` `.sty` `.bst` をレイアウトの�
 ```
 
 投稿用の最終原稿は、巻号・受付日・英文要旨など Markdown から渡せない項目があるため、
-同じフォルダの `main.tex` を `publications/` にコピーして LaTeX で仕上げる。
+同じフォルダの `main.tex` を `work/publications/<名前>/` にコピーして LaTeX で仕上げる。
 このレイアウトは体裁の下見用と位置づける。
 
 ## 書誌（Zotero 連携）
 
-本文に `[@citekey]` と書くと、`lab/latex/references.bib` を引いて脚注書誌になる。
+本文に `[@citekey]` と書くと、`bibliography/references.bib` を引いて脚注書誌になる。
 このファイルは Zotero の Better BibTeX から自動エクスポートする想定。
 
 **日本語の著者名は `author = {山田太郎}` と姓名を区切らず1語で書く。**
@@ -112,8 +112,8 @@ common と citations を宣言し、`.cls` `.sty` `.bst` をレイアウトの�
 
 ## 使用例
 ```
-/md-to-pdf publications/20260911_seminar/resume.md --author "山田太郎" --date "2026-09-11"
-/md-to-pdf project_a/docs/draft_ch3.md --layout thesis
+/md-to-pdf work/publications/20260911_seminar/resume.md --author "山田太郎" --date "2026-09-11"
+/md-to-pdf work/project_a/docs/draft_ch3.md --layout thesis
 /md-to-pdf 発表原稿.md   # frontmatter に pdf: transcript があれば発表原稿体裁
 ```
 
