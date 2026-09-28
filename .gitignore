@@ -43,6 +43,10 @@ publications/**/*.docx
 # 完成版の置き場に .tex は要らない（原稿は work/publications/ 側にある）
 publications/**/*.tex
 
+# 履歴書の基本情報。生年月日・住所・電話番号を入れる場所なので既定では追跡しない。
+# 使うときは cv/master/01_基本情報.csv.example をコピーする
+cv/master/01_基本情報.csv
+
 # LaTeX 生成物
 *.aux
 *.bbl

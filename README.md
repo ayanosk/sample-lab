@@ -30,6 +30,7 @@ sample-lab/
 ├── CLAUDE.md                     ← Claude Code 固有の設定だけ（冒頭で AGENTS.md を読み込む）
 ├── .gitignore
 ├── bibliography/                 ← 書誌データ（Zotero の自動エクスポート先）と引用スタイル
+├── cv/                           ← 履歴書に転記する業績一覧（researchmap が正本）
 ├── dotclaude/                    ← セットアップ時に .claude/ にリネーム（下記参照）
 │   ├── agents/                   ← エージェント定義
 │   ├── skills/                   ← スキル定義。雛形・テーマ・スクリプトも中にある
@@ -170,7 +171,7 @@ Claude Code / Codex が以下を自動で行います（人間の操作が必要
 - 生成結果は `work/<名前>/outputs/`
 - メモや下書きは `work/<名前>/docs/`
 - 発表・論文の**原稿**は `work/publications/<名前>/`、**完成版**は `publications/<名前>/`（ビルドすると自動で集まる）
-- 書誌は `bibliography/references.bib`
+- 書誌は `bibliography/references.bib`、履歴書用の業績一覧は `cv/master/`
 - `lab/` は自分が開く共通部品、`.claude/skills/` はエージェントへの手順書
 
 ## セキュリティ設定

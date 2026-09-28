@@ -36,6 +36,7 @@ Claude Code、Codex など複数の AI ツールで共有する**共通ルール
 | `work/publications/<名前>/` | 原稿の制作。原稿・図・中間ファイルはここ |
 | `publications/<名前>/` | 完成版の収集場所。PDF・PPTX だけを置く |
 | `bibliography/references.bib` | 書誌データ。Zotero から自動エクスポートする |
+| `cv/master/` | 履歴書に転記するための業績一覧。researchmap が正本 |
 | `lab/` | 複数の work で使う共通部品（図のサンプル、ログ） |
 | `repos/` | 別Gitが必要なもの。このリポジトリでは追跡しない |
 
