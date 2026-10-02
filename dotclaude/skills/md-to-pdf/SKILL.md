@@ -93,13 +93,15 @@ common と citations を宣言し、`.cls` `.sty` `.bst` をレイアウトの�
 本文に `[@citekey]` と書くと、`bibliography/references.bib` を引いて脚注書誌になる。
 このファイルは Zotero の Better BibTeX から自動エクスポートする想定。
 
-**日本語の著者名は `author = {山田太郎}` と姓名を区切らず1語で書く。**
-`{山田 太郎}` は biblatex・citeproc が「名 姓」と読んで姓が「太郎」になり、
-`{山田, 太郎}` は学会の日本語 .bst で「太郎山田」と反転する。区切らない形だけが
-3系統すべてで正しく出る。**`.bib` のコメントにアットマーク記号を書かないこと**
+**日本語の著者名は `author = {山田, 太郎}` と姓と名をカンマで区切る。**
+Zotero で姓・名の欄を分けて入れるとこの形になる。citeproc は CJK の人名を判別し、
+文献一覧では「山田太郎」と連結し、脚注では「山田」に短縮する。
+`{山田 太郎}` と空白で区切ると「名 姓」と読まれて姓が「太郎」になり、
+`{山田太郎}` とまとめ書きすると全体が姓とみなされ脚注が短縮されない。**`.bib` のコメントにアットマーク記号を書かないこと**
 （BibTeX がエントリ開始と誤認して止まる）。
 
 ## 前提
+- **Python**（`python3` または `python`。Windows の python.org 版は `python` のみ）
 - `pandoc`・`latexmk`・**LuaLaTeX** と、`jlreq` `luatexja-adjust` `enumitem` `fvextra` `adjustbox`（TeX Live）
 - `engine = platex` のレイアウトを使う場合は `platex` `pbibtex` `dvipdfmx` も必要（TeX Live に同梱）
 

@@ -48,6 +48,7 @@ python3 .claude/skills/md-to-docx/make_reference.py
 
 ## 前提
 - `pandoc`（`brew install pandoc`）。LaTeX は不要
+- **Python**（`python3` または `python`）。`reference.docx` の生成に使う
 
 ## 使用例
 

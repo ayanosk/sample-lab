@@ -63,7 +63,7 @@ npx @marp-team/marp-cli --allow-local-files --pdf [パス]
 npx @marp-team/marp-cli --allow-local-files --pptx [パス]
 ```
 この場合は**リポジトリルートで実行する**（`.marprc.yml` のテーマ設定がルート基準のため）。
-`python3` が無ければ `python` に読み替える。
+`build_marp.sh` は `python3` が無ければ `python` を使う。どちらも無ければ検査を飛ばす。
 
 ### 4. 確認と報告
 

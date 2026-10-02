@@ -29,13 +29,13 @@ sample-lab/
 ├── AGENTS.md                     ← AI への指示書（共通ルールの正本。書き換えて使う）
 ├── CLAUDE.md                     ← Claude Code 固有の設定だけ（冒頭で AGENTS.md を読み込む）
 ├── .gitignore
+├── .marprc.yml                   ← Marp CLI の設定（テーマの登録。そのまま使う）
 ├── bibliography/                 ← 書誌データ（Zotero の自動エクスポート先）と引用スタイル
 ├── cv/                           ← 履歴書に転記する業績一覧（researchmap が正本）
 ├── dotclaude/                    ← セットアップ時に .claude/ にリネーム（下記参照）
 │   ├── agents/                   ← エージェント定義
 │   ├── skills/                   ← スキル定義。雛形・テーマ・スクリプトも中にある
-│   ├── settings.json             ← 危険な操作をブロックする設定
-│   └── marprc.yml                ← → .marprc.yml にコピー
+│   └── settings.json             ← 危険な操作をブロックする設定
 ├── dotvscode/                    ← セットアップ時に .vscode/ にリネーム
 ├── lab/
 │   ├── assets/figures/           ← 使い回す図
@@ -101,15 +101,12 @@ Claude Code / Codex が以下を自動で行います（人間の操作が必要
 2. **dotclaude/ の展開**（以下のコマンドを順に実行する）
    **bash / Git Bash / WSL:**
    ```bash
-   # 隠しファイルをルートにコピー（リネーム前に行うこと）
-   cp dotclaude/marprc.yml .marprc.yml
    # ディレクトリをリネーム
    mv dotclaude .claude
    mv dotvscode .vscode
    ```
    **PowerShell:**
    ```powershell
-   Copy-Item dotclaude/marprc.yml .marprc.yml
    Move-Item dotclaude .claude
    Move-Item dotvscode .vscode
    ```

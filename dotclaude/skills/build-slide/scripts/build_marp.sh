@@ -2,6 +2,17 @@
 
 set -euo pipefail
 
+# --- Python 実行体の解決 ---
+# Windows の python.org 版は python.exe しか作らず、python3 が無い。
+# python3 → python の順に探し、見つかったほうを $PY として使う。
+if command -v python3 >/dev/null 2>&1; then
+  PY=python3
+elif command -v python >/dev/null 2>&1; then
+  PY=python
+else
+  PY=""
+fi
+
 usage() {
   cat <<'EOF'
 Usage: build_marp.sh --pdf|--pptx <markdown-file>
@@ -84,13 +95,13 @@ cd "$repo_root"
 # Marp はHTMLブロック内のMarkdown記法を処理しないため、
 # `text` → <code>text</code> に変換した一時ファイルを生成する。
 # 山括弧もエスケープ: <tag> → &lt;tag&gt;
-# python3 が無い環境ではこの前処理だけ飛ばす（ビルド自体は通る）。
+# Python が無い環境ではこの前処理だけ飛ばす（ビルド自体は通る）。
 preprocess_md() {
-  if ! command -v python3 >/dev/null 2>&1; then
+  if [[ -z "$PY" ]]; then
     cat
     return 0
   fi
-  python3 -c "
+  "$PY" -c "
 import re, sys
 
 text = sys.stdin.read()
@@ -125,8 +136,8 @@ preprocess_md < "$target_file" > "$tmp_file"
 # 「図の字が小さい」と指摘される。ビルドは止めず警告にとどめる。
 # MARP_SKIP_SVG_CHECK=1 で黙らせられる。
 if [[ -z "${MARP_SKIP_SVG_CHECK:-}" && -f "${script_dir}/check_svg_text.py" ]] \
-   && command -v python3 >/dev/null 2>&1; then
-  if ! python3 "${script_dir}/check_svg_text.py" --quiet "$target_file" >&2; then
+   && [[ -n "$PY" ]]; then
+  if ! "$PY" "${script_dir}/check_svg_text.py" --quiet "$target_file" >&2; then
     cat >&2 <<'SVGWARN'
 [WARN] 図の中の文字が小さすぎます。上の指示どおり font-size を上げてください。
        一括で直す: python3 .claude/skills/build-slide/scripts/check_svg_text.py --fix <このmd>

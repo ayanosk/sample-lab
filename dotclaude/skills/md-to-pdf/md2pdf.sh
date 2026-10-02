@@ -23,6 +23,18 @@
 set -euo pipefail
 
 SKILL_DIR="$(cd "$(dirname "$0")" && pwd)"
+# --- Python 実行体の解決 ---
+# Windows の python.org 版は python.exe しか作らず、python3 が無い。
+# python3 → python の順に探し、見つかったほうを $PY として使う。
+if command -v python3 >/dev/null 2>&1; then
+  PY=python3
+elif command -v python >/dev/null 2>&1; then
+  PY=python
+else
+  PY=""
+fi
+[[ -n "$PY" ]] || { echo "ERROR: python3 も python も見つかりません。Python を入れてください。" >&2; exit 1; }
+
 # リポジトリルート（AGENTS.md のあるフォルダ）を上へ辿って探す。
 # git 管理外に展開された場合でも動くよう、git には頼りきらない。
 ROOT="$SKILL_DIR"
@@ -172,7 +184,7 @@ BODY="${OUTDIR}/.${BASE}.body.tex"
 TEX="${OUTDIR}/${BASE}.tex"
 
 # --- 1) 正規化（書き癖の機械補正）＋ 記法の前処理 ---
-python3 "${SKILL_DIR}/normalize.py" "$MD_FILE" "$NORM"
+"$PY" "${SKILL_DIR}/normalize.py" "$MD_FILE" "$NORM"
 
 # 冒頭の # 見出しは原稿のタイトル行なので本文から落とす（\chapter{} 変換より前に行う
 # ので、\chapter{} 記法は対象外）。--keep-h1 で抑止できる。
@@ -220,7 +232,7 @@ if grep -q '\[@' "$NORM"; then
     # Zotero が出す「姓, 名」は日本語 .bst で姓名が反転する。詰めた複製を作って渡す
     # （元の references.bib は変更しない）
     BIBFORTEX="${OUTDIR}/.${BASE}.bib"
-    python3 "${SKILL_DIR}/bib_for_pbibtex.py" "$BIB" "$BIBFORTEX" >&2
+    "$PY" "${SKILL_DIR}/bib_for_pbibtex.py" "$BIB" "$BIBFORTEX" >&2
   else
     CITE+=(--citeproc --bibliography="$BIB")
     if [[ "$BIBMODE" == "list" ]]; then
@@ -246,7 +258,7 @@ TITLE="$TITLE" AUTHOR="$AUTHOR" DATE="$DATE" TITLESTYLE="$TITLESTYLE" \
 CLASSOPTS="$CLASSOPTS" MARGIN="$MARGIN" \
 TEMPLATE="$TEMPLATE" COMMON_TEX="$COMMON" SECNUM="$SECNUM" MD_FILE="$MD_FILE" BIBPATH="${BIBFORTEX%.bib}" \
 BODY_TEX="$BODY" OUT_TEX="$TEX" ROOT="$ROOT" \
-python3 <<'PY'
+"$PY" <<'PY'
 import os, re
 tpl    = open(os.environ["TEMPLATE"], encoding="utf-8").read()
 _c     = os.environ.get("COMMON_TEX", "")

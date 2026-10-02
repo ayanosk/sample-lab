@@ -13,6 +13,18 @@
 
 set -euo pipefail
 
+# --- Python 実行体の解決 ---
+# Windows の python.org 版は python.exe しか作らず、python3 が無い。
+# python3 → python の順に探し、見つかったほうを $PY として使う。
+if command -v python3 >/dev/null 2>&1; then
+  PY=python3
+elif command -v python >/dev/null 2>&1; then
+  PY=python
+else
+  PY=""
+fi
+[[ -n "$PY" ]] || { echo "ERROR: python3 も python も見つかりません。Python を入れてください。" >&2; exit 1; }
+
 PANDOC="$(command -v pandoc || true)"
 SKILL_DIR="$(cd "$(dirname "$0")" && pwd)"
 # リポジトリルート（AGENTS.md のあるフォルダ）を上へ辿って探す。
@@ -47,7 +59,7 @@ TITLE_ARG="${ARGS[1]:-}"
 # ---- 事前チェック ----
 [[ -n "$PANDOC" ]] || { echo "ERROR: pandoc が見つかりません（'brew install pandoc'）。" >&2; exit 1; }
 [[ -f "$MD_FILE" ]] || { echo "ERROR: 入力ファイルが見つかりません: $MD_FILE" >&2; exit 1; }
-[[ -f "$REF" ]] || { echo "INFO: reference.docx を生成します..." >&2; python3 "${SKILL_DIR}/make_reference.py" "$REF"; }
+[[ -f "$REF" ]] || { echo "INFO: reference.docx を生成します..." >&2; "$PY" "${SKILL_DIR}/make_reference.py" "$REF"; }
 
 BASE="$(basename "${MD_FILE%.md}")"
 OUT="${OUTDIR}/${BASE}.docx"
