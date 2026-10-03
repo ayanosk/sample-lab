@@ -1,0 +1,59 @@
+# 第三者の著作物について
+
+このリポジトリには、第三者が作成し、それぞれ独自の条件で提供されているファイルが
+含まれています。**以下のものは、[LICENSE](./LICENSE) が定める二つのライセンスの
+いずれの対象でもありません。** 利用・再配布の際は、各項に記載した条件に従って
+ください。
+
+---
+
+## bibliography/chicago-shortened-notes-bibliography.csl
+
+引用スタイル（CSL）ファイル。
+
+- 著作者: Andrew Dunning (https://orcid.org/0000-0003-0464-5036)
+- 出所: Citation Style Language styles リポジトリ
+  https://github.com/citation-style-language/styles
+- ライセンス: Creative Commons Attribution-ShareAlike 3.0
+  http://creativecommons.org/licenses/by-sa/3.0/
+- 改変の有無: **なし。** 配布元のファイルをそのまま収録しています
+
+著作者名とライセンスは、ファイル冒頭の `<info>` 要素にも記載されています。
+
+> このリポジトリの文書側は CC BY-SA 4.0 なので、CC BY-SA 3.0 のこのファイルとは
+> 条件が揃っています（3.0 は後継版での提供を認めています）。別扱いが必要なのは
+> **著作者表示**だけです。
+
+**このファイルを改変して再配布する場合は、次の3点が必要です。**
+
+1. CC BY-SA 3.0 または後継版（4.0 可）のままにする。**非営利限定のライセンスに
+   変更することはできません**
+2. 改変した旨を明示する
+3. `<id>`・`<title>`・`<link rel="self">` を書き換える（公式スタイルと取り違えられ
+   ないようにするための、CSL プロジェクトの慣行）
+
+---
+
+## work/dihuco_workshop/drafts/sample_resume/sample_resume.md（本文の引用部分）
+
+テンプレートの動作確認用サンプル原稿。その本文は次の刊行物から引用しています。
+
+- 出典: 総務省『令和8年版 情報通信白書』第Ⅰ部第3章第1節
+  https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r08/html/nd131100.html
+  https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r08/html/nd131200.html
+- 利用条件: 政府標準利用規約（第2.0版）
+  出典を記載すれば、複製・公衆送信・翻案等を自由に行うことができ、商用利用も
+  認められています。同規約はクリエイティブ・コモンズ・ライセンス表示4.0国際
+  （CC BY 4.0）と互換です
+- 改変の有無: **あり。** 見出しの階層と脚注の付け方を、サンプルとして整えています
+
+このファイルは動作確認用です。不要になったら削除して構いません。
+
+---
+
+## 同梱していないもの
+
+学会が配布するクラスファイル（情報処理学会の `ipsj.cls` など）は、再配布の許諾が
+確認できないため**同梱していません**。必要な場合は、各学会のウェブサイトから各自で
+入手し、雛形フォルダに置いてください。置き方は
+`.claude/skills/md-to-pdf/assets/templates/README.md` を参照してください。
