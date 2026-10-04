@@ -1,7 +1,7 @@
 ---
 name: md-to-pdf
-description: MarkdownをA4のPDFに変換する。レイアウトはfrontmatterの`template:`キー（旧`pdf:`も可）か--layoutで指定：resume=配布レジュメ/paper=論文体裁/thesis=学位論文体裁(章立て)/transcript=口頭発表原稿/ipsj=情報処理学会論文誌。テンプレートは .claude/skills/md-to-pdf/assets/templates/ にあり、フォルダを足すだけでレイアウトが増える。
-argument-hint: "<mdファイルパス> [タイトル] [--layout resume|paper|thesis|transcript|ipsj] [--author 氏名] [--date YYYY-MM-DD]"
+description: MarkdownをA4のPDFに変換する。レイアウトはfrontmatterの`template:`キー（旧`pdf:`も可）か--layoutで指定：resume=配布レジュメ/paper=論文体裁/thesis=学位論文体裁(章立て)/transcript=口頭発表原稿。テンプレートは .claude/skills/md-to-pdf/assets/templates/ にあり、フォルダを足すだけでレイアウトが増える。
+argument-hint: "<mdファイルパス> [タイトル] [--layout resume|paper|thesis|transcript] [--author 氏名] [--date YYYY-MM-DD]"
 ---
 
 # Markdown → PDF
@@ -16,7 +16,6 @@ argument-hint: "<mdファイルパス> [タイトル] [--layout resume|paper|the
 | `paper` | 10.5pt・40字×30行・作成者非表示・末尾に参考文献 | 短い論文、原稿の確認用 |
 | `thesis` | `paper` と同じ組で book クラス。見出し1が「第n章」になる | 学位論文の章単位の原稿 |
 | `transcript` | 12pt・36字×22行・段落間空き・大きめページ番号 | 口頭発表の読み上げ原稿 |
-| `ipsj` | 情報処理学会論文誌（`ipsj.cls`・2段組） | 投稿前の体裁確認。**pLaTeX で組まれる** |
 
 指定は **frontmatter の `template:`** が基本（旧 `pdf:` も読む）。`--layout` はその上書き。どちらも無ければ `resume`。
 
@@ -39,7 +38,7 @@ bash .claude/skills/md-to-pdf/md2pdf.sh <入力mdパス> ["タイトル"] [optio
 主なオプション:
 - `--layout NAME`：レイアウトの明示指定
 - `--author "氏名"` / `--date "2026-09-11"`：作成者・日付（`YYYY-MM-DD` は `YYYY年M月D日` へ自動整形。**`paper` と `thesis` は作成者を表示しない**＝原稿確認用）
-- `--outdir DIR`：出力先。**既定は原稿の隣**。原稿が `work/publications/<名前>/` の下にあれば、完成版が `publications/<名前>/` にも自動で集まる
+- `--outdir DIR`：出力先。**既定は原稿の隣**。原稿が `work/<プロジェクト>/drafts/<名前>/` の下にあれば、完成版が `publications/<名前>/` にも自動で集まる
 - `--fontsize 8pt` / `--margin 15mm` / `--twocolumn`：体裁の微調整
 - `--no-secnum`：見出しに番号を振らない。原稿に「1. はじめに」と番号を書いてある場合、自動採番と二重になるので使う
 - `--keep-h1`：冒頭の `# 見出し` を本文に残す（既定はタイトルブロックと重複するため除去）
@@ -53,7 +52,7 @@ bash .claude/skills/md-to-pdf/md2pdf.sh <入力mdパス> ["タイトル"] [optio
 5. **LuaLaTeXコンパイル**：`latexmk -lualatex`。補助ファイルは自動で掃除
 
 ## 出力
-- `<outdir>/<basename>.pdf` … 生成PDF（既定は原稿の隣。ページ数とレイアウトを報告）。`work/publications/` 配下なら `publications/` への収集も報告する
+- `<outdir>/<basename>.pdf` … 生成PDF（既定は原稿の隣。ページ数とレイアウトを報告）。`work/<プロジェクト>/drafts/` 配下なら `publications/` への収集も報告する
 - `<outdir>/<basename>.tex` … 単一ソース（`latexmk -lualatex` で再コンパイル可・手直し可）
 
 ## レイアウトを増やす
@@ -74,7 +73,7 @@ bash .claude/skills/md-to-pdf/md2pdf.sh <入力mdパス> ["タイトル"] [optio
 
 ### 学会指定のクラスファイルを使う場合
 
-pLaTeX 専用のクラス（`ipsj.cls` など）も同じ仕組みに載る。レイアウトで engine と
+学会配布の pLaTeX 専用クラス（`ipsj.cls` など）も、各自で入手して雛形フォルダに置けば同じ仕組みに載る。レイアウトで engine と
 common と citations を宣言し、`.cls` `.sty` `.bst` をレイアウトのフォルダに置く
 （スクリプトが `TEXINPUTS` / `BSTINPUTS` にそのフォルダを追加する）。
 
@@ -85,7 +84,7 @@ common と citations を宣言し、`.cls` `.sty` `.bst` をレイアウトの�
 ```
 
 投稿用の最終原稿は、巻号・受付日・英文要旨など Markdown から渡せない項目があるため、
-同じフォルダの `main.tex` を `work/publications/<名前>/` にコピーして LaTeX で仕上げる。
+同じフォルダの `main.tex` を `work/<プロジェクト>/drafts/<名前>/` にコピーして LaTeX で仕上げる。
 このレイアウトは体裁の下見用と位置づける。
 
 ## 書誌（Zotero 連携）
@@ -114,7 +113,7 @@ Zotero で姓・名の欄を分けて入れるとこの形になる。citeproc �
 
 ## 使用例
 ```
-/md-to-pdf work/publications/20260911_seminar/resume.md --author "山田太郎" --date "2026-09-11"
+/md-to-pdf work/<プロジェクト>/drafts/20260911_seminar/resume.md --author "山田太郎" --date "2026-09-11"
 /md-to-pdf work/project_a/docs/draft_ch3.md --layout thesis
 /md-to-pdf 発表原稿.md   # frontmatter に pdf: transcript があれば発表原稿体裁
 ```

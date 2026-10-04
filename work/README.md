@@ -4,15 +4,34 @@
 
 ```text
 work/
-  project_a/          ← 作業単位。名前は自分の用途に変える
-    sources/          元データ。上書きしない
-    scripts/          処理用のコード
-    outputs/          生成物
-    docs/             メモ・下書き・作業ログ
+  project_a/                      ← 作業単位。名前は自分の用途に変える
+    sources/                      元データ。上書きしない（著作権上問題のないものだけ）
+    scripts/                      処理用のコード
+    generated/                    scripts/ を動かせば作り直せるもの
+    docs/                         メモ・下書き・作業ログ
+    drafts/                       人に出すものの制作
+      2026_annual_meeting/        原稿1本ごとにフォルダを作る
+        slides.md
+        figures/                  この原稿で使う図
   project_b/
-  publications/       ← 原稿の制作。完成版は publications/ へ出す
-    conference-a/
+  dihuco_workshop/                ← 動作確認用のサンプル。試したら削除してよい
 ```
+
+## `generated/` と `drafts/` の使い分け
+
+迷ったら、**作り直せるかどうか**で決めます。
+
+| | 置く場所 | Git |
+|---|---|---|
+| `scripts/` を動かせば**作り直せる**もの（集計結果、分析図、中間データ） | `generated/` | 追跡しない |
+| **手で書いた**もの（原稿、スライド、そこに貼ると決めた図） | `drafts/<原稿名>/` | 追跡する |
+
+`generated/` は次に実行すれば上書きされます。**そこにある図を原稿に使うときは、`drafts/<原稿名>/figures/` に
+コピーしてください。** コピーした時点の版が、その原稿の図として固定されます。
+元の図を作り直しても原稿は変わらないので、提出した体裁をあとから再現できます。
+
+`drafts/` でビルドすると、完成版の PDF・PPTX が [publications/<原稿名>/](../publications/) に自動で集まります。
+ビルドの手順は [publications/README.md](../publications/README.md) が正本です。
 
 ## 粒度は自由
 
@@ -24,7 +43,7 @@ work/
 
 ## 別リポジトリに分けるとき
 
-次のようになったら `repos/` の独立リポジトリへ移します（[repos/README.md](../repos/README.md)）。
+次のようになったら、`repos/` を作ってその中に独立リポジトリとして移します（`.gitignore` で除外済み）。
 
 - 別の共同編集者が現れた
 - 単独で配布・引用・バージョン付けしたくなった

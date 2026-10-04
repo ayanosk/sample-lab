@@ -190,7 +190,7 @@ Marp shrinks a block until its **longest line** fits, so a long line costs you f
 
 <p class="chart-label">How a slide deck gets made with AI (sample figure)</p>
 
-![Figure](../../assets/figures/ai_collaboration_slidemaking_en.svg)
+![Figure](../../../lab/assets/figures/ai_collaboration_slidemaking_en.svg)
 
 <!--
   fig-full の画像枠は約 1200×580。h1 と chart-label を除いた残りに
@@ -203,7 +203,7 @@ Marp shrinks a block until its **longest line** fits, so a long line costs you f
 # Figure above notes — figure-layout
 
 <div class="figure-layout" style="--figure-notes-size: 0.8em; --figure-gap: 22px;">
-  <div class="figure-box"><img src="../../assets/figures/ai_collaboration_slidemaking_en_compact.svg" alt=""></div>
+  <div class="figure-box"><img src="../../../lab/assets/figures/ai_collaboration_slidemaking_en_compact.svg" alt=""></div>
   <ul class="figure-notes">
     <li>A plain <code>![Figure](…)</code> followed by body text <span class="signal">also displays</span>. What differs is how much you can control</li>
     <li class="dim">Plain images are capped at 560px, always centred, and the gap is left to generic margins</li>

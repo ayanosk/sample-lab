@@ -25,27 +25,40 @@ secrets/
 *.sqlite
 *.db
 
-# 各 work の生成結果
-work/*/outputs/*
-!work/*/outputs/.gitkeep
+# 各 work の生成結果（scripts を動かせば作り直せるもの）
+work/*/generated/*
+!work/*/generated/.gitkeep
 
-# 独立Gitリポジトリの置き場。外側Gitでは追跡しない。
-# ここを追跡すると入れ子リポジトリが gitlink として登録され、中身も履歴も壊れる
-repos/*
-!repos/.gitkeep
-!repos/README.md
+# drafts でビルドした出力。原稿と中間ファイルは残し、出力だけ履歴に入れない
+work/*/drafts/**/*.pdf
+work/*/drafts/**/*.pptx
+work/*/drafts/**/*.docx
+
+# 別Gitが必要なものを置く repos/ は、作った時点から追跡しない（既定では存在しない）。
+# 追跡すると入れ子リポジトリが gitlink として登録され、中身も履歴も壊れる
+repos/
 
 # 完成版の書き出し。サイズが大きいので履歴には入れない
 publications/**/*.pdf
 publications/**/*.pptx
 publications/**/*.docx
 
-# 完成版の置き場に .tex は要らない（原稿は work/publications/ 側にある）
+# 完成版の置き場に .tex は要らない（原稿は work/<プロジェクト>/drafts/ 側にある）
 publications/**/*.tex
 
 # 履歴書の基本情報。生年月日・住所・電話番号を入れる場所なので既定では追跡しない。
 # 使うときは cv/master/01_基本情報.csv.example をコピーする
 cv/master/01_基本情報.csv
+
+# researchmap のエクスポート原本。業績一覧そのものなので履歴には入れない
+cv/rm_*.csv
+cv/archive/
+
+
+# マスター生成の作業ファイル（手編集の検出・退避・差分プレビュー）
+cv/master/.manifest.json
+cv/master/.backup/
+cv/master/.preview/
 
 # LaTeX 生成物
 *.aux

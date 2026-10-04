@@ -20,13 +20,13 @@ Claude Code や Codex で研究の作業を整理していくための、最小�
 - リポジトリが肥大して clone が重くなる
 
 同じ研究目的に属するのに、Git の管理条件だけが違うもの（公開データセット、共同開発のソフトウェアなど）は、
-`repos/` に別リポジトリとして置きます（[repos/README.md](./repos/README.md)）。
+`repos/` を作って、その中に clone します（`.gitignore` で除外済みなので、外側の履歴には入りません）。
 
 ## ディレクトリ構成
 
 ```text
 sample-lab/
-├── AGENTS.md                     ← AI への指示書（共通ルールの正本。書き換えて使う）
+├── AGENTS.md                     ← AI への共通ルール（正本。書き換えて使う）
 ├── CLAUDE.md                     ← Claude Code 固有の設定だけ（冒頭で AGENTS.md を読み込む）
 ├── .gitignore
 ├── .marprc.yml                   ← Marp CLI の設定（テーマの登録。そのまま使う）
@@ -41,11 +41,9 @@ sample-lab/
 │   ├── assets/figures/           ← 使い回す図
 │   └── logs/                     ← 日次ログ
 ├── work/                         ← 作業単位。ここが日々の作業場
-│   ├── project_a/ project_b/     ← sources/ scripts/ outputs/ docs/
-│   └── publications/             ← 原稿の制作（原稿・図・中間ファイル）
-├── publications/                 ← 完成版の収集場所（PDF・PPTX だけ。自動で集まる）
-├── repos/                        ← 別Gitが必要なもの（このリポジトリでは追跡しない）
-└── sample-files/                 ← 動作確認用のサンプル。不要になったら削除してよい
+│   ├── project_a/ project_b/     ← sources/ scripts/ generated/ docs/ drafts/
+│   └── dihuco_workshop/          ← 動作確認用のサンプル。不要になったら削除してよい
+└── publications/                 ← 完成版の収集場所（PDF・PPTX だけ。自動で集まる）
 ```
 
 ## 環境準備（AI エージェント起動前に必要なもの）
@@ -145,8 +143,8 @@ Claude Code / Codex が以下を自動で行います（人間の操作が必要
      - このリポジトリで扱う研究のまとまりは何か（1つの研究目的に絞れているか）
      - 一緒に入れようとしているものの中に、**共同研究者・公開範囲・ライセンス・保存期間が違うもの**はないか
    - 違うものがあれば、**このリポジトリに入れず別のリポジトリにする**よう提案する。
-     同じ目的だが Git の条件だけ違うものは `repos/` に置くよう案内する
-   - 決まった範囲を [AGENTS.md](./AGENTS.md) の「このリポジトリが扱う範囲」に書く
+     同じ目的だが Git の条件だけ違うものは、`repos/` を作ってその中に clone するよう案内する
+   - 決まった範囲は、[AGENTS.md](./AGENTS.md) の「作業単位」に並べることで表す（範囲を別に書き起こさない）
 
 6. **AGENTS.md のカスタマイズ**
    - ユーザに研究分野・用途・作業単位の数・応答言語をヒアリングする
@@ -157,17 +155,18 @@ Claude Code / Codex が以下を自動で行います（人間の操作が必要
 7. **作業ディレクトリのリネーム**
    - 手順5で決めた範囲に合わせて `work/project_a/`, `work/project_b/` をリネームする
    - 各フォルダの `README.md` も更新する
+   - サンプルの `work/dihuco_workshop/` は、試したあとフォルダごと削除してよいと伝える
 
 8. **初回コミット**
    - セットアップ完了後、変更をまとめてコミットする（push はユーザの許可を得てから）
 
 ## 使い方の目安
 
-- 研究データは `work/<名前>/sources/`
+- 研究データは `work/<名前>/sources/`（**著作権上問題のないものだけ**。購入した PDF や利用に制限のある史資料は工房の外に置き、`.claude/settings.json` の許可に `Read(//Volumes/.../**)` を一行足して読み取りだけ通す）
 - 分析コードは `work/<名前>/scripts/`
-- 生成結果は `work/<名前>/outputs/`
+- 生成結果は `work/<名前>/generated/`（`scripts/` を動かせば作り直せるので追跡しない）
 - メモや下書きは `work/<名前>/docs/`
-- 発表・論文の**原稿**は `work/publications/<名前>/`、**完成版**は `publications/<名前>/`（ビルドすると自動で集まる）
+- 発表・論文の**原稿**は `work/<名前>/drafts/<原稿名>/`、**完成版**は `publications/<原稿名>/`（ビルドすると自動で集まる）
 - 書誌は `bibliography/references.bib`、履歴書用の業績一覧は `cv/master/`
 - `lab/` は自分が開く共通部品、`.claude/skills/` はエージェントへの手順書
 
@@ -225,9 +224,9 @@ TeX Live（Mac は MacTeX）が必要です（セットアップ手順の環境�
 
 **雛形の選び方・使い方・文献の書き方は [publications/README.md](./publications/README.md) にまとめてあります。**
 
-- 雛形は `.claude/skills/md-to-pdf/assets/templates/` に。`paper/`（短い論文・動作確認）、`thesis/`（学位論文）、`resume/`（レジュメ）、`transcript/`（口頭発表原稿）、`ipsj/`（情報処理学会論文誌）
+- 雛形は `.claude/skills/md-to-pdf/assets/templates/` に。`paper/`（短い論文・動作確認）、`thesis/`（学位論文）、`resume/`（レジュメ）、`transcript/`（口頭発表原稿）
 - **新しい学会テンプレートを足すときは、そこにフォルダを1つ置けば** LaTeX 直書きでも `/md-to-pdf` でも使える（手順は `templates/README.md`）
-- 雛形は `work/publications/<名前>/` にコピーして使う。**パスの書き換えは不要**で、コピー先の深さも問わない（`.latexmkrc` がリポジトリルートを自分で探す）
+- 雛形は `work/<プロジェクト>/drafts/<名前>/` にコピーして使う。**パスの書き換えは不要**で、コピー先の深さも問わない（`.latexmkrc` がリポジトリルートを自分で探す）
 - LaTeX Workshop が保存時に自動ビルドし、VSCode 内で PDF プレビューできる
 - LaTeX を書かずに、ふつうの Markdown から同じ体裁の PDF・docx を作ることもできる（`/md-to-pdf`・`/md-to-docx`）
 - 書誌は `bibliography/references.bib` の1本にまとめる。Zotero（Better BibTeX）の自動エクスポート先に指定して使う
@@ -248,7 +247,7 @@ claude --plugin-dir "$HOME/.agents"
 
 ## Codex（ChatGPT）で使う場合
 
-このテンプレートは **Claude Code と Codex の併用**を前提に設計されています。
+このテンプレートは **Claude Code と Codex の併用**を前提に設計していますが、どちらか一方だけでも使えます。
 指示ファイルは次のように役割を分けています。
 
 - **AGENTS.md** — 共通ルールの正本。Codex はこれを直接読む
@@ -270,10 +269,45 @@ Windows で Codex を使う場合は、OpenAI 公式も **WSL ワークスペー
 > スキルの自動呼び出し（`/daily-start` 等）は Claude Code 固有の機能です。
 > Codex では SKILL.md の内容をプロンプトに貼り付けるか、手順を AGENTS.md に転記して使ってください。
 
+### Codex だけで使う場合
+
+Claude Code を入れずに Codex だけで使うこともできます。**`.claude/` をリネームする必要はありません。**
+
+- **スキルはそのまま使えます。** フォルダ名は Claude Code 由来ですが、中身は `SKILL.md` と
+  スクリプト・雛形です。「`.claude/skills/md-to-pdf/SKILL.md` を読んで、この原稿を PDF にして」と
+  頼めば同じことができます。`.agents/` へのコピー（セットアップ手順3）は、Codex 側の置き場に
+  揃えたいときだけ行ってください。コピーすると同じスキルが2か所になります
+- **`.claude/settings.json` の deny は効きません。** あれは Claude Code の機能なので、
+  Codex には引き継がれません。危険な操作のブロックは **Codex 側のサンドボックスと承認モード**で
+  代替してください（上の「セキュリティ設定」を参照）
+- **`CLAUDE.md` は読まれません。** 共通ルールは `AGENTS.md` にあるので問題ありませんが、
+  Claude Code 固有の設定を書き足したいときも、共通ルールを `CLAUDE.md` 側へ移さないでください
+
+## ライセンスと再配布
+
+**自由にカスタマイズして、再配布して構いません。** 分野ごとに必要な体裁も作業の型も違うので、むしろ作り変えて使っていただくために置いています。
+
+構成要素ごとに二つのライセンスで提供しています。どちらも「改変して配ってよい。ただし改変した部分は同じ条件で提供する」という同じ考え方です。
+
+| 対象 | ライセンス |
+|---|---|
+| `dotclaude/skills/` 以下の `.sh` `.py` `.css`、`dotclaude/settings.json`、`dotvscode/`、`.marprc.yml` | [MPL-2.0](https://www.mozilla.org/MPL/2.0/) |
+| それ以外すべて（`.md` の文書、LaTeX・Marp の雛形、サンプル） | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.ja) |
+
+全文と適用範囲の詳細は [LICENSE](./LICENSE) にあります。
+
+**あなたが書いたものは、あなたのものです。** このテンプレートを使って書いた原稿・史料・データ・図表など、あなたが新しく作ったファイルの著作権はあなたにあります。ライセンスが及ぶのは、テンプレートとして配布されたファイルだけです。
+
+**無保証です。** 作成者はいかなる保証も行いません。カスタマイズしたテンプレートの動作とその結果についても、作成者は一切の責任を負いません。
+
+**お願い:** 改変せずそのままの形で有償配布することは、ご遠慮ください。
+
+一部のファイルは第三者が作成したもので、上記いずれの対象でもありません。[NOTICE](./NOTICE) を参照してください。
+
 ## 補足
 
 - `project_a` と `project_b` はサンプル名です。自分の用途に合わせて名前を変えてください
 - `AGENTS.md` と `CLAUDE.md` は完成品ではなく、書き換え前提のテンプレートです
 - `.claude/agents/` のエージェント定義も雛形です。不要なものは削除して構いません
 - `dotclaude/` と `dotvscode/` は GitHub テンプレート配布のためにリネームしてあります。セットアップ手順で `.claude/` や `.vscode/` に展開されます
-- `sample-files/` は動作確認用です。ひと通り試したらフォルダごと削除して構いません
+- `work/dihuco_workshop/` は動作確認用のサンプルです。ひと通り試したらフォルダごと削除して構いません

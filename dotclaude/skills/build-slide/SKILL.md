@@ -1,6 +1,6 @@
 ---
 name: build-slide
-description: MarpスライドMDからPDFとPPTXを生成する。原稿は work/publications/<イベント>/、完成版は publications/<イベント>/ に出す。
+description: MarpスライドMDからPDFとPPTXを生成する。原稿は work/<プロジェクト>/drafts/<イベント>/、完成版は publications/<イベント>/ に出す。
 argument-hint: "<スライドmdのパス> [--pdf-only|--pptx-only]"
 ---
 
@@ -21,7 +21,7 @@ argument-hint: "<スライドmdのパス> [--pdf-only|--pptx-only]"
 引数からファイルパスとフラグを読み取る。
 
 - `--pdf-only` / `--pptx-only` フラグを確認
-- **原稿mdは `work/publications/<イベント名>/` に置く。** 中間ファイルもそこに残る
+- **原稿mdは `work/<プロジェクト>/drafts/<イベント名>/` に置く。** 中間ファイルもそこに残る
 - **完成版の PDF・PPTX は `publications/<イベント名>/` に出す**（手順3で自動的にコピーされる）
 - 新規作成なら `.claude/skills/build-slide/assets/templates/template_academic-ja.md`（和文）または
   `template_academic-intl.md`（英語）をコピーして始める

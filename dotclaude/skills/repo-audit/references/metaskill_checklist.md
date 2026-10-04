@@ -2,16 +2,6 @@
 
 監査時に、以下のメタスキルが公式最新情報と整合しているか確認する。
 
-## optimize-agent
-
-Read ツールで以下を読み、公式情報との差異を確認する：
-- `.claude/skills/optimize-agent/references/field_mapping.md` — フロントマターフィールドの過不足
-- `.claude/skills/optimize-agent/references/agents_md_guide.md` — AGENTS.md 仕様の更新有無
-
-**チェック項目：**
-- 公式で新しいフロントマターフィールドが追加されていないか
-- 非推奨になったフィールドがないか
-- tools 推奨設定が公式の変更を反映しているか
 - AGENTS.md の推奨セクション・行数制限に変更がないか
 
 ## optimize-skill

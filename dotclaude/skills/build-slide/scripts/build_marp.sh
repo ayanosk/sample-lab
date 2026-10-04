@@ -201,14 +201,16 @@ case "$format" in
   --pptx) out_file="${target_file%.md}.pptx" ;;
 esac
 
-# 完成版の収集先。原稿が work/publications/<名前>/ の下にあるなら、
+# 完成版の収集先。原稿が work/<プロジェクト>/drafts/<名前>/ の下にあるなら、
 # 同じ名前の publications/<名前>/ へ完成版だけをコピーする。
 # 手でコピーすると忘れるので、ビルドの一部として行う。
 src_dir="$(cd "$(dirname "$target_file")" && pwd)"
 collect_dir=""
 case "$src_dir/" in
-  "${repo_root}/work/publications/"*)
-    collect_dir="${repo_root}/publications/${src_dir#"${repo_root}/work/publications/"}"
+  "${repo_root}"/work/*/drafts/*)
+    rel="${src_dir}/"
+    rel="${rel##*/drafts/}"
+    collect_dir="${repo_root}/publications/${rel%/}"
     ;;
 esac
 

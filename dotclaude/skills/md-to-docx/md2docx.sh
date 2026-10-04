@@ -37,7 +37,7 @@ done
 REF="${SKILL_DIR}/reference.docx"
 # 書誌は Zotero（Better BibTeX）の自動エクスポート先をリポジトリで1本に固定する
 BIB="${ROOT}/bibliography/references.bib"
-CSL="${ROOT}/bibliography/chicago-note-bibliography.csl"
+CSL="${ROOT}/bibliography/chicago-shortened-notes-bibliography.csl"
 OUTDIR=""
 
 # ---- 引数処理 ----

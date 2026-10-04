@@ -8,20 +8,16 @@
 > **初回セットアップ:** `dotclaude/` ディレクトリが残っている場合、まだセットアップが完了していません。
 > [README.md](./README.md) の「セットアップ手順」を実行してください。
 
-## スキル
+## 呼び出しの作法
 
-繰り返す作業は `/スキル名` で呼び出せます。一覧は [.claude/skills/README.md](./.claude/skills/README.md)。
-
-| よく使うもの | 用途 |
-|---|---|
-| `/build-slide <パス>` | Marp スライドを PDF・PPTX にする |
-| `/md-to-pdf <パス>` | Markdown を論文体裁の PDF にする |
-| `/md-to-docx <パス>` | Markdown をコメント用の docx にする |
-
-## サブエージェント
-
-`.claude/agents/` に役割別のエージェント定義があります。**すべてサンプルです。**
-自分の研究分野に合わないものは削除してください。
+- **スキル**（`.claude/skills/`）は、`/md-to-pdf` のように `/スキル名` で呼び出せます。
+  どんなスキルがあるかは、各 `SKILL.md` 冒頭の `description` が一覧になります
+- **サブエージェント**（`.claude/agents/`）は、Claude Code が起動時に読み込みます。
+  同梱しているのは `support/academic-writer.md` の1件だけで、**分野ごとの約束
+  （註の付け方、史料引用の作法など）を書き込む置き場の見本**です
+- 呼び出せるのが Claude Code 固有で、**中身はどちらもただのテキストです。**
+  他のツールでは `SKILL.md` を読ませれば同じ手順が動きます
+  （[README.md](./README.md) の「Codex（ChatGPT）で使う場合」）
 
 ## 権限
 

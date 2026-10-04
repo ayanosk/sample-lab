@@ -227,7 +227,7 @@ Que les Académiciens travailleront à bannir toutes les Erreurs qui se sont int
 
 <p class="chart-label">AI協働型のスライド作成フロー（サンプル図）。図解はsvgで作成すれば自力でも修正しやすい</p>
 
-![図](../../assets/figures/ai_collaboration_slidemaking.svg)
+![図](../../../lab/assets/figures/ai_collaboration_slidemaking.svg)
 
 
 ---
@@ -235,7 +235,7 @@ Que les Académiciens travailleront à bannir toutes les Erreurs qui se sont int
 # 図と注記を上下に置く — figure-layout
 
 <div class="figure-layout" style="--figure-notes-size: 0.8em; --figure-gap: 24px;">
-  <div class="figure-box"><img src="../../assets/figures/ai_collaboration_slidemaking_compact.svg" alt=""></div>
+  <div class="figure-box"><img src="../../../lab/assets/figures/ai_collaboration_slidemaking_compact.svg" alt=""></div>
   <ul class="figure-notes">
     <li>素の <code>![図](…)</code> と地の文でも<span class="signal">表示はされる</span>。違うのは制御できる範囲</li>
     <li class="dim">素だと図は「高さ上限560px・中央寄せ」で固定、図と注記の間隔も汎用マージン任せ</li>

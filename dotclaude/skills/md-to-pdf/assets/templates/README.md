@@ -10,7 +10,6 @@
 | `thesis/` | 学位論文。章を `chapters/` に分割、部と史料／研究文献に分けた文献一覧つき |
 | `resume/` | ゼミ・会議の配布レジュメ |
 | `transcript/` | 口頭発表の読み上げ原稿（Markdown からの変換専用） |
-| `ipsj/` | 情報処理学会論文誌。学会配布の `.cls` `.bst` 同梱。pLaTeX で組む |
 
 ## 1つのフォルダに入る2種類のファイル
 
@@ -18,7 +17,7 @@
 
 | ファイル | いつ使われるか |
 |---|---|
-| `main.tex` ＋ `.latexmkrc`（＋ `chapters/`） | **LaTeX で書くとき。** フォルダごと `work/publications/<名前>/` にコピーして、`main.tex` を直接編集する |
+| `main.tex` ＋ `.latexmkrc`（＋ `chapters/`） | **LaTeX で書くとき。** フォルダごと `work/<プロジェクト>/drafts/<名前>/` にコピーして、`main.tex` を直接編集する |
 | `layout.tex` | **Markdown で書くとき。** `/md-to-pdf <パス> --layout <フォルダ名>` が本文を流し込む型枠。コピーしない |
 
 どちらか一方だけでも構いません。`transcript/` は `layout.tex` だけを持ちます（読み上げ原稿を LaTeX で直接書くことはまずないため）。
@@ -56,7 +55,7 @@ __BODY__
 
 ### 学会クラスは pLaTeX 専用のことが多い
 
-日本の学会が配布するクラスファイルは pLaTeX 前提で、既定の LuaLaTeX では組めません（`ipsj.cls` は `JT1` エンコーディングが解決できず失敗します）。その場合は `layout.tex` で3つ宣言を足します。
+日本の学会が配布するクラスファイルは pLaTeX 前提で、既定の LuaLaTeX では組めないことがあります（たとえば情報処理学会の `ipsj.cls` は `JT1` エンコーディングが解決できず失敗します）。その場合は `layout.tex` で3つ宣言を足します。
 
 ```tex
 %%! engine    = platex                  % 既定は lualatex
@@ -64,7 +63,7 @@ __BODY__
 %%! citations = natbib                  % 学会の .bst（BibTeX）に合わせる。既定は citeproc
 ```
 
-`engine = platex` にすると、ビルドが `platex → dvipdfmx` になり、書誌も日本語対応の `pbibtex` で処理されます。実例は `ipsj/layout.tex` を見てください。
+`engine = platex` にすると、ビルドが `platex → dvipdfmx` になり、書誌も日本語対応の `pbibtex` で処理されます。
 
 ### 投稿用の最終原稿は main.tex で
 
@@ -72,6 +71,6 @@ __BODY__
 
 ## 注意
 
-- 雛形は**その場でビルドしないでください**。このスキルの中に出力が散らかります。まず `work/publications/<名前>/` へコピーしてください（コピー先の深さは問いません）
+- 雛形は**その場でビルドしないでください**。このスキルの中に出力が散らかります。まず `work/<プロジェクト>/drafts/<名前>/` へコピーしてください（コピー先の深さは問いません）
 - 書誌は `bibliography/references.bib` の1本を共有します。雛形ごとに `.bib` は持ちません
 - 学会の制約が体裁以外（提出物の構成、`.bbl` の同梱など）にも及ぶ場合は、テンプレートに加えて `build-<学会名>` のスキルを作ることを検討してください

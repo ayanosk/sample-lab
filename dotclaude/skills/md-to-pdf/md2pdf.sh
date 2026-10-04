@@ -13,7 +13,7 @@
 #   --layout NAME       レイアウト名（frontmatter `pdf:` より優先）
 #   --author "氏名"     タイトル部に作成者を表示（既定: 空）
 #   --date "YYYY-MM-DD" タイトル部に日付を表示（YYYY年M月D日 へ自動整形。既定: 空）
-#   --outdir DIR        出力先（既定: 原稿の隣。work/publications/ 下なら完成版を publications/ へ収集）
+#   --outdir DIR        出力先（既定: 原稿の隣。work/<プロジェクト>/drafts/ 下なら完成版を publications/ へ収集）
 #   --fontsize 9pt      本文サイズ（既定: レイアウトごとの宣言値）
 #   --margin 15mm       余白（geometry を使うレイアウトのみ有効）
 #   --twocolumn         本文2段組
@@ -46,7 +46,7 @@ PANDOC="$(command -v pandoc || true)"
 LATEXMK="$(command -v latexmk || true)"
 # 書誌は Zotero（Better BibTeX）の自動エクスポート先をリポジトリで1本に固定する
 BIB="${ROOT}/bibliography/references.bib"
-CSL="${ROOT}/bibliography/chicago-note-bibliography.csl"
+CSL="${ROOT}/bibliography/chicago-shortened-notes-bibliography.csl"
 TPL_DIR="${SKILL_DIR}/assets/templates"
 COMMON="${SKILL_DIR}/assets/md-common.tex"
 
@@ -160,13 +160,15 @@ fi
 [[ "$OUTDIR" != /* ]] && OUTDIR="${ROOT}/${OUTDIR}"
 mkdir -p "$OUTDIR"
 
-# 完成版の収集先。原稿が work/publications/<名前>/ の下にあるなら、
+# 完成版の収集先。原稿が work/<プロジェクト>/drafts/<名前>/ の下にあるなら、
 # 同じ名前の publications/<名前>/ へ PDF だけをコピーする（中間ファイルは移さない）。
 # 手でコピーすると忘れるので、ビルドの一部として行う。
 COLLECT_DIR=""
 case "$SRC_DIR/" in
-  "${ROOT}/work/publications/"*)
-    COLLECT_DIR="${ROOT}/publications/${SRC_DIR#"${ROOT}/work/publications/"}"
+  "${ROOT}"/work/*/drafts/*)
+    REL="${SRC_DIR}/"
+    REL="${REL##*/drafts/}"
+    COLLECT_DIR="${ROOT}/publications/${REL%/}"
     ;;
 esac
 
@@ -487,7 +489,7 @@ fi
 [[ -n "$MISSING_BIB" ]] && echo "WARN: [@key] 引用がありますが書誌が見つかりません: $MISSING_BIB" >&2
 echo "OK: $PDF (${PAGES:-?}ページ)  layout=$LAYOUT  engine=$ENGINE  tex=$TEX"
 
-# 完成版を publications/<名前>/ へ集める（原稿が work/publications/ 配下のときだけ）
+# 完成版を publications/<名前>/ へ集める（原稿が work/<プロジェクト>/drafts/ 配下のときだけ）
 if [[ -n "$COLLECT_DIR" ]]; then
   mkdir -p "$COLLECT_DIR"
   cp "$PDF" "$COLLECT_DIR/"

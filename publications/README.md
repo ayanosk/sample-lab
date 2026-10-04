@@ -2,15 +2,15 @@
 
 **完成した提出版・配布版・公開版を集める場所です。** PDF と PPTX だけを置きます。
 
-原稿・図・中間ファイルはここではなく [work/publications/](../work/publications/) に置きます。
+原稿・図・中間ファイルはここではなく、各プロジェクトの [work/<プロジェクト>/drafts/](../work/) に置きます。
 ビルドすると、完成版がここへ自動でコピーされます。手でコピーする必要はありません。
 
 ```text
-work/publications/2026_annual_meeting/   ← 制作（原稿・図・.tex などの中間ファイル）
+work/project_a/drafts/2026_annual_meeting/   ← 制作（原稿・図・.tex などの中間ファイル）
     slides.md
     slides.pdf
-    figures/
-publications/2026_annual_meeting/        ← 完成版（自動で集まる）
+    figures/                                 ← この原稿で使う図。原稿ごとに持つ
+publications/2026_annual_meeting/            ← 完成版（自動で集まる）
     slides.pdf
 ```
 
@@ -19,7 +19,7 @@ publications/2026_annual_meeting/        ← 完成版（自動で集まる）
 
 ## ビルド方法
 
-原稿の置き場所と、そこから成果物を作る手段の対応です。**原稿はすべて `work/publications/<名前>/` に置きます。**
+原稿の置き場所と、そこから成果物を作る手段の対応です。**原稿はすべて `work/<プロジェクト>/drafts/<名前>/` に置きます。**
 
 | 作りたいもの | 原稿 | ビルド |
 |---|---|---|
@@ -45,24 +45,24 @@ LaTeX、書くことに集中したいなら Markdown** が目安です。どち
 
 **2. 雛形をコピーして書き始める** — ゼロから書く必要はありません。雛形は**テーマのレイアウトと記法のサンプル集**です。1枚が1クラスに対応し、そのスライドの本文に記法の説明が書いてあります。要らない枚を削り、残した枚の中身を差し替えて使ってください。サンプル図は `lab/assets/figures/` にあります。
 
-コピー先は `work/publications/<イベント>/` です。PDF・PPTX は原稿mdと同じディレクトリに出て、**完成版が `publications/<イベント>/` にも集まります。**
+コピー先は `work/<プロジェクト>/drafts/<イベント>/` です。PDF・PPTX は原稿mdと同じディレクトリに出て、**完成版が `publications/<イベント>/` にも集まります。**
 
 **3. ビルドする**
 
 ```bash
 # Claude Code
-/build-slide work/publications/<イベント>/my_presentation.md
+/build-slide work/<プロジェクト>/drafts/<イベント>/my_presentation.md
 
 # Mac / Linux / Git Bash / WSL
-bash .claude/skills/build-slide/scripts/build_marp.sh --pdf  work/publications/<イベント>/my_presentation.md
-bash .claude/skills/build-slide/scripts/build_marp.sh --pptx work/publications/<イベント>/my_presentation.md
+bash .claude/skills/build-slide/scripts/build_marp.sh --pdf  work/<プロジェクト>/drafts/<イベント>/my_presentation.md
+bash .claude/skills/build-slide/scripts/build_marp.sh --pptx work/<プロジェクト>/drafts/<イベント>/my_presentation.md
 
 # Windows の PowerShell など、直接 Marp CLI を使う場合（リポジトリルートで実行）
-npx @marp-team/marp-cli --allow-local-files --pdf  work/publications/<イベント>/my_presentation.md
-npx @marp-team/marp-cli --allow-local-files --pptx work/publications/<イベント>/my_presentation.md
+npx @marp-team/marp-cli --allow-local-files --pdf  work/<プロジェクト>/drafts/<イベント>/my_presentation.md
+npx @marp-team/marp-cli --allow-local-files --pptx work/<プロジェクト>/drafts/<イベント>/my_presentation.md
 ```
 
-`/build-slide` は Claude Code 固有の機能です。Codex など他のツールでは、上のコマンドをそのまま実行するか「`work/publications/...` のスライドを PDF と PPTX にビルドして」と指示してください。
+`/build-slide` は Claude Code 固有の機能です。Codex など他のツールでは、上のコマンドをそのまま実行するか「`work/<プロジェクト>/drafts/...` のスライドを PDF と PPTX にビルドして」と指示してください。
 
 > **Marp CLI を直接叩いた場合、完成版は `publications/` に集まりません。**
 > `build_marp.sh` か `/build-slide` を使うと自動でコピーされます。
@@ -74,7 +74,7 @@ npx @marp-team/marp-cli --allow-local-files --pptx work/publications/<イベン�
 SVG の `font-size` は viewBox のユーザ単位なので、図が枠に合わせて縮むと文字も一緒に縮みます。会場の後方から読めない図は、たいていこれが原因です。
 
 ```bash
-python3 .claude/skills/build-slide/scripts/check_svg_text.py work/publications/<イベント>/my_presentation.md
+python3 .claude/skills/build-slide/scripts/check_svg_text.py work/<プロジェクト>/drafts/<イベント>/my_presentation.md
 ```
 
 - `build_marp.sh` を使う場合はビルド時に自動で走ります（ビルドは止めません。`MARP_SKIP_SVG_CHECK=1` で抑止）
@@ -83,7 +83,7 @@ python3 .claude/skills/build-slide/scripts/check_svg_text.py work/publications/<
 
 ### 論文・レジュメ・学位論文
 
-雛形は `.claude/skills/md-to-pdf/assets/templates/` にあります。**フォルダごと `work/publications/<名前>/` にコピーして、`main.tex` を編集するだけ**です。パスの書き換えは要りません。
+雛形は `.claude/skills/md-to-pdf/assets/templates/` にあります。**フォルダごと `work/<プロジェクト>/drafts/<名前>/` にコピーして、`main.tex` を編集するだけ**です。パスの書き換えは要りません。
 
 | 用途 | 雛形 | 特徴 |
 |---|---|---|
@@ -91,11 +91,10 @@ python3 .claude/skills/build-slide/scripts/check_svg_text.py work/publications/<
 | 学位論文・長い論文 | `thesis/` | 章を `chapters/` に分割。部（`\part`）と、史料／研究文献に分けた文献一覧つき |
 | レジュメ・配布資料 | `resume/` | 1ファイル完結。囲み枠・図の回り込み・手書きの参考文献リスト |
 | 口頭発表原稿 | `transcript/` | 読み上げ用。`/md-to-pdf` 専用（LaTeX 直書きの雛形はなし） |
-| 情報処理学会論文誌 | `ipsj/` | 学会配布の `.cls` と `.bst` 同梱。pLaTeX で組む |
 
 ```bash
-cp -r .claude/skills/md-to-pdf/assets/templates/paper work/publications/20260911_mypaper
-cd work/publications/20260911_mypaper && latexmk main.tex
+cp -r .claude/skills/md-to-pdf/assets/templates/paper work/<プロジェクト>/drafts/20260911_mypaper
+cd work/<プロジェクト>/drafts/20260911_mypaper && latexmk main.tex
 ```
 
 > **雛形の置き場所のままビルドしないでください。** スキルの中に出力が散らかります。必ずコピーしてから使います。
@@ -126,7 +125,7 @@ cd work/publications/20260911_mypaper && latexmk main.tex
 LaTeX を書かずに、ふつうの Markdown から同じ体裁の PDF を作れます。
 
 ```bash
-/md-to-pdf work/publications/<イベント>/resume.md --author "山田太郎" --date "2026-09-11"
+/md-to-pdf work/<プロジェクト>/drafts/<イベント>/resume.md --author "山田太郎" --date "2026-09-11"
 /md-to-docx work/project_a/docs/draft_ch3.md
 ```
 
@@ -138,7 +137,6 @@ LaTeX を書かずに、ふつうの Markdown から同じ体裁の PDF を作�
 | `paper` | 10.5pt・40字×30行・末尾に参考文献 | 短い論文、原稿の確認 |
 | `thesis` | 同上＋見出し1が「第n章」になる | 学位論文の章単位の原稿 |
 | `transcript` | 12pt・36字×22行・広い行間 | 口頭発表の読み上げ原稿 |
-| `ipsj` | 情報処理学会論文誌の体裁 | 学会投稿 |
 
 ```yaml
 ---
@@ -151,7 +149,7 @@ template: transcript
 ここにフォルダを1つ作るだけ**で、LaTeX 直書きと `/md-to-pdf` の両方で使えるようになります。
 手順は [templates/README.md](../.claude/skills/md-to-pdf/assets/templates/README.md) にあります。
 
-PDF は原稿の隣に出て、原稿が `work/publications/` の下にあれば完成版が `publications/` にも集まります。
+PDF は原稿の隣に出て、原稿が `work/<プロジェクト>/drafts/` の下にあれば完成版が `publications/` にも集まります。
 
 部（`\part`）や、史料と研究文献に分けた文献一覧が要る完成稿は、Markdown ではなく
 `thesis/main.tex` の LaTeX 雛形で組んでください。

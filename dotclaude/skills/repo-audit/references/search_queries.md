@@ -15,6 +15,4 @@ repo-audit で公式仕様の変更を確認する際に使用する検索クエ
 
 変更が見つかった場合、以下との差異を確認する：
 
-- `.claude/skills/optimize-agent/references/field_mapping.md` — フロントマターフィールド定義
-- `.claude/skills/optimize-agent/references/agents_md_guide.md` — AGENTS.md ガイドライン
 - `.claude/skills/repo-audit/references/expected_structure.md` — ディレクトリ期待構成

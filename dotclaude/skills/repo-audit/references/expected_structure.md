@@ -20,12 +20,12 @@
 
 | パス | 用途 | 管理方針 |
 |------|------|---------|
-| `work/<名前>/` | 作業単位（`sources` `scripts` `outputs` `docs`） | git管理。`outputs/` は除外 |
-| `work/publications/<名前>/` | 原稿の制作。原稿・図・中間ファイル | git管理（生成物を除く） |
+| `work/<名前>/` | 作業単位（`sources` `scripts` `generated` `docs` `drafts`） | git管理。`generated/` は除外 |
+| `work/<名前>/drafts/<原稿名>/` | 原稿の制作。原稿・図・中間ファイル | git管理。PDF・PPTX・docx は除外 |
 | `publications/<名前>/` | 完成版の収集場所。PDF・PPTX のみ | git管理。中身は `.gitignore` で除外 |
 | `bibliography/` | 書誌データと引用スタイル | git管理。**スキルに入れない** |
 | `lab/` | 自分が開く共通部品（図・ログ） | git管理 |
-| `repos/` | 別Gitが必要なもの | **git除外**。入れ子repoを追跡しない |
+| `repos/` | 別Gitが必要なもの（既定では存在しない。必要になったら作る） | **git除外**。入れ子repoを追跡しない |
 
 ## 廃止候補の判定基準
 
@@ -43,7 +43,7 @@
 
 - `work/` の中に、**研究目的・共同研究者・公開範囲が異なるもの**が同居していないか
   → あれば別リポジトリへの分離を提案する
-- `repos/` が `.gitignore` で除外されているか（入れ子repoが gitlink として登録されていないか）
+- 入れ子リポジトリが gitlink として登録されていないか（`git ls-files -s` に mode 160000 の行が無いか）。別Gitが必要なものは `repos/` に置き、`.gitignore` の `repos/` で除外する
 - `publications/` に原稿や中間ファイル（`.md` `.tex`）が混ざっていないか
 - スキルの中に**研究データ・原稿・書誌・成果物**が入り込んでいないか
 

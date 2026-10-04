@@ -54,7 +54,7 @@ python3 .claude/skills/md-to-docx/make_reference.py
 
 ```
 /md-to-docx work/project_a/docs/draft_ch3.md
-/md-to-docx work/publications/20260911_seminar/resume.md "ゼミレジュメ" --number-sections
+/md-to-docx work/<プロジェクト>/drafts/20260911_seminar/resume.md "ゼミレジュメ" --number-sections
 ```
 
 ## 関連スキル
