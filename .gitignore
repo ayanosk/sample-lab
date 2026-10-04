@@ -54,6 +54,11 @@ cv/master/01_基本情報.csv
 cv/rm_*.csv
 cv/archive/
 
+# researchmap に登録する前の追加分と、刊行待ちの待機列。どちらも業績の実データが入る。
+# researchmap へのアップロード用なので手元にだけあればよい
+cv/pending/pending_*.csv
+cv/pending/imported/
+cv/forthcoming.md
 
 # マスター生成の作業ファイル（手編集の検出・退避・差分プレビュー）
 cv/master/.manifest.json
