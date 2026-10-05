@@ -15,11 +15,18 @@ fi
 
 usage() {
   cat <<'EOF'
-Usage: build_marp.sh --pdf|--pptx <markdown-file>
+Usage: build_marp.sh --pdf|--pptx|--pptx-editable <markdown-file>
 
 どのディレクトリから実行してもよい。
   <markdown-file> は「呼び出し元のカレントディレクトリ基準」で解決し、
   見つからなければリポジトリルート基準でも探す。
+
+PPTX は2種類ある。出力ファイル名はどちらも <name>.pptx。
+  --pptx            各ページを画像として貼る。体裁は完全に再現されるが、
+                    PowerPoint 側で文字を直せず、本文の検索もリンクもできない。
+  --pptx-editable   文字を文字のまま出す。PowerPoint で直せるが、
+                    フォントや位置がずれることがある。LibreOffice が必要で、
+                    Marp CLI では実験的機能の扱い。
 
 Optional env vars:
   MARP_BROWSER          Browser kind for Marp (chrome|edge|firefox)
@@ -38,8 +45,25 @@ fi
 format="$1"
 target_file="$2"
 
+# marp に渡す引数。--pptx-editable は --pptx の修飾なので2つ渡す。
 case "$format" in
-  --pdf|--pptx)
+  --pdf)  format_args=(--pdf) ;;
+  --pptx) format_args=(--pptx) ;;
+  --pptx-editable)
+    format_args=(--pptx --pptx-editable)
+    # Marp CLI は LibreOffice を自分で探すが、無いときのメッセージが分かりにくい。
+    # ここで先に止めて、何を入れればよいかを伝える。
+    if ! command -v soffice >/dev/null 2>&1 \
+       && ! command -v libreoffice >/dev/null 2>&1 \
+       && [[ ! -x "/Applications/LibreOffice.app/Contents/MacOS/soffice" ]]; then
+      cat >&2 <<'EOF'
+
+--pptx-editable には LibreOffice が必要です（見つかりませんでした）。
+- 入れずに進めるなら --pptx を使ってください。体裁はそのまま、編集はできません。
+- LibreOffice: https://www.libreoffice.org/download/
+EOF
+      exit 1
+    fi
     ;;
   *)
     usage >&2
@@ -197,8 +221,8 @@ fi
 
 # 出力ファイル名は元のファイルに合わせる（原稿mdと同じディレクトリに出る）
 case "$format" in
-  --pdf)  out_file="${target_file%.md}.pdf" ;;
-  --pptx) out_file="${target_file%.md}.pptx" ;;
+  --pdf)                   out_file="${target_file%.md}.pdf" ;;
+  --pptx|--pptx-editable)  out_file="${target_file%.md}.pptx" ;;
 esac
 
 # 完成版の収集先。原稿が work/<プロジェクト>/drafts/<名前>/ の下にあるなら、
@@ -290,7 +314,7 @@ marp_cmd=(
   --allow-local-files
   --no-stdin
   "${browser_args[@]}"
-  "$format"
+  "${format_args[@]}"
   -o "$out_file"
   "$tmp_file"
 )

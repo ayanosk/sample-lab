@@ -1,7 +1,7 @@
 ---
 name: build-slide
 description: MarpスライドMDからPDFとPPTXを生成する。原稿は work/<プロジェクト>/drafts/<イベント>/、完成版は publications/<イベント>/ に出す。
-argument-hint: "<スライドmdのパス> [--pdf-only|--pptx-only]"
+argument-hint: "<スライドmdのパス> [--pdf-only|--pptx-only] [--pptx-editable]"
 ---
 
 # スライドビルド
@@ -21,6 +21,12 @@ argument-hint: "<スライドmdのパス> [--pdf-only|--pptx-only]"
 引数からファイルパスとフラグを読み取る。
 
 - `--pdf-only` / `--pptx-only` フラグを確認
+- `--pptx-editable` フラグを確認。**PPTX は2種類あり、既定は画像貼り付け**
+  - 既定（`--pptx`）：各ページを画像として貼る。体裁は完全に再現されるが、
+    PowerPoint で文字を直せず、本文の検索もハイパーリンクのクリックもできない
+  - `--pptx-editable`：文字を文字のまま出す。PowerPoint で直せるが、
+    **フォントや位置がずれることがある。LibreOffice が必要**（Marp CLI では実験的機能）
+  - 会場のPCに挿して映すだけなら既定でよい。渡した相手が直すなら editable を選ぶ
 - **原稿mdは `work/<プロジェクト>/drafts/<イベント名>/` に置く。** 中間ファイルもそこに残る
 - **完成版の PDF・PPTX は `publications/<イベント名>/` に出す**（手順3で自動的にコピーされる）
 - 新規作成なら `.claude/skills/build-slide/assets/templates/template_academic-ja.md`（和文）または
@@ -50,6 +56,14 @@ argument-hint: "<スライドmdのパス> [--pdf-only|--pptx-only]"
 ```bash
 .claude/skills/build-slide/scripts/build_marp.sh --pptx [パス] 2>&1
 ```
+
+**編集できる PPTX（`--pptx-editable` が指定された場合は `--pptx` の代わりに）:**
+```bash
+.claude/skills/build-slide/scripts/build_marp.sh --pptx-editable [パス] 2>&1
+```
+出力ファイル名は `--pptx` と同じ `<name>.pptx` なので、**両方は作れない**（後に走ったほうが残る）。
+LibreOffice が無ければスクリプトが先に止めて、`--pptx` を使うよう案内する。
+**体裁がずれることがあるので、生成後に開いて確かめるようユーザに伝えること。**
 
 ビルド前に `check_svg_text.py` が自動で走り、図中の文字が小さすぎる場合に警告する
 （ビルドは止めない）。**警告が出たらユーザに報告し、黙って通さないこと。**

@@ -64,6 +64,15 @@ npx @marp-team/marp-cli --allow-local-files --pptx work/<プロジェクト>/dra
 
 `/build-slide` は Claude Code 固有の機能です。Codex など他のツールでは、上のコマンドをそのまま実行するか「`work/<プロジェクト>/drafts/...` のスライドを PDF と PPTX にビルドして」と指示してください。
 
+**PPTX は2種類あります。** 出力ファイル名はどちらも `<名前>.pptx` なので、両方は持てません。
+
+| | 体裁 | PowerPoint での編集 | 必要なもの |
+|---|---|---|---|
+| `--pptx`（既定） | 崩れない（各ページを画像として貼る） | できない。文字の検索もリンクもできない | ブラウザのみ |
+| `--pptx-editable` | **ずれることがある** | できる（文字が文字のまま入る） | LibreOffice |
+
+会場のPCに挿して映すだけなら既定で十分です。渡した相手が手を入れる場合だけ `--pptx-editable` を使い、**生成後に必ず開いて体裁を確かめてください**（Marp CLI では実験的機能の扱いです）。
+
 > **Marp CLI を直接叩いた場合、完成版は `publications/` に集まりません。**
 > `build_marp.sh` か `/build-slide` を使うと自動でコピーされます。
 
