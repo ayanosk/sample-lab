@@ -148,7 +148,7 @@ section h1 {
 
 section h2 {
   font-family: var(--font-sans);
-  font-size: 1.6em;
+  font-size: var(--subhead-size, 1.6em);
   font-weight: 700;
   color: var(--color-accent);
   margin-bottom: 0.4em;
@@ -160,6 +160,32 @@ section h3 {
   color: var(--color-muted);
   margin-bottom: 0.3em;
 }
+
+/* ── Subheading size — スライド内の副題を小さくする ─────────── */
+/*
+ * h2 の既定は 1.6em で h1 と同じ大きさ。1枚の中で話題を区切るための
+ * 副題（「(1) …」「(2) …」のような小見出し）に使うと、タイトルと
+ * 同じ大きさで出てしまい、見出しの階層が読めなくなる。
+ * 本文（29px = 1em）を基準に、h2 を何段上げるかで選ぶ。
+ *
+ *   <!-- _class: subhead-0 -->   本文と同じ（29px）
+ *   <!-- _class: subhead-1 -->   本文より1段上（約32px）
+ *   <!-- _class: subhead-2 -->   本文より2段上（約35px）
+ *
+ * 指定しなければ従来どおり 1.6em（約46px）。既存スライドは変わらない。
+ * 他のクラスと併用できる: <!-- _class: compact subhead-1 -->
+ *
+ * margin-bottom は h2 自身の em なので、サイズを下げれば余白も自動で
+ * 詰まる。色と太さは変えない（副題であることは大きさで示す）。
+ * 1枚の中で大きさを混ぜたいときだけ、生の HTML で個別に指定する:
+ *   <h2 class="subhead-1">小見出し</h2> */
+section.subhead-0 { --subhead-size: 1em; }
+section.subhead-1 { --subhead-size: 1.12em; }
+section.subhead-2 { --subhead-size: 1.26em; }
+
+section h2.subhead-0 { font-size: 1em; }
+section h2.subhead-1 { font-size: 1.12em; }
+section h2.subhead-2 { font-size: 1.26em; }
 
 /* ── Title slide ────────────────────────────────────────────── */
 section.title {
@@ -691,8 +717,9 @@ section strong {
 }
 
 section em {
+  /* 和文のイタリックは合成斜体になって読みにくいので使わない。
+     強調は明朝への切り替えで示す。 */
   font-family: var(--font-serif);
-  font-style: italic;
 }
 
 section a {
@@ -754,7 +781,7 @@ section .source {
   color: var(--color-muted);
   text-align: right;
   margin-top: 0.5em;
-  font-style: italic;
+  /* イタリックは外した（和文で読みにくい）。小さめ・薄めで十分に区別できる。 */
 }
 
 /* ── Width utilities ────────────────────────────────────────── */
@@ -1204,8 +1231,13 @@ section .cards {
   margin: 0.5em 0;
   width: 100%;
 }
+/* 地色は明示する。指定がないと section の背景が透けるので、地色を変える
+   スライド（appendix は --color-code-bg）に置いたときカードが紙に見えず、
+   上罫だけが浮いた帯になる。通常スライドでは --color-bg = 白で、
+   指定なしのときと同じ見え方のまま。 */
 section .card {
   flex: 1;
+  background-color: var(--color-bg);
   border: 1px solid var(--color-border);
   border-top: 3px solid var(--color-accent);
   padding: 0.7em 0.9em;
