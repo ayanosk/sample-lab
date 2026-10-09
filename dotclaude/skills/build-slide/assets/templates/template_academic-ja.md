@@ -105,6 +105,7 @@ lang: ja
 
 - まず `dense` で試し、それでも溢れたら `compact`
 - どちらも academic-ja のみ。`academic-intl` には定義されていない
+- `_class` はスライドのどこに書いても**そのスライド全体**に効く（要素ごとには効かない）
 
 ---
 
@@ -272,6 +273,8 @@ Que les Académiciens travailleront à bannir toutes les Erreurs qui se sont int
 <table class="w-66">
 ```
 
+画像は Marp の記法でも大きさを指定できる: `![w:800](…)` `![h:500](…)`
+
 </div>
 <div>
 
@@ -319,7 +322,7 @@ Que les Académiciens travailleront à bannir toutes les Erreurs qui se sont int
 - 科学史・技術史
 - デジタル人文学
 
-既定は左右均等（1:1）
+既定は左右均等（1:1）。中の Markdown は、`<div>` の直後と `</div>` の直前に**空行**がないと効かない
 
 </div>
 </div>
