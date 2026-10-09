@@ -74,10 +74,8 @@ section {
  * 画面高に対する比は 3.6% から 4.4% に上がる。
  *
  * **`.dense` `.compact` に相当する密度エスケープは定義しない。**
- * `academic` では 554枚中 72枚（13.0%）でそれらが発動していたが、
- * **72回すべてがハンズオン系ワークショップ資料**（＝聴衆が手元で追う
- * 配布資料）に集中しており、授業スライドでの使用はゼロだった。
- * 口頭発表は配布資料ではないので、この道具は持ち込まない。
+ * 文字を詰める手段は、聴衆が手元で追う配布資料には要るが、
+ * 口頭発表には要らない。
  * 単一チャネル原理（Duarte 133頁）に照らせば、入りきらないスライドの
  * 正しい処置は縮めることではなく、削るか2枚に割ることである。
  * 縮める手段がなければ、入りきらないスライドは見切れて作者に見える。 */
@@ -98,8 +96,7 @@ section {
      既定値は従来の直書きの値そのままなので、見た目は変わらない。
      幅の既定が 100% なのは、Marp が pre を
      data-auto-scaling="downscale-only" で包み、いちばん長い行が枠に
-     収まるまで文字を自動縮小するため。枠を狭めた分だけ字が小さくなる。
-     2026-09-10 追加。 */
+     収まるまで文字を自動縮小するため。枠を狭めた分だけ字が小さくなる。 */
   --code-block-max-width: 100%;
   --code-block-min-width: 100%;
   --code-block-font-size: 0.72em;
@@ -522,7 +519,7 @@ section.fig-full h1 { margin-bottom: 0.3em !important; flex-shrink: 0; }
 section.fig-full .chart-label { flex-shrink: 0; margin-bottom: 0.3em; }
 /* 図は上寄せ。center にすると横長の図が余った縦の空きの分だけ下がり、
    ラベルとのあいだに宙ぶらりんの余白ができる。縦長の図は max-height:100%
-   で高さいっぱいになるのでこの指定の影響を受けない。2026-09-10 変更。 */
+   で高さいっぱいになるのでこの指定の影響を受けない。 */
 section.fig-full > p:has(> img) {
   flex: 1 1 0;
   min-height: 0;
@@ -563,7 +560,7 @@ section .figure-box {
    clamp する作りだと、横長の図（幅で律速される図）は指定した高さの箱の中で
    上下に letterbox され、図の前後に死んだ余白が残る。height:auto にすれば
    箱が図に密着する。--figure-height は「これ以上高くしない」上限として働く。
-   academic-ja と同じ扱い。2026-09-10 変更。 */
+   academic-ja と同じ扱い。 */
 section .figure-box img {
   width: auto;
   max-width: 100%;
@@ -771,7 +768,7 @@ section a {
 /* ── Notes, sources, footnotes ──────────────────────────────
  * 補助テキストの下限は本文32px の 0.6倍 = 19.2px（Images & Figures 節の
  * 基準と同じ）。.source / .footnote / .references p / .stat-source は
- * 0.58em ＝ 18.6px でこれを割っていたので、2026-09-10 に 0.64em ＝ 20.5px
+ * 0.58em ＝ 18.6px でこれを割っていたので、0.64em ＝ 20.5px
  * へ揃えた。`academic-ja` の対応値（18.9〜20.9px）と同水準になる。 */
 section small { font-size: 0.62em; color: var(--color-muted); line-height: 1.45; }
 section .source {
@@ -882,7 +879,7 @@ section .highlight-box p {
  * <span class="outline-desc"> は任意。無くても成立する。
  * 番号は 01 / 02 …（decimal-leading-zero）。項目は4〜6件まで。
  * それ以上は本文が縮まないので、2枚に割るか dense を併用する。
- * 2026-09-10 追加。academic-ja と同じ記法。 */
+ * academic-ja と同じ記法。 */
 section.outline ol {
   counter-reset: outline;
   list-style: none;
@@ -932,7 +929,7 @@ section.outline ol > li.now { color: var(--color-signal); }
 section.outline ol > li.now::before { color: var(--color-signal); }
 section.outline ol > li.dim::before { color: var(--color-dim); }
 
-/* ── academic-ja から移植した部品（2026-09-10）──────────────────
+/* ── academic-ja から移植した部品 ──────────────────
  * いずれも「この判型では成り立たない」という理由が無かったもの。
  * 移植しなかったのは密度エスケープ（dense / compact）とコード用クラス
  * （code-*）だけで、それぞれ本ファイル冒頭と Code 節に理由がある。

@@ -82,7 +82,7 @@ section .icon.xxl { font-size: 3em;   vertical-align: -0.3em; }
   --color-highlight:  #d4a843;       /* 引用・強調用ゴールド（地色向け。文字色には使わない） */
   --color-code-bg:    #f5f7fa;
 
-  /* 一点強調と脱強調（2026-09-09 追加。方針書スライド編 4.1節）
+  /* 一点強調と脱強調（方針書スライド編 4.1節）
    * 構造色（--color-accent）と強調色を分けないと、全部がアクセント色に
    * なって強調が効かなくなる。既存の --color-highlight は白地に対して
    * 約1.9:1 しかなく、地色としてしか使えない。文字を強調するための色を
@@ -114,8 +114,7 @@ section {
      幅 100% なら内寸は 1148px。等幅の字送りは 0.6em なので
        ・66文字までは縮小なし（29px のまま）
        ・110文字までは縮小率 0.6 以上（＝17.4px 以上）を保てる
-     110文字を超える行は下限を割るので、折り返すか行を分ける。
-     2026-09-10 変更。 */
+     110文字を超える行は下限を割るので、折り返すか行を分ける。 */
   --code-block-max-width: 100%;
   --code-block-min-width: 100%;
   --code-block-font-size: 1em;
@@ -417,7 +416,7 @@ section.table-tight {
    fig-full だけ枠なし・figure-layout や fig-grid は枠あり、という不揃いが
    生まれる。テンプレート全体で「図は枠なし」に統一する。
    史料画像のように輪郭を示したいときだけ、その img に
-   style="border:1px solid var(--color-border)" を足す。2026-09-10 変更。 */
+   style="border:1px solid var(--color-border)" を足す。 */
 section img {
   display: block;
   max-width: 100%;
@@ -453,7 +452,7 @@ section.fig-full h2 {
 /* 図は上寄せ。center にすると、横長の図（幅で律速される図）が余った縦の
    空きの分だけ下がり、ラベルとのあいだに宙ぶらりんの余白ができる。
    縦長の図は max-height:100% で高さいっぱいになるので、この指定の影響を
-   受けるのは横長の図だけ。2026-09-10 に center から変更。 */
+   受けるのは横長の図だけ。 */
 section.fig-full > p:has(> img) {
   flex: 1 1 0;
   min-height: 0;
@@ -534,7 +533,7 @@ section .figure-box {
    clamp する作りだと、横長の図（幅で律速される図）は指定した高さの箱の中で
    上下に letterbox され、枠線と図のあいだに死んだ余白が残る。height:auto に
    すれば箱が図に密着し、余白は出ない。--figure-height は「これ以上高く
-   しない」という上限として働く。2026-09-10 変更。 */
+   しない」という上限として働く。 */
 section .figure-box img {
   width: auto;
   max-width: 100%;
@@ -1002,12 +1001,8 @@ section .icon-card-desc {
  *    読み替えた（intl は「原文＝セリフ／英訳＝サンセリフ」）。
  *
  * 【移植していないもの】
- * 密度エスケープ（.dense / .compact）は academic に残す。方針書10.1節が
- * 根拠を示している。2026-09-01 時点で全554枚中72回の使用があり、その
- * すべてがハンズオン系ワークショップ資料に集中していた。これらは方針書
- * 0.2節の分類でいう配布用 Slidedoc であって投影用ライブプレゼンではなく、
- * 密度エスケープはそのジャンルの要請として現れている。academic は授業・
- * ハンズオンを担うテーマなので取り上げない。
+ * 密度エスケープ（.dense / .compact）は残している。ハンズオンなどの
+ * 配布資料で必要になるため（方針書10.1節）。
  * ============================================================ */
 
 /* ── 中立的な図表ラベル（方針書 2.1・2.2節）────────────────────
@@ -1179,14 +1174,8 @@ section .quote-parallel blockquote p + p { margin-top: 0.45em; }
  * **色は intl と変えている。** intl の章区切りは白地なので強調色
  * （burnt orange）が効くが、`academic` の章区切りは濃紺グラデーション地
  * （#1e4d7a→#5ba3d4）で、その上に burnt orange を置くと沈んで読めない。
- * **2026-09-10 に白へ変更した。** それまでゴールド（--color-highlight
- * #d4a843）を使っていたが、地のグラデーションは `to top right` で
- * 右上へ行くほど明るくなる（#1e4d7a→#5ba3d4）ため、ゴールドが効くのは
- * 左下の濃い側だけだった。実測のコントラスト比は、濃い側 3.95:1 /
- * .progress の実際の位置 2.56:1 / 明るい側 1.24:1。同じ位置で白なら
- * 5.67:1 になる。ゴールドは ::before のアクセントバー専用に戻し、
- * .progress は h1・h2 と同じ白で揃える。太字＋字間 0.08em があるので
- * 見出しや副題とは書体の扱いで区別がつく。 */
+ * そのため白にした。ゴールドも地の明るい側では読めない（コントラスト比
+ * 1.24〜3.95:1。白は 5.67:1）。見出しとは太字と字間で区別する。 */
 section.section-divider .progress {
   font-size: 0.68em;
   font-weight: 700;
@@ -1284,8 +1273,7 @@ section.section-divider strong {
 /* 同じ理由で `section code` も壊れる。code は背景色（--color-code-bg
    #f5f7fa）だけ指定して文字色を指定していないので、濃紺地スライドでは
    白を継承し、淡いグレーのチップに白文字が乗る（コントラスト比 1.06:1、
-   実質不可視）。チップの地はそのままに、文字色を本文色へ戻す。
-   2026-09-10 追加。 */
+   実質不可視）。チップの地はそのままに、文字色を本文色へ戻す。 */
 section.title code,
 section.section-divider code {
   color: var(--color-fg);
@@ -1303,8 +1291,7 @@ section.section-divider code {
  *
  * <span class="outline-desc"> は任意。無くても成立する。
  * 番号は 01 / 02 …（decimal-leading-zero）。項目は4〜6件まで。
- * それ以上は本文が縮まないので、2枚に割るか dense を併用する。
- * 2026-09-10 追加。 */
+ * それ以上は本文が縮まないので、2枚に割るか dense を併用する。 */
 section.outline ol {
   counter-reset: outline;
   list-style: none;
